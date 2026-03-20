@@ -69,12 +69,10 @@ portfolio/
 
 ---
 
-## 🚀 Run Locally
+## 🚀 Run
 
 ```bash
-git clone https://github.com/QuantumSenpai/portfolio.git
-cd portfolio
-# Open index.html in browser — done!
+Click Here: https://portfolio-kisu.vercel.app/
 ```
 
 No dependencies. No build step. Pure HTML/CSS/JS. ⚡

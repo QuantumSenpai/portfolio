@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Krishnendu Adak · Portfolio</title>
+<link rel="stylesheet" href="style.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Noto+Serif+JP:wght@300;400;700&family=Share+Tech+Mono&family=Zen+Kaku+Gothic+New:wght@300;400&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+<!-- SAKURA -->
+<div id="sakura"></div>
+
+<!-- CURSOR -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-trail" id="cursor-trail"></div>
+
+<!-- NAVBAR -->
+<nav id="navbar">
+  <div class="nav-logo">鬼<span>kisu</span></div>
+  <ul class="nav-links">
+    <li><a href="#hero" class="nav-link">home</a></li>
+    <li><a href="#about" class="nav-link">about</a></li>
+    <li><a href="#experience" class="nav-link">experience</a></li>
+    <li><a href="#skills" class="nav-link">skills</a></li>
+    <li><a href="#projects" class="nav-link">projects</a></li>
+    <li><a href="#reel" class="nav-link">reel</a></li>
+    <li><a href="#contact" class="nav-link">contact</a></li>
+  </ul>
+  <div class="nav-burger" onclick="toggleMenu()">☰</div>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobile-menu">
+  <a href="#hero" onclick="toggleMenu()">home</a>
+  <a href="#about" onclick="toggleMenu()">about</a>
+  <a href="#experience" onclick="toggleMenu()">experience</a>
+  <a href="#skills" onclick="toggleMenu()">skills</a>
+  <a href="#projects" onclick="toggleMenu()">projects</a>
+  <a href="#reel" onclick="toggleMenu()">reel</a>
+  <a href="#contact" onclick="toggleMenu()">contact</a>
+</div>
+
+<!-- ══ HERO ══ -->
+<section id="hero">
+  <div class="hero-bg-text">KISU</div>
+  <div class="hero-content">
+    <div class="hero-greeting">こんにちは · hello, world</div>
+    <h1 class="hero-name">Krishnendu<br/><span>Adak</span></h1>
+    <div class="hero-roles">
+      <span class="role active">⚡ Developer · CSE Student</span>
+      <span class="role">🎬 Video Editor · Motion Designer</span>
+      <span class="role">✍️ Content Writer · Creator</span>
+      <span class="role">🧠 NLP &amp; ML Enthusiast</span>
+      <span class="role">🌸 Open for Freelance Work</span>
+    </div>
+    <p class="hero-motto">"Building things that work. Improving what doesn't."</p>
+    <div class="hero-stats">
+      <div class="hstat"><div class="hstat-num">6+</div><div class="hstat-label">Projects</div></div>
+      <div class="hstat-divider"></div>
+      <div class="hstat"><div class="hstat-num">2+</div><div class="hstat-label">Years Editing</div></div>
+      <div class="hstat-divider"></div>
+      <div class="hstat"><div class="hstat-num">10+</div><div class="hstat-label">Videos Made</div></div>
+    </div>
+    <div class="hero-btns">
+      <a href="#projects" class="btn-primary">⚡ View Projects</a>
+      <a href="#contact" class="btn-secondary">✉ Hire Me</a>
+    </div>
+  </div>
+  <div class="hero-scroll-hint">scroll ↓</div>
+</section>
+
+<!-- ══ ABOUT ══ -->
+<section id="about">
+  <div class="section-tag ani">// about.me</div>
+  <div class="about-grid">
+    <div class="about-img-wrap ani">
+      <div class="about-img-ring">
+        <img src="assets/images/profile.jpg" alt="Krishnendu Adak" class="about-img"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+        <div class="about-img-placeholder">鬼</div>
+      </div>
+      <div class="about-status"><span class="status-dot"></span> available for work</div>
+      <div class="about-socials">
+        <a href="https://github.com/QuantumSenpai" target="_blank" class="soc-btn">⌥ GitHub</a>
+        <a href="https://www.linkedin.com/in/krishnendu158" target="_blank" class="soc-btn">in LinkedIn</a>
+        <a href="https://instagram.com/aura4.vibes" target="_blank" class="soc-btn">◎ Instagram</a>
+      </div>
+    </div>
+    <div class="about-text ani">
+      <h2 class="about-name">Krishnendu <span>Adak</span></h2>
+      <div class="about-jp">開発者 · クリエイター · エディター</div>
+      <div class="intro-cards">
+        <div class="intro-card">
+          <div class="intro-icon">🎓</div>
+          <div><div class="intro-card-title">Student</div><div class="intro-card-sub">B.Tech CSE · Adamas University · 2nd Year</div></div>
+        </div>
+        <div class="intro-card">
+          <div class="intro-icon">⚡</div>
+          <div><div class="intro-card-title">Developer</div><div class="intro-card-sub">Java · C++ · DSA · Web · Python · NLP</div></div>
+        </div>
+        <div class="intro-card">
+          <div class="intro-icon">🎬</div>
+          <div><div class="intro-card-title">Video Editor</div><div class="intro-card-sub">After Effects · DaVinci · Premiere Pro</div></div>
+        </div>
+        <div class="intro-card">
+          <div class="intro-icon">✍️</div>
+          <div><div class="intro-card-title">Content Writer</div><div class="intro-card-sub">Finance · Tech · Creative Storytelling</div></div>
+        </div>
+      </div>
+      <p class="about-bio">
+        Hey! I'm <strong>Kisu</strong> — a developer and creator from <strong>Ghatal, West Bengal</strong>.
+        I build interactive web experiences and cut cinematic videos that tell stories.
+        Whether it's an anime-themed DSA visualizer or a finance edit for 100k+ viewers —
+        I bring the same energy to both. Currently leveling up in <strong>NLP &amp; Machine Learning</strong>.
+      </p>
+      <div class="about-info">
+        <div class="info-row"><span class="info-label">📍 Location</span><span>Ghatal, West Bengal, India</span></div>
+        <div class="info-row"><span class="info-label">✉ Email</span><span>itxkisu@gmail.com</span></div>
+        <div class="info-row"><span class="info-label">⌥ GitHub</span><span>QuantumSenpai</span></div>
+        <div class="info-row"><span class="info-label">🎯 Focus</span><span>Dev · Editing · Freelance</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ EXPERIENCE ══ -->
+<section id="experience">
+  <div class="section-tag ani">// experience.log</div>
+  <div class="exp-timeline">
+
+    <div class="exp-card ani">
+      <div class="exp-left"><div class="exp-dot"></div><div class="exp-line"></div></div>
+      <div class="exp-content">
+        <div class="exp-header">
+          <div>
+            <div class="exp-role">🎬 Video Editor &amp; YouTube Manager</div>
+            <a href="https://www.youtube.com/@InvestorInsights.24" target="_blank" class="exp-company">Investor Insights ↗</a>
+          </div>
+          <div class="exp-date">2023 — Ongoing</div>
+        </div>
+        <p class="exp-desc">Managing full video production pipeline — editing, motion graphics, thumbnails and channel strategy for a finance-focused YouTube channel covering stocks, mutual funds and investment insights.</p>
+        <div class="exp-tags">
+          <span>Video Editing</span><span>YouTube Management</span>
+          <span>Motion Graphics</span><span>Thumbnails</span><span>Finance Content</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="exp-card ani">
+      <div class="exp-left"><div class="exp-dot"></div></div>
+      <div class="exp-content">
+        <div class="exp-header">
+          <div>
+            <div class="exp-role">✂️ Video Editor · Intern</div>
+            <a href="https://www.youtube.com/@Ramkrishna.22" target="_blank" class="exp-company">Ramkrishna ↗</a>
+          </div>
+          <div class="exp-date">2023 — Ongoing</div>
+        </div>
+        <p class="exp-desc">Assisted with video editing, content structuring and production support. Contributed to editing workflows, visual storytelling and overall content quality improvement.</p>
+        <div class="exp-tags">
+          <span>Video Editing</span><span>Content Support</span><span>Production</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══ SKILLS ══ -->
+<section id="skills">
+  <div class="section-tag ani">// skills.exe</div>
+  <div class="skills-grid">
+
+    <div class="skill-card ani">
+      <div class="skill-card-title">⚡ Development</div>
+      <div class="skill-bars">
+        <div class="skill-item"><div class="skill-name"><span>Java</span><span>85%</span></div><div class="bar-track"><div class="bar-fill" data-w="85"></div></div></div>
+        <div class="skill-item"><div class="skill-name"><span>C / C++</span><span>80%</span></div><div class="bar-track"><div class="bar-fill" data-w="80"></div></div></div>
+        <div class="skill-item"><div class="skill-name"><span>DSA</span><span>78%</span></div><div class="bar-track"><div class="bar-fill" data-w="78"></div></div></div>
+        <div class="skill-item"><div class="skill-name"><span>HTML/CSS/JS</span><span>82%</span></div><div class="bar-track"><div class="bar-fill" data-w="82"></div></div></div>
+        <div class="skill-item"><div class="skill-name"><span>Python</span><span>65%</span></div><div class="bar-track"><div class="bar-fill" data-w="65"></div></div></div>
+        <div class="skill-item"><div class="skill-name"><span>DBMS</span><span>70%</span></div><div class="bar-track"><div class="bar-fill" data-w="70"></div></div></div>
+      </div>
+    </div>
+
+    <div class="skill-card ani">
+      <div class="skill-card-title">🎨 Creative</div>
+      <div class="skill-bars">
+        <div class="skill-item"><div class="skill-name"><span>After Effects</span><span>80%</span></div><div class="bar-track"><div class="bar-fill" data-w="80" style="--bar-color:#f48fb1"></div></div></div>
+        <div class="skill-item"><div class="skill-name"><span>Premiere Pro</span><span>82%</span></div><div class="bar-track"><div class="bar-fill" data-w="82" style="--bar-color:#f48fb1"></div></div></div>
+        <div class="skill-item"><div class="skill-name"><span>DaVinci Resolve</span><span>78%</span></div><div class="bar-track"><div class="bar-fill" data-w="78" style="--bar-color:#f48fb1"></div></div></div>
+        <div class="skill-item"><div class="skill-name"><span>Photoshop</span><span>75%</span></div><div class="bar-track"><div class="bar-fill" data-w="75" style="--bar-color:#f48fb1"></div></div></div>
+        <div class="skill-item"><div class="skill-name"><span>Canva</span><span>90%</span></div><div class="bar-track"><div class="bar-fill" data-w="90" style="--bar-color:#f48fb1"></div></div></div>
+        <div class="skill-item"><div class="skill-name"><span>Content Writing</span><span>85%</span></div><div class="bar-track"><div class="bar-fill" data-w="85" style="--bar-color:#f48fb1"></div></div></div>
+      </div>
+    </div>
+
+    <div class="skill-card ani">
+      <div class="skill-card-title">🧠 AI / ML <span style="font-size:10px;color:var(--gold)">learning</span></div>
+      <div class="skill-bars">
+        <div class="skill-item"><div class="skill-name"><span>Machine Learning</span><span>40%</span></div><div class="bar-track"><div class="bar-fill" data-w="40" style="--bar-color:#ffd54f"></div></div></div>
+        <div class="skill-item"><div class="skill-name"><span>NLP</span><span>35%</span></div><div class="bar-track"><div class="bar-fill" data-w="35" style="--bar-color:#ffd54f"></div></div></div>
+        <div class="skill-item"><div class="skill-name"><span>Flask</span><span>60%</span></div><div class="bar-track"><div class="bar-fill" data-w="60" style="--bar-color:#ffd54f"></div></div></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══ PROJECTS ══ -->
+<section id="projects">
+  <div class="section-tag ani">// projects.log</div>
+  <div class="projects-filter ani">
+    <button class="filter-btn active" onclick="filterProjects('all',this)">All</button>
+    <button class="filter-btn" onclick="filterProjects('web',this)">Web</button>
+    <button class="filter-btn" onclick="filterProjects('dsa',this)">DSA</button>
+    <button class="filter-btn" onclick="filterProjects('ml',this)">ML / AI</button>
+    <button class="filter-btn" onclick="filterProjects('game',this)">Game</button>
+  </div>
+  <div class="projects-grid">
+    <div class="project-card ani" data-cat="web">
+      <div class="project-top"><div class="project-icon">🌸</div><div class="project-links"><a href="https://github.com/QuantumSenpai/sakura-timer" target="_blank" class="plink">⌥ Code</a></div></div>
+      <div class="project-name">Sakura Timer</div>
+      <div class="project-desc">Anime lofi pomodoro study timer with falling sakura petals, ambient mood and focus tracking.</div>
+      <div class="project-tags"><span>HTML</span><span>CSS</span><span>JS</span><span>Anime</span></div>
+    </div>
+    <div class="project-card ani" data-cat="dsa">
+      <div class="project-top"><div class="project-icon">ソ</div><div class="project-links"><a href="https://quantumsenpai.github.io/Sort-Visualizer" target="_blank" class="plink">↗ Live</a><a href="https://github.com/QuantumSenpai/Sort-Visualizer" target="_blank" class="plink">⌥ Code</a></div></div>
+      <div class="project-name">SortAnime</div>
+      <div class="project-desc">Type your numbers and watch them sort in real-time. 10 algorithms with dual visualization.</div>
+      <div class="project-tags"><span>HTML</span><span>CSS</span><span>JS</span><span>DSA</span></div>
+    </div>
+    <div class="project-card ani" data-cat="ml">
+      <div class="project-top"><div class="project-icon">🧠</div><div class="project-links"><a href="https://github.com/QuantumSenpai/Sentiment-Analysis-Mini-Project" target="_blank" class="plink">⌥ Code</a></div></div>
+      <div class="project-name">Sentiment Analysis</div>
+      <div class="project-desc">NLP-powered customer review insight extraction using Python, NLTK, TextBlob and Flask.</div>
+      <div class="project-tags"><span>Python</span><span>NLP</span><span>Flask</span><span>ML</span></div>
+    </div>
+    <div class="project-card ani" data-cat="web">
+      <div class="project-top"><div class="project-icon">🃏</div><div class="project-links"><a href="https://quantumsenpai.github.io/dev-card" target="_blank" class="plink">↗ Live</a><a href="https://github.com/QuantumSenpai/dev-card" target="_blank" class="plink">⌥ Code</a></div></div>
+      <div class="project-name">Dev Card</div>
+      <div class="project-desc">Anime lofi developer card with sakura petals, spinning gradient ring, live clock and 3D tilt.</div>
+      <div class="project-tags"><span>HTML</span><span>CSS</span><span>JS</span><span>Anime</span></div>
+    </div>
+    <div class="project-card ani" data-cat="web">
+      <div class="project-top"><div class="project-icon">⌨️</div><div class="project-links"><a href="https://quantumsenpai.github.io/Cyber-Type" target="_blank" class="plink">↗ Live</a><a href="https://github.com/QuantumSenpai/Cyber-Type" target="_blank" class="plink">⌥ Code</a></div></div>
+      <div class="project-name">CyberType</div>
+      <div class="project-desc">Neon cyberpunk typing speed test with live WPM tracking and rank system from Recruit to Cyber God.</div>
+      <div class="project-tags"><span>HTML</span><span>CSS</span><span>JS</span><span>Cyberpunk</span></div>
+    </div>
+    <div class="project-card ani" data-cat="game">
+      <div class="project-top"><div class="project-icon">🎮</div><div class="project-links"><a href="https://quantumsenpai.github.io/Midsem-Rush" target="_blank" class="plink">↗ Live</a><a href="https://github.com/QuantumSenpai/Midsem-Rush" target="_blank" class="plink">⌥ Code</a></div></div>
+      <div class="project-name">MidSem Rush</div>
+      <div class="project-desc">Dodge deadlines, slow your HOD and strike with an anime thunder sword. Student survival runner.</div>
+      <div class="project-tags"><span>HTML</span><span>CSS</span><span>JS</span><span>Game</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ REEL ══ -->
+<section id="reel">
+  <div class="section-tag ani">// video.reel</div>
+  <div class="reel-tabs ani">
+    <button class="reel-tab active" onclick="switchTab('anime',this)">🎌 Anime Edits</button>
+    <button class="reel-tab" onclick="switchTab('pro',this)">💼 Professional</button>
+  </div>
+
+  <div class="reel-tab-content active" id="tab-anime">
+    <div class="reel-grid">
+      <div class="reel-card ani"><div class="reel-thumb"><iframe src="https://drive.google.com/file/d/1ZyNIax5j9PJsFHrbwscxzLYY5DJjv6bU/preview" allowfullscreen></iframe></div><div class="reel-info"><div class="reel-title">Eren Yeager Edit</div><div class="reel-tools">After Effects · TikTok Style</div></div></div>
+      <div class="reel-card ani"><div class="reel-thumb"><iframe src="https://drive.google.com/file/d/1GNVNDWx-LCeiaw04s6ghLii5kYFbRJ6w/preview" allowfullscreen></iframe></div><div class="reel-info"><div class="reel-title">Gojo Satoru Edit</div><div class="reel-tools">After Effects · TikTok Style</div></div></div>
+      <div class="reel-card ani"><div class="reel-thumb"><iframe src="https://www.youtube.com/embed/RSFbZIeSGmg" allowfullscreen></iframe></div><div class="reel-info"><div class="reel-title">JJK · Yuta Edit</div><div class="reel-tools">After Effects · Anime Edit</div></div></div>
+      <div class="reel-card ani"><div class="reel-thumb"><iframe src="https://www.youtube.com/embed/zp42sJYuLP8" allowfullscreen></iframe></div><div class="reel-info"><div class="reel-title">Royalty · Solo Leveling</div><div class="reel-tools">Motion Design</div></div></div>
+      <div class="reel-card ani"><div class="reel-thumb"><iframe src="https://drive.google.com/file/d/1oaXMELH80SDtYC-mfZgpEpTKAXo8ZArt/preview" allowfullscreen></iframe></div><div class="reel-info"><div class="reel-title">Anime Edit · VFX</div><div class="reel-tools">After Effects · VFX</div></div></div>
+      <div class="reel-card ani"><div class="reel-thumb"><iframe src="https://www.youtube.com/embed/PMZbuAV5hYQ" allowfullscreen></iframe></div><div class="reel-info"><div class="reel-title">JJK S2 Edit</div><div class="reel-tools">After Effects · Premiere Pro</div></div></div>
+    </div>
+  </div>
+
+  <div class="reel-tab-content" id="tab-pro">
+    <div class="reel-grid">
+      <div class="reel-card"><div class="reel-thumb"><iframe src="https://drive.google.com/file/d/1X7ww4YQneN1dyk6XaF07R5QrVCNm-Tp2/preview" allowfullscreen></iframe></div><div class="reel-info"><div class="reel-title">Gold Vs Apple</div><div class="reel-tools">Investor Insights · Finance</div></div></div>
+      <div class="reel-card"><div class="reel-thumb"><iframe src="https://drive.google.com/file/d/1Xycl3PnBJZ4OZLyYK_x-uQ305LBGcwl2/preview" allowfullscreen></iframe></div><div class="reel-info"><div class="reel-title">Royal Enfield</div><div class="reel-tools">Professional Edit</div></div></div>
+      <div class="reel-card"><div class="reel-thumb"><iframe src="https://drive.google.com/file/d/1HQsXW2kr2AO98FCgr569zd4LdwI_nQnG/preview" allowfullscreen></iframe></div><div class="reel-info"><div class="reel-title">Car vs Investment</div><div class="reel-tools">Investor Insights · Finance</div></div></div>
+      <div class="reel-card"><div class="reel-thumb"><iframe src="https://drive.google.com/file/d/1jHtV8ShmiQjGVQjENbgVKVz0t1XLmeFr/preview" allowfullscreen></iframe></div><div class="reel-info"><div class="reel-title">2 Cr for a Mercedes</div><div class="reel-tools">Investor Insights · Finance</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CONTACT ══ -->
+<section id="contact">
+  <div class="section-tag ani">// contact.init</div>
+  <div class="contact-grid">
+    <div class="contact-info ani">
+      <h2 class="contact-title">Let's work<br/><span>together.</span></h2>
+      <p class="contact-bio">Open for freelance — video editing, motion design, web development and content writing. Let's build something great.</p>
+      <div class="contact-links">
+        <a href="mailto:itxkisu@gmail.com" class="contact-link"><span class="clink-icon">✉</span><span>itxkisu@gmail.com</span></a>
+        <a href="https://www.linkedin.com/in/krishnendu158" target="_blank" class="contact-link"><span class="clink-icon">in</span><span>linkedin · krishnendu158</span></a>
+        <a href="https://instagram.com/aura4.vibes" target="_blank" class="contact-link"><span class="clink-icon">◎</span><span>instagram · aura4.vibes</span></a>
+        <a href="https://github.com/QuantumSenpai" target="_blank" class="contact-link"><span class="clink-icon">⌥</span><span>github · QuantumSenpai</span></a>
+      </div>
+    </div>
+    <form class="contact-form ani" onsubmit="submitForm(event)">
+      <div class="form-field"><label>NAME</label><input type="text" placeholder="Your name" required/></div>
+      <div class="form-field"><label>EMAIL</label><input type="email" placeholder="your@email.com" required/></div>
+      <div class="form-field">
+        <label>SERVICE NEEDED</label>
+        <select>
+          <option>Video Editing</option>
+          <option>Motion Design / VFX</option>
+          <option>Web Development</option>
+          <option>Content Writing</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="form-field"><label>MESSAGE</label><textarea rows="4" placeholder="Tell me about your project..." required></textarea></div>
+      <button type="submit" class="btn-primary" style="width:100%">Send Message ✉</button>
+      <div class="form-note" id="form-note"></div>
+    </form>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">鬼 <span>kisu</span></div>
+  <p class="footer-motto">"Building things that work. Improving what doesn't."</p>
+  <div class="footer-links">
+    <a href="https://github.com/QuantumSenpai" target="_blank">GitHub</a>
+    <a href="https://www.linkedin.com/in/krishnendu158" target="_blank">LinkedIn</a>
+    <a href="https://instagram.com/aura4.vibes" target="_blank">Instagram</a>
+    <a href="mailto:itxkisu@gmail.com">Email</a>
+  </div>
+  <p class="footer-copy">© 2025 · Krishnendu Adak · All Rights Reserved · Made with 🌸 and ⚡</p>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>

@@ -180,7 +180,9 @@ function closeThankyou() {
 }
 
 /* ═══════════════════════════════════
-   ENHANCED PARTICLE CANVAS
+   CLEAN PARTICLE CANVAS
+   — 50 dots only, no connections,
+     subtle opacity, dot + ring only
 ═══════════════════════════════════ */
 const cvs = document.createElement('canvas');
 cvs.id = 'particle-canvas';
@@ -191,131 +193,69 @@ let PW, PH;
 
 function resizeCvs() { PW = cvs.width = window.innerWidth; PH = cvs.height = window.innerHeight; }
 
-const P_COLORS = ['79,195,247','244,143,177','255,213,79','105,240,174','149,117,205'];
+const P_COLORS = ['79,195,247','244,143,177','255,213,79'];
 
 class Dot {
-  constructor(init) {
-    this.reset(init);
-  }
+  constructor(init) { this.reset(init); }
   reset(init) {
     this.x    = Math.random() * PW;
     this.y    = init ? Math.random() * PH : PH + 10;
-    this.vx   = (Math.random() - 0.5) * 0.7;
-    this.vy   = -(Math.random() * 0.55 + 0.1);
-    this.r    = Math.random() * 2.2 + 0.3;
-    this.life = Math.random() * 0.9 + 0.2;
+    this.vx   = (Math.random() - 0.5) * 0.4;
+    this.vy   = -(Math.random() * 0.35 + 0.08);
+    this.r    = Math.random() * 1.8 + 0.4;
+    this.life = Math.random() * 0.8 + 0.2;
     this.max  = this.life;
-    this.dec  = 0.0015 + Math.random() * 0.001;
+    this.dec  = 0.0012 + Math.random() * 0.0008;
     this.col  = P_COLORS[Math.floor(Math.random() * P_COLORS.length)];
-    this.type = Math.floor(Math.random() * 5);
-    this.rot  = Math.random() * Math.PI * 2;
-    this.rotV = (Math.random() - 0.5) * 0.025;
+    this.type = Math.random() > 0.5 ? 0 : 1; // dot or ring only
   }
   update() {
     this.x   += this.vx;
     this.y   += this.vy;
     this.life -= this.dec;
-    this.rot  += this.rotV;
     if (this.life <= 0 || this.y < -10) this.reset(false);
   }
   draw() {
-    const a = (this.life / this.max) * 0.6;
+    const a = (this.life / this.max) * 0.35; // subtle opacity
     const c = `rgba(${this.col},${a})`;
     pctx.save();
     pctx.translate(this.x, this.y);
-    pctx.rotate(this.rot);
     pctx.strokeStyle = c;
     pctx.fillStyle   = c;
-    pctx.lineWidth   = 0.9;
-    switch(this.type) {
-      case 0: // dot
-        pctx.beginPath();
-        pctx.arc(0, 0, this.r, 0, Math.PI * 2);
-        pctx.fill();
-        break;
-      case 1: // ring
-        pctx.beginPath();
-        pctx.arc(0, 0, this.r * 2, 0, Math.PI * 2);
-        pctx.stroke();
-        break;
-      case 2: // cross
-        const s = this.r * 2.5;
-        pctx.beginPath();
-        pctx.moveTo(-s,0); pctx.lineTo(s,0);
-        pctx.moveTo(0,-s); pctx.lineTo(0,s);
-        pctx.stroke();
-        break;
-      case 3: // diamond
-        const d = this.r * 2;
-        pctx.beginPath();
-        pctx.moveTo(0,-d); pctx.lineTo(d,0);
-        pctx.lineTo(0,d);  pctx.lineTo(-d,0);
-        pctx.closePath();
-        pctx.stroke();
-        break;
-      case 4: // tiny sakura shape
-        for(let i=0;i<4;i++){
-          pctx.beginPath();
-          pctx.ellipse(this.r, 0, this.r*1.5, this.r*0.7, i*Math.PI/2, 0, Math.PI*2);
-          pctx.fill();
-        }
-        break;
+    pctx.lineWidth   = 0.7;
+    if (this.type === 0) {
+      pctx.beginPath();
+      pctx.arc(0, 0, this.r, 0, Math.PI * 2);
+      pctx.fill();
+    } else {
+      pctx.beginPath();
+      pctx.arc(0, 0, this.r * 2.2, 0, Math.PI * 2);
+      pctx.stroke();
     }
     pctx.restore();
   }
 }
 
-function drawConnections(dots) {
-  for (let i = 0; i < dots.length; i++) {
-    for (let j = i + 1; j < dots.length; j++) {
-      const dx = dots[i].x - dots[j].x;
-      const dy = dots[i].y - dots[j].y;
-      const d  = Math.sqrt(dx*dx + dy*dy);
-      if (d < 160) {
-        const a = 0.09 * (1 - d/160) * Math.min(dots[i].life/dots[i].max, dots[j].life/dots[j].max);
-        pctx.beginPath();
-        pctx.moveTo(dots[i].x, dots[i].y);
-        pctx.lineTo(dots[j].x, dots[j].y);
-        pctx.strokeStyle = `rgba(244,143,177,${a})`;
-        pctx.lineWidth = 0.5;
-        pctx.stroke();
-      }
-    }
-  }
-}
-
-let pmx = -999, pmy = -999;
-document.addEventListener('mousemove', e => {
-  pmx = e.clientX; pmy = e.clientY;
-  dots.forEach(p => {
-    const dx = p.x - pmx, dy = p.y - pmy;
-    const d  = Math.sqrt(dx*dx + dy*dy);
-    if (d < 110 && d > 0) { p.vx += (dx/d)*0.4; p.vy += (dy/d)*0.4; }
-  });
-});
-
-// Click burst
+// Click burst — small subtle one
 document.addEventListener('click', e => {
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 5; i++) {
     const p = new Dot(false);
     p.x = e.clientX; p.y = e.clientY;
-    p.vx = (Math.random()-0.5) * 4;
-    p.vy = (Math.random()-0.5) * 4;
-    p.life = p.max = 0.7;
-    p.col = P_COLORS[Math.floor(Math.random()*P_COLORS.length)];
+    p.vx = (Math.random() - 0.5) * 2.5;
+    p.vy = (Math.random() - 0.5) * 2.5;
+    p.life = p.max = 0.5;
     dots.push(p);
   }
-  while (dots.length > COUNT + 40) dots.shift();
+  while (dots.length > COUNT + 15) dots.shift();
 });
 
-const COUNT = 120;
+const COUNT = 50;
 let dots = [];
-function initDots() { dots = []; for(let i=0;i<COUNT;i++) dots.push(new Dot(true)); }
+function initDots() { dots = []; for (let i = 0; i < COUNT; i++) dots.push(new Dot(true)); }
 
 function pLoop() {
   pctx.clearRect(0, 0, PW, PH);
   dots.forEach(p => { p.update(); p.draw(); });
-  drawConnections(dots);
   requestAnimationFrame(pLoop);
 }
 

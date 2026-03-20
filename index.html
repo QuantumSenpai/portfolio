@@ -129,7 +129,6 @@
 <section id="experience">
   <div class="section-tag ani">// experience.log</div>
   <div class="exp-timeline">
-
     <div class="exp-card ani">
       <div class="exp-left"><div class="exp-dot"></div><div class="exp-line"></div></div>
       <div class="exp-content">
@@ -147,7 +146,6 @@
         </div>
       </div>
     </div>
-
     <div class="exp-card ani">
       <div class="exp-left"><div class="exp-dot"></div></div>
       <div class="exp-content">
@@ -164,7 +162,6 @@
         </div>
       </div>
     </div>
-
   </div>
 </section>
 
@@ -172,7 +169,6 @@
 <section id="skills">
   <div class="section-tag ani">// skills.exe</div>
   <div class="skills-grid">
-
     <div class="skill-card ani">
       <div class="skill-card-title">⚡ Development</div>
       <div class="skill-bars">
@@ -184,7 +180,6 @@
         <div class="skill-item"><div class="skill-name"><span>DBMS</span><span>70%</span></div><div class="bar-track"><div class="bar-fill" data-w="70"></div></div></div>
       </div>
     </div>
-
     <div class="skill-card ani">
       <div class="skill-card-title">🎨 Creative</div>
       <div class="skill-bars">
@@ -196,7 +191,6 @@
         <div class="skill-item"><div class="skill-name"><span>Content Writing</span><span>85%</span></div><div class="bar-track"><div class="bar-fill" data-w="85" style="--bar-color:#f48fb1"></div></div></div>
       </div>
     </div>
-
     <div class="skill-card ani">
       <div class="skill-card-title">🧠 AI / ML <span style="font-size:10px;color:var(--gold)">learning</span></div>
       <div class="skill-bars">
@@ -205,7 +199,6 @@
         <div class="skill-item"><div class="skill-name"><span>Flask</span><span>60%</span></div><div class="bar-track"><div class="bar-fill" data-w="60" style="--bar-color:#ffd54f"></div></div></div>
       </div>
     </div>
-
   </div>
 </section>
 
@@ -266,7 +259,6 @@
     <button class="reel-tab active" onclick="switchTab('anime',this)">🎌 Anime Edits</button>
     <button class="reel-tab" onclick="switchTab('pro',this)">💼 Professional</button>
   </div>
-
   <div class="reel-tab-content active" id="tab-anime">
     <div class="reel-grid">
       <div class="reel-card ani"><div class="reel-thumb"><iframe src="https://drive.google.com/file/d/1ZyNIax5j9PJsFHrbwscxzLYY5DJjv6bU/preview" allowfullscreen></iframe></div><div class="reel-info"><div class="reel-title">Eren Yeager Edit</div><div class="reel-tools">After Effects · TikTok Style</div></div></div>
@@ -277,7 +269,6 @@
       <div class="reel-card ani"><div class="reel-thumb"><iframe src="https://www.youtube.com/embed/PMZbuAV5hYQ" allowfullscreen></iframe></div><div class="reel-info"><div class="reel-title">JJK S2 Edit</div><div class="reel-tools">After Effects · Premiere Pro</div></div></div>
     </div>
   </div>
-
   <div class="reel-tab-content" id="tab-pro">
     <div class="reel-grid">
       <div class="reel-card"><div class="reel-thumb"><iframe src="https://drive.google.com/file/d/1X7ww4YQneN1dyk6XaF07R5QrVCNm-Tp2/preview" allowfullscreen></iframe></div><div class="reel-info"><div class="reel-title">Gold Vs Apple</div><div class="reel-tools">Investor Insights · Finance</div></div></div>
@@ -302,9 +293,7 @@
         <a href="https://github.com/QuantumSenpai" target="_blank" class="contact-link"><span class="clink-icon">⌥</span><span>github · QuantumSenpai</span></a>
       </div>
     </div>
-    <form class="contact-form ani"
-          action="https://formspree.io/f/xreydgqn"
-          method="POST">
+    <form class="contact-form ani" id="kisu-form">
       <div class="form-field">
         <label>NAME</label>
         <input type="text" name="name" placeholder="Your name" required/>
@@ -327,7 +316,6 @@
         <label>MESSAGE</label>
         <textarea rows="4" name="message" placeholder="Tell me about your project..." required></textarea>
       </div>
-      <input type="hidden" name="_next" value="https://portfolio-kisu.vercel.app/#contact"/>
       <button type="submit" class="btn-primary" style="width:100%">Send Message ✉</button>
       <div class="form-note" id="form-note"></div>
     </form>
@@ -346,6 +334,17 @@
   </div>
   <p class="footer-copy">© 2025 · Krishnendu Adak · All Rights Reserved · Made with 🌸 and ⚡</p>
 </footer>
+
+<!-- THANK YOU OVERLAY -->
+<div class="kisu-thankyou" id="kisu-thankyou">
+  <div class="ty-box">
+    <div class="ty-sakura">🌸</div>
+    <div class="ty-icon">✓</div>
+    <h3 class="ty-title">Message Sent!</h3>
+    <p class="ty-sub">Thank you for reaching out!<br/>I'll get back to you soon 🌸</p>
+    <button class="btn-primary" onclick="closeThankyou()">↩ Back to Website</button>
+  </div>
+</div>
 
 <script src="script.js"></script>
 </body>

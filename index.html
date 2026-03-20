@@ -302,12 +302,20 @@
         <a href="https://github.com/QuantumSenpai" target="_blank" class="contact-link"><span class="clink-icon">⌥</span><span>github · QuantumSenpai</span></a>
       </div>
     </div>
-    <form class="contact-form ani" onsubmit="submitForm(event)">
-      <div class="form-field"><label>NAME</label><input type="text" placeholder="Your name" required/></div>
-      <div class="form-field"><label>EMAIL</label><input type="email" placeholder="your@email.com" required/></div>
+    <form class="contact-form ani"
+          action="https://formspree.io/f/xreydgqn"
+          method="POST">
+      <div class="form-field">
+        <label>NAME</label>
+        <input type="text" name="name" placeholder="Your name" required/>
+      </div>
+      <div class="form-field">
+        <label>EMAIL</label>
+        <input type="email" name="email" placeholder="your@email.com" required/>
+      </div>
       <div class="form-field">
         <label>SERVICE NEEDED</label>
-        <select>
+        <select name="service">
           <option>Video Editing</option>
           <option>Motion Design / VFX</option>
           <option>Web Development</option>
@@ -315,7 +323,10 @@
           <option>Other</option>
         </select>
       </div>
-      <div class="form-field"><label>MESSAGE</label><textarea rows="4" placeholder="Tell me about your project..." required></textarea></div>
+      <div class="form-field">
+        <label>MESSAGE</label>
+        <textarea rows="4" name="message" placeholder="Tell me about your project..." required></textarea>
+      </div>
       <button type="submit" class="btn-primary" style="width:100%">Send Message ✉</button>
       <div class="form-note" id="form-note"></div>
     </form>

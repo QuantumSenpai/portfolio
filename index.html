@@ -2,15 +2,12 @@
 <html lang="en" data-theme="dark">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
 <title>Krishnendu Adak · Portfolio</title>
 <meta name="description" content="Krishnendu Adak — CSE Student, Developer, Video Editor & NLP Enthusiast"/>
-
-<!-- FONTS: Syne (display) + JetBrains Mono (code) + Inter Tight (body) -->
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,100;0,300;0,400;0,500;1,300&family=Cabinet+Grotesk:wght@300;400;500;700;800;900&display=swap" rel="stylesheet"/>
-
 <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
@@ -19,8 +16,7 @@
 <div id="loader">
   <div class="loader-inner">
     <div class="loader-logo-anim">
-      <span class="ll-k">K</span>
-      <span class="ll-dot">.</span>
+      <span class="ll-k">K</span><span class="ll-dot">.</span>
     </div>
     <div class="loader-bar-wrap">
       <div class="loader-bar"><div class="loader-progress" id="loader-progress"></div></div>
@@ -30,7 +26,7 @@
   </div>
 </div>
 
-<!-- ══ CUSTOM CURSOR ══ -->
+<!-- ══ CUSTOM CURSOR (desktop only) ══ -->
 <div class="cursor-dot" id="cursor-dot"></div>
 <div class="cursor-ring" id="cursor-ring"></div>
 
@@ -42,7 +38,7 @@
 
 <!-- ══ NAVBAR ══ -->
 <nav id="navbar">
-  <div class="nav-logo">
+  <div class="nav-logo" id="nav-logo-click">
     <span class="nav-logo-k">K</span><span class="nav-logo-rest">isu</span><span class="nav-logo-dot">.</span>
   </div>
   <ul class="nav-links" id="nav-links">
@@ -70,9 +66,11 @@
   </div>
 </div>
 
+<!-- ══ SHUFFLE PARTICLE BURST CANVAS ══ -->
+<canvas id="burst-canvas"></canvas>
+
 <!-- ══ HERO ══ -->
 <section id="hero">
-  <!-- Animated BG -->
   <div class="hero-bg">
     <div class="mesh-orb orb-1"></div>
     <div class="mesh-orb orb-2"></div>
@@ -82,8 +80,8 @@
     <div class="hero-grid-overlay"></div>
   </div>
 
-  <!-- Content -->
   <div class="hero-content">
+    <!-- Left -->
     <div class="hero-left">
       <div class="hero-badge">
         <span class="badge-dot"></span>
@@ -111,7 +109,7 @@
         </div>
       </div>
 
-      <p class="hero-bio">Building interactive experiences &amp; cutting cinematic videos. 
+      <p class="hero-bio">Building interactive experiences &amp; cutting cinematic videos.
       From <strong>Ghatal, West Bengal</strong> — leveling up in <strong>NLP &amp; ML</strong>.</p>
 
       <div class="hero-cta">
@@ -143,9 +141,10 @@
       </div>
     </div>
 
-    <!-- Hero Visual: CSS 3D Stack of project previews -->
+    <!-- Right -->
     <div class="hero-right">
-      <div class="card-stack" id="card-stack">
+      <!-- Desktop: 3D Stack -->
+      <div class="card-stack desktop-stack" id="card-stack">
         <div class="stack-card card-back-2" data-card="devcard">
           <div class="sc-preview preview-devcard"></div>
           <div class="sc-info">
@@ -154,7 +153,6 @@
             <div class="sc-desc">Anime lofi developer card with live clock and 3D tilt</div>
             <div class="sc-tech"><span>HTML</span><span>CSS</span><span>JS</span></div>
           </div>
-          <div class="sc-label">Dev Card</div>
         </div>
         <div class="stack-card card-back-1" data-card="sortanime">
           <div class="sc-preview preview-sortanime"></div>
@@ -164,7 +162,6 @@
             <div class="sc-desc">Real-time sorting visualizer with 10 algorithms</div>
             <div class="sc-tech"><span>JS</span><span>DSA</span><span>UI</span></div>
           </div>
-          <div class="sc-label">SortAnime</div>
         </div>
         <div class="stack-card card-front" id="stack-front" data-card="cybertype">
           <div class="sc-preview preview-cybertype"></div>
@@ -174,7 +171,6 @@
             <div class="sc-desc">Neon cyberpunk typing speed test</div>
             <div class="sc-tech"><span>HTML</span><span>CSS</span><span>JS</span></div>
           </div>
-          <div class="sc-label">CyberType</div>
           <div class="sc-glow"></div>
         </div>
         <div class="stack-card card-back-3" data-card="wraith">
@@ -185,8 +181,6 @@
             <div class="sc-desc">Dark cinematic web project with a haunting UI</div>
             <div class="sc-tech"><span>HTML</span><span>CSS</span><span>JS</span></div>
           </div>
-          <div class="sc-label">Wraith</div>
-          <div class="sc-glow"></div>
         </div>
         <div class="stack-card card-back-4" data-card="sentiment">
           <div class="sc-preview preview-sentiment"></div>
@@ -196,11 +190,68 @@
             <div class="sc-desc">NLP-powered customer review insight extraction</div>
             <div class="sc-tech"><span>Python</span><span>Flask</span><span>NLP</span></div>
           </div>
-          <div class="sc-label">Sentiment</div>
-          <div class="sc-glow"></div>
         </div>
       </div>
-      <!-- Floating orbit badges -->
+
+      <!-- Mobile: Swipeable Card Carousel -->
+      <div class="mobile-carousel" id="mobile-carousel">
+        <div class="mc-track" id="mc-track">
+          <div class="mc-card active" data-card="cybertype">
+            <div class="sc-preview preview-cybertype"></div>
+            <div class="mc-info">
+              <div class="mc-tag-row"><span class="sc-tag">FEATURED</span></div>
+              <div class="sc-title">CyberType</div>
+              <div class="sc-desc">Neon cyberpunk typing speed test — WPM tracker</div>
+              <div class="sc-tech"><span>HTML</span><span>CSS</span><span>JS</span></div>
+            </div>
+          </div>
+          <div class="mc-card" data-card="sortanime">
+            <div class="sc-preview preview-sortanime"></div>
+            <div class="mc-info">
+              <div class="mc-tag-row"><span class="sc-tag">DSA</span></div>
+              <div class="sc-title">SortAnime</div>
+              <div class="sc-desc">Real-time sorting visualizer with 10 algorithms</div>
+              <div class="sc-tech"><span>JS</span><span>DSA</span><span>UI</span></div>
+            </div>
+          </div>
+          <div class="mc-card" data-card="devcard">
+            <div class="sc-preview preview-devcard"></div>
+            <div class="mc-info">
+              <div class="mc-tag-row"><span class="sc-tag">PROFILE</span></div>
+              <div class="sc-title">Dev Card</div>
+              <div class="sc-desc">Anime lofi developer card with live clock</div>
+              <div class="sc-tech"><span>HTML</span><span>CSS</span><span>JS</span></div>
+            </div>
+          </div>
+          <div class="mc-card" data-card="sentiment">
+            <div class="sc-preview preview-sentiment"></div>
+            <div class="mc-info">
+              <div class="mc-tag-row"><span class="sc-tag">AI / ML</span></div>
+              <div class="sc-title">Sentiment</div>
+              <div class="sc-desc">NLP-powered customer review insight extraction</div>
+              <div class="sc-tech"><span>Python</span><span>Flask</span><span>NLP</span></div>
+            </div>
+          </div>
+          <div class="mc-card" data-card="wraith">
+            <div class="sc-preview preview-wraith"></div>
+            <div class="mc-info">
+              <div class="mc-tag-row"><span class="sc-tag">WEB</span></div>
+              <div class="sc-title">Wraith</div>
+              <div class="sc-desc">Dark cinematic web project with a haunting UI</div>
+              <div class="sc-tech"><span>HTML</span><span>CSS</span><span>JS</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="mc-dots" id="mc-dots">
+          <span class="mc-dot active"></span>
+          <span class="mc-dot"></span>
+          <span class="mc-dot"></span>
+          <span class="mc-dot"></span>
+          <span class="mc-dot"></span>
+        </div>
+      </div>
+
+      <!-- Orbit badges (desktop only) -->
       <div class="orbit-badge ob-java">Java</div>
       <div class="orbit-badge ob-ae">AE</div>
       <div class="orbit-badge ob-nlp">NLP</div>
@@ -251,45 +302,30 @@
 
     <div class="about-right reveal-right">
       <div class="about-jp-label">開発者 · クリエイター · エディター</div>
-
       <div class="intro-cards-grid">
         <div class="intro-card glass-card">
           <span class="ic-icon">🎓</span>
-          <div>
-            <div class="ic-title">Student</div>
-            <div class="ic-sub">B.Tech CSE · Adamas University · 2nd Year</div>
-          </div>
+          <div><div class="ic-title">Student</div><div class="ic-sub">B.Tech CSE · Adamas University · 2nd Year</div></div>
         </div>
         <div class="intro-card glass-card">
           <span class="ic-icon">⚡</span>
-          <div>
-            <div class="ic-title">Developer</div>
-            <div class="ic-sub">Java · C++ · DSA · Web · Python</div>
-          </div>
+          <div><div class="ic-title">Developer</div><div class="ic-sub">Java · C++ · DSA · Web · Python</div></div>
         </div>
         <div class="intro-card glass-card">
           <span class="ic-icon">🎬</span>
-          <div>
-            <div class="ic-title">Video Editor</div>
-            <div class="ic-sub">After Effects · DaVinci · Premiere</div>
-          </div>
+          <div><div class="ic-title">Video Editor</div><div class="ic-sub">After Effects · DaVinci · Premiere</div></div>
         </div>
         <div class="intro-card glass-card">
           <span class="ic-icon">✍️</span>
-          <div>
-            <div class="ic-title">Writer</div>
-            <div class="ic-sub">Finance · Tech · Creative Stories</div>
-          </div>
+          <div><div class="ic-title">Writer</div><div class="ic-sub">Finance · Tech · Creative Stories</div></div>
         </div>
       </div>
-
       <p class="about-bio-text">
         Hey! I'm <strong>Kisu</strong> — a developer and creator from <strong>Ghatal, West Bengal</strong>.
         I build interactive web experiences and cut cinematic videos that tell stories.
         Currently leveling up in <strong>NLP &amp; Machine Learning</strong>.
         Open for <strong>freelance</strong> in web dev, editing &amp; content writing.
       </p>
-
       <div class="about-info-list">
         <div class="ai-row"><span class="ai-key">📍 Location</span><span class="ai-val">Ghatal, West Bengal, India</span></div>
         <div class="ai-row"><span class="ai-key">✉ Email</span><span class="ai-val">itxkisu@gmail.com</span></div>
@@ -304,13 +340,9 @@
 <section id="skills" class="section">
   <div class="section-label">// skills.exe</div>
   <h2 class="section-title reveal-up">Tech <span class="grad-text">Arsenal</span></h2>
-
   <div class="skills-grid">
     <div class="skill-panel glass-card reveal-up" data-delay="0">
-      <div class="sp-header">
-        <span class="sp-icon">⚡</span>
-        <span class="sp-title">Development</span>
-      </div>
+      <div class="sp-header"><span class="sp-icon">⚡</span><span class="sp-title">Development</span></div>
       <div class="skill-bars">
         <div class="skill-row"><div class="sr-top"><span>Java</span><span>85%</span></div><div class="sr-track"><div class="sr-fill" data-w="85" style="--accent:var(--blue)"></div></div></div>
         <div class="skill-row"><div class="sr-top"><span>C / C++</span><span>80%</span></div><div class="sr-track"><div class="sr-fill" data-w="80" style="--accent:var(--blue)"></div></div></div>
@@ -320,12 +352,8 @@
         <div class="skill-row"><div class="sr-top"><span>DBMS</span><span>70%</span></div><div class="sr-track"><div class="sr-fill" data-w="70" style="--accent:var(--cyan)"></div></div></div>
       </div>
     </div>
-
     <div class="skill-panel glass-card reveal-up" data-delay="1">
-      <div class="sp-header">
-        <span class="sp-icon">🎨</span>
-        <span class="sp-title">Creative</span>
-      </div>
+      <div class="sp-header"><span class="sp-icon">🎨</span><span class="sp-title">Creative</span></div>
       <div class="skill-bars">
         <div class="skill-row"><div class="sr-top"><span>After Effects</span><span>80%</span></div><div class="sr-track"><div class="sr-fill" data-w="80" style="--accent:#FFB347"></div></div></div>
         <div class="skill-row"><div class="sr-top"><span>Premiere Pro</span><span>82%</span></div><div class="sr-track"><div class="sr-fill" data-w="82" style="--accent:#FFB347"></div></div></div>
@@ -335,12 +363,8 @@
         <div class="skill-row"><div class="sr-top"><span>Content Writing</span><span>85%</span></div><div class="sr-track"><div class="sr-fill" data-w="85" style="--accent:#FFB347"></div></div></div>
       </div>
     </div>
-
     <div class="skill-panel glass-card reveal-up" data-delay="2">
-      <div class="sp-header">
-        <span class="sp-icon">🧠</span>
-        <span class="sp-title">AI / ML <em>learning</em></span>
-      </div>
+      <div class="sp-header"><span class="sp-icon">🧠</span><span class="sp-title">AI / ML <em>learning</em></span></div>
       <div class="skill-bars">
         <div class="skill-row"><div class="sr-top"><span>Machine Learning</span><span>40%</span></div><div class="sr-track"><div class="sr-fill" data-w="40" style="--accent:#A78BFA"></div></div></div>
         <div class="skill-row"><div class="sr-top"><span>NLP</span><span>35%</span></div><div class="sr-track"><div class="sr-fill" data-w="35" style="--accent:#A78BFA"></div></div></div>
@@ -364,7 +388,6 @@
   </div>
 
   <div class="projects-grid" id="projects-grid">
-
     <div class="proj-card glass-card" data-cat="web">
       <div class="proj-preview preview-sakura">
         <div class="proj-overlay">
@@ -372,10 +395,7 @@
         </div>
       </div>
       <div class="proj-body">
-        <div class="proj-top-row">
-          <span class="proj-emoji">🌸</span>
-          <span class="proj-cat-tag">Web</span>
-        </div>
+        <div class="proj-top-row"><span class="proj-emoji">🌸</span><span class="proj-cat-tag">Web</span></div>
         <div class="proj-name">Sakura Timer</div>
         <div class="proj-desc">Anime lofi pomodoro study timer with falling sakura petals, ambient mood and focus tracking.</div>
         <div class="proj-tech"><span>HTML</span><span>CSS</span><span>JS</span></div>
@@ -389,10 +409,7 @@
         </div>
       </div>
       <div class="proj-body">
-        <div class="proj-top-row">
-          <span class="proj-emoji">👁️</span>
-          <span class="proj-cat-tag">Web</span>
-        </div>
+        <div class="proj-top-row"><span class="proj-emoji">👁️</span><span class="proj-cat-tag">Web</span></div>
         <div class="proj-name">Wraith</div>
         <div class="proj-desc">A dark cinematic web project — built with precision and a haunting aesthetic.</div>
         <div class="proj-tech"><span>HTML</span><span>CSS</span><span>JS</span></div>
@@ -406,10 +423,7 @@
         </div>
       </div>
       <div class="proj-body">
-        <div class="proj-top-row">
-          <span class="proj-emoji">ソ</span>
-          <span class="proj-cat-tag">DSA</span>
-        </div>
+        <div class="proj-top-row"><span class="proj-emoji">ソ</span><span class="proj-cat-tag">DSA</span></div>
         <div class="proj-name">SortAnime</div>
         <div class="proj-desc">Type numbers and watch them sort in real-time. 10 algorithms, dual visualization mode.</div>
         <div class="proj-tech"><span>HTML</span><span>CSS</span><span>JS</span><span>DSA</span></div>
@@ -423,10 +437,7 @@
         </div>
       </div>
       <div class="proj-body">
-        <div class="proj-top-row">
-          <span class="proj-emoji">🧠</span>
-          <span class="proj-cat-tag">ML/AI</span>
-        </div>
+        <div class="proj-top-row"><span class="proj-emoji">🧠</span><span class="proj-cat-tag">ML/AI</span></div>
         <div class="proj-name">Sentiment Analysis</div>
         <div class="proj-desc">NLP-powered customer review insight extraction using Python, NLTK, TextBlob and Flask.</div>
         <div class="proj-tech"><span>Python</span><span>NLP</span><span>Flask</span></div>
@@ -440,10 +451,7 @@
         </div>
       </div>
       <div class="proj-body">
-        <div class="proj-top-row">
-          <span class="proj-emoji">🃏</span>
-          <span class="proj-cat-tag">Web</span>
-        </div>
+        <div class="proj-top-row"><span class="proj-emoji">🃏</span><span class="proj-cat-tag">Web</span></div>
         <div class="proj-name">Dev Card</div>
         <div class="proj-desc">Anime lofi developer card — sakura petals, spinning gradient ring, live clock and 3D tilt.</div>
         <div class="proj-tech"><span>HTML</span><span>CSS</span><span>JS</span></div>
@@ -457,10 +465,7 @@
         </div>
       </div>
       <div class="proj-body">
-        <div class="proj-top-row">
-          <span class="proj-emoji">⌨️</span>
-          <span class="proj-cat-tag">Web</span>
-        </div>
+        <div class="proj-top-row"><span class="proj-emoji">⌨️</span><span class="proj-cat-tag">Web</span></div>
         <div class="proj-name">CyberType</div>
         <div class="proj-desc">Neon cyberpunk typing speed test — live WPM, rank system from Recruit to Cyber God.</div>
         <div class="proj-tech"><span>HTML</span><span>CSS</span><span>JS</span></div>
@@ -474,16 +479,12 @@
         </div>
       </div>
       <div class="proj-body">
-        <div class="proj-top-row">
-          <span class="proj-emoji">🎮</span>
-          <span class="proj-cat-tag">Game</span>
-        </div>
+        <div class="proj-top-row"><span class="proj-emoji">🎮</span><span class="proj-cat-tag">Game</span></div>
         <div class="proj-name">MidSem Rush</div>
         <div class="proj-desc">Dodge deadlines, slow your HOD and strike with an anime thunder sword. Student runner.</div>
         <div class="proj-tech"><span>HTML</span><span>CSS</span><span>JS</span><span>Game</span></div>
       </div>
     </div>
-
   </div>
 </section>
 
@@ -491,12 +492,10 @@
 <section id="reel" class="section">
   <div class="section-label">// video.reel</div>
   <h2 class="section-title reveal-up">My <span class="grad-text">Work</span></h2>
-
   <div class="reel-tabs reveal-up">
     <button class="reel-tab active" data-tab="anime">🎌 Anime Edits</button>
     <button class="reel-tab" data-tab="pro">💼 Professional</button>
   </div>
-
   <div class="reel-panel active" id="tab-anime">
     <div class="reel-grid">
       <div class="reel-card glass-card"><div class="reel-frame"><iframe src="https://drive.google.com/file/d/1ZyNIax5j9PJsFHrbwscxzLYY5DJjv6bU/preview" allowfullscreen loading="lazy" title="Eren Yeager Edit"></iframe></div><div class="reel-info"><div class="reel-title">Eren Yeager Edit</div><div class="reel-sub">After Effects · TikTok Style</div></div></div>
@@ -507,7 +506,6 @@
       <div class="reel-card glass-card"><div class="reel-frame"><iframe src="https://www.youtube.com/embed/PMZbuAV5hYQ" allowfullscreen loading="lazy" title="JJK S2"></iframe></div><div class="reel-info"><div class="reel-title">JJK S2 Edit</div><div class="reel-sub">After Effects · Premiere Pro</div></div></div>
     </div>
   </div>
-
   <div class="reel-panel" id="tab-pro">
     <div class="reel-grid">
       <div class="reel-card glass-card"><div class="reel-frame"><iframe src="https://drive.google.com/file/d/1X7ww4YQneN1dyk6XaF07R5QrVCNm-Tp2/preview" allowfullscreen loading="lazy" title="Gold vs Apple"></iframe></div><div class="reel-info"><div class="reel-title">Gold Vs Apple</div><div class="reel-sub">Investor Insights · Finance</div></div></div>
@@ -522,7 +520,6 @@
 <section id="contact" class="section">
   <div class="section-label">// contact.init</div>
   <h2 class="section-title reveal-up">Let's <span class="grad-text">Connect</span></h2>
-
   <div class="contact-grid">
     <div class="contact-left reveal-left">
       <p class="contact-intro">Open for freelance — video editing, motion design, web development and content writing. Whether you're a startup, creator, or fellow student — let's build something great.</p>
@@ -545,32 +542,19 @@
         </a>
       </div>
     </div>
-
     <form class="contact-form glass-card reveal-right" id="contact-form" novalidate>
       <div class="cf-shimmer"></div>
-      <div class="form-field">
-        <label>NAME</label>
-        <input type="text" name="name" placeholder="Your name" required autocomplete="name"/>
-      </div>
-      <div class="form-field">
-        <label>EMAIL</label>
-        <input type="email" name="email" placeholder="your@email.com" required autocomplete="email"/>
-      </div>
+      <div class="form-field"><label>NAME</label><input type="text" name="name" placeholder="Your name" required autocomplete="name"/></div>
+      <div class="form-field"><label>EMAIL</label><input type="email" name="email" placeholder="your@email.com" required autocomplete="email"/></div>
       <div class="form-field">
         <label>SERVICE</label>
         <select name="service">
-          <option>Video Editing</option>
-          <option>Motion Design / VFX</option>
-          <option>Web Development</option>
-          <option>Content Writing</option>
-          <option>College Project Help</option>
-          <option>Other</option>
+          <option>Video Editing</option><option>Motion Design / VFX</option>
+          <option>Web Development</option><option>Content Writing</option>
+          <option>College Project Help</option><option>Other</option>
         </select>
       </div>
-      <div class="form-field">
-        <label>MESSAGE</label>
-        <textarea rows="4" name="message" placeholder="Tell me about your project..." required></textarea>
-      </div>
+      <div class="form-field"><label>MESSAGE</label><textarea rows="4" name="message" placeholder="Tell me about your project..." required></textarea></div>
       <button type="submit" class="btn-primary btn-full" id="form-submit">
         <span id="submit-text">Send Message ✉</span>
       </button>
@@ -600,7 +584,7 @@
     <div class="ty-icon">✉</div>
     <h3 class="ty-title">Message Sent!</h3>
     <p class="ty-sub">Thank you for reaching out!<br/>I'll get back to you soon ⚡</p>
-    <button class="btn-primary" onclick="closeThankyou()">↩ Back</button>
+    <button class="btn-primary" id="ty-close-btn">↩ Back</button>
   </div>
 </div>
 

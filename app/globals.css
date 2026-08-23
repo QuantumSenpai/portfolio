@@ -1,0 +1,185 @@
+@import "tailwindcss";
+
+/* ==========================================================
+   DESIGN TOKENS
+   Palette source: Moon Tint / Sunny Herb / Blue Harbor / Ice Blue
+   Light = default. Dark = inverted navy, same accent family.
+   ========================================================== */
+
+:root {
+  --bg: #f3f6ff;
+  --surface: #ffffff;
+  --surface-2: #eaf0ff;
+  --ink: #0e1b33;
+  --ink-dim: #5b6b85;
+  --accent: #3770bf;
+  --accent-soft: #8dc2ff;
+  --pop: #b9e34f;
+  --line: rgba(14, 27, 51, 0.1);
+  --line-strong: rgba(14, 27, 51, 0.2);
+  --shadow: rgba(14, 27, 51, 0.08);
+
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.dark {
+  --bg: #0a0e18;
+  --surface: #121729;
+  --surface-2: #171d33;
+  --ink: #f3f6ff;
+  --ink-dim: #8b96b8;
+  --accent: #8dc2ff;
+  --accent-soft: #3770bf;
+  --pop: #cef26d;
+  --line: rgba(243, 246, 255, 0.09);
+  --line-strong: rgba(243, 246, 255, 0.16);
+  --shadow: rgba(0, 0, 0, 0.4);
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-ink: var(--ink);
+  --color-ink-dim: var(--ink-dim);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-pop: var(--pop);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+
+  --font-display: var(--font-display);
+  --font-body: var(--font-body);
+  --font-mono: var(--font-mono);
+}
+
+/* ==========================================================
+   BASE
+   ========================================================== */
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  transition: background-color 0.4s var(--ease), color 0.4s var(--ease);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+p {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+::selection {
+  background: var(--pop);
+  color: var(--ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* subtle custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--line-strong);
+  border-radius: 999px;
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-inline: clamp(1.25rem, 5vw, 4rem);
+}
+
+/* ==========================================================
+   ANIMATIONS
+   ========================================================== */
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-25%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 32s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee {
+    animation: none;
+  }
+}
+
+/* ==========================================================
+   FORM FIELD
+   ========================================================== */
+
+.field-input {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  border-radius: 0.6rem;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  transition: border-color 0.2s var(--ease);
+}
+
+.field-input:focus {
+  outline: none;
+  border-color: var(--accent);
+}

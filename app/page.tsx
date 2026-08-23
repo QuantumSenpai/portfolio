@@ -2,7 +2,7 @@ import { Nav } from "@/components/nav";
 import { Hero } from "@/components/hero";
 import { Ticker } from "@/components/ticker";
 import { Work } from "@/components/work";
-import { Research } from "@/components/research";
+import { Experience } from "@/components/experience";
 import { About } from "@/components/about";
 import { Skills } from "@/components/skills";
 import { Reel } from "@/components/reel";
@@ -20,7 +20,7 @@ export default function Home() {
         <FilmstripDivider />
         <Work />
         <FilmstripDivider />
-        <Research />
+        <Experience />
         <About />
         <Skills />
         <FilmstripDivider />

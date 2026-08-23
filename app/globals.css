@@ -1,11 +1,5 @@
 @import "tailwindcss";
 
-/* ==========================================================
-   DESIGN TOKENS
-   Palette source: Moon Tint / Sunny Herb / Blue Harbor / Ice Blue
-   Light = default. Dark = inverted navy, same accent family.
-   ========================================================== */
-
 :root {
   --bg: #f3f6ff;
   --surface: #ffffff;
@@ -53,10 +47,6 @@
   --font-mono: var(--font-mono);
 }
 
-/* ==========================================================
-   BASE
-   ========================================================== */
-
 * {
   box-sizing: border-box;
 }
@@ -91,8 +81,15 @@ h2,
 h3,
 h4 {
   font-family: var(--font-display);
-  letter-spacing: -0.02em;
+  font-weight: 800;
+  letter-spacing: -0.025em;
   margin: 0;
+}
+
+.text-stroke {
+  -webkit-text-stroke: 1.5px var(--accent);
+  -webkit-text-fill-color: transparent;
+  color: transparent;
 }
 
 p {
@@ -114,7 +111,6 @@ a {
   outline-offset: 3px;
 }
 
-/* subtle custom scrollbar */
 ::-webkit-scrollbar {
   width: 10px;
 }
@@ -140,10 +136,6 @@ a {
   padding-inline: clamp(1.25rem, 5vw, 4rem);
 }
 
-/* ==========================================================
-   ANIMATIONS
-   ========================================================== */
-
 @keyframes marquee {
   from {
     transform: translateX(0);
@@ -162,10 +154,6 @@ a {
     animation: none;
   }
 }
-
-/* ==========================================================
-   FORM FIELD
-   ========================================================== */
 
 .field-input {
   width: 100%;

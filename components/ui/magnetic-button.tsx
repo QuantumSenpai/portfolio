@@ -9,11 +9,6 @@ interface MagneticProps {
   strength?: number;
 }
 
-/**
- * Wraps any element (usually a button/link) and nudges it toward the
- * cursor within a small radius — a restrained magnetic-hover effect.
- * Disabled automatically for touch/coarse pointers.
- */
 export function Magnetic({ children, className, strength = 0.35 }: MagneticProps) {
   const ref = useRef<HTMLDivElement>(null);
   const x = useMotionValue(0);

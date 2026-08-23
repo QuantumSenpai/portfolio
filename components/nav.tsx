@@ -1,15 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "next-themes";
-import { Magnetic } from "./ui/magnetic";
+import { Magnetic } from "./ui/magnetic-button";
 import { cn } from "@/lib/utils";
 
 const links = [
   { href: "#work", label: "Work" },
-  { href: "#research", label: "Research" },
+  { href: "#experience", label: "Experience" },
   { href: "#about", label: "About" },
   { href: "#skills", label: "Skills" },
   { href: "#reel", label: "Reel" },
@@ -51,9 +50,6 @@ export function Nav() {
     return () => observer.disconnect();
   }, []);
 
-  const logoSrc =
-    mounted && resolvedTheme === "dark" ? "/logo-mark-dark.png" : "/logo-mark-light.png";
-
   return (
     <>
       <header
@@ -62,9 +58,19 @@ export function Nav() {
           scrolled && "border-b border-line bg-bg/80 py-3.5 backdrop-blur-md"
         )}
       >
-        <a href="#top" className="flex items-center gap-2.5">
-          <Image src={logoSrc} alt="Kisu" width={28} height={28} priority className="rounded-md" />
-          <span className="font-display text-lg">Kisu</span>
+        <a href="#top" className="group flex items-center gap-2.5">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg border border-line bg-surface p-1.5 text-ink shadow-sm transition-transform duration-200 group-hover:scale-105">
+            <svg
+              viewBox="0 0 100 100"
+              fill="none"
+              className="h-full w-full fill-current"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path d="M22 18C22 14.6863 24.6863 12 28 12H34C37.3137 12 40 14.6863 40 18V82C40 85.3137 37.3137 88 34 88H28C24.6863 88 22 85.3137 22 82V18Z" />
+              <path d="M47.5 45.2L74.8 17.9C76.8 15.9 80 17.3 80 20.1V34C80 35.6 79.2 37.1 77.9 38L62 50L77.9 62C79.2 62.9 80 64.4 80 66V79.9C80 82.7 76.8 84.1 74.8 82.1L47.5 54.8C44.8 52.1 44.8 47.9 47.5 45.2Z" />
+            </svg>
+          </div>
+          <span className="font-display text-lg font-bold tracking-tight text-ink">Kisu</span>
         </a>
 
         <nav className="hidden items-center gap-8 text-sm md:flex" aria-label="Primary">
@@ -74,7 +80,7 @@ export function Nav() {
               href={link.href}
               className={cn(
                 "relative text-ink-dim transition-colors hover:text-ink",
-                active === link.href && "text-ink"
+                active === link.href && "text-ink font-medium"
               )}
             >
               {link.label}
@@ -103,20 +109,19 @@ export function Nav() {
         <div className="flex items-center gap-2 md:hidden">
           <ThemeToggle theme={resolvedTheme} setTheme={setTheme} mounted={mounted} />
           <button
-            aria-label="Open menu"
-            aria-expanded={open}
-            onClick={() => setOpen((v) => !v)}
-            className="flex flex-col gap-[5px] p-2"
+            aria-label="Toggle navigation menu"
+            onClick={() => setOpen(!open)}
+            className="flex h-9 w-9 flex-col items-center justify-center gap-1.5 rounded-full border border-line-strong"
           >
             <span
               className={cn(
-                "h-px w-5 bg-ink transition-transform duration-300",
+                "h-px w-4 bg-ink transition-transform duration-200",
                 open && "translate-y-[3px] rotate-45"
               )}
             />
             <span
               className={cn(
-                "h-px w-5 bg-ink transition-transform duration-300",
+                "h-px w-4 bg-ink transition-transform duration-200",
                 open && "-translate-y-[3px] -rotate-45"
               )}
             />
@@ -138,7 +143,7 @@ export function Nav() {
                 key={link.href}
                 href={link.href}
                 onClick={() => setOpen(false)}
-                className="font-display text-3xl text-ink"
+                className="font-display text-3xl font-bold text-ink"
               >
                 {link.label}
               </a>

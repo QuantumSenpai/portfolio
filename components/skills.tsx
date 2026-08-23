@@ -4,16 +4,17 @@ import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { skillGroups } from "@/lib/data";
 import { Reveal } from "./ui/reveal";
+import { StrokeText } from "./ui/stroke-text";
 
 export function Skills() {
   return (
     <section id="skills" className="container py-24 sm:py-32">
       <Reveal>
         <span className="eyebrow">004 — Toolkit</span>
-        <h2 className="mt-4 text-4xl sm:text-5xl">
+        <h2 className="mt-4 text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl">
           What I
           <br />
-          work with.
+          <StrokeText>work with.</StrokeText>
         </h2>
       </Reveal>
 

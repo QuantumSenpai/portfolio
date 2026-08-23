@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import { JetBrains_Mono } from "next/font/google";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { SmoothScroll } from "@/components/providers/smooth-scroll-provider";
+import { SwissGridBackground } from "@/components/ui/swiss-grid-background";
 import "./globals.css";
 
 const cabinetGrotesk = localFont({
@@ -91,6 +92,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     >
       <body>
         <ThemeProvider>
+          <SwissGridBackground />
           <SmoothScroll>{children}</SmoothScroll>
         </ThemeProvider>
       </body>

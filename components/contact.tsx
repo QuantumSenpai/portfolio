@@ -3,7 +3,8 @@
 import { useState, type FormEvent, type ReactNode } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Reveal } from "./ui/reveal";
-import { Magnetic } from "./ui/magnetic";
+import { Magnetic } from "./ui/magnetic-button";
+import { StrokeText } from "./ui/stroke-text";
 
 type Status = "idle" | "loading" | "success" | "error";
 
@@ -42,10 +43,10 @@ export function Contact() {
     <section id="contact" className="container py-24 sm:py-32">
       <Reveal>
         <span className="eyebrow">006 — Contact</span>
-        <h2 className="mt-4 max-w-lg text-4xl sm:text-5xl">
+        <h2 className="mt-4 max-w-xl text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl">
           Let&apos;s build
           <br />
-          something.
+          <StrokeText>something.</StrokeText>
         </h2>
         <p className="mt-5 max-w-md text-ink-dim">
           Open for freelance — video editing, motion design, web development and content

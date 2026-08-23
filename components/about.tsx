@@ -1,3 +1,4 @@
+import { StrokeText } from "./ui/stroke-text";
 import { Reveal, RevealGroup, RevealItem } from "./ui/reveal";
 
 export function About() {
@@ -5,8 +6,8 @@ export function About() {
     <section id="about" className="container py-24 sm:py-32">
       <Reveal>
         <span className="eyebrow">003 — About</span>
-        <h2 className="mt-4 max-w-lg text-4xl sm:text-5xl">
-          Crafting digital experiences with code and motion.
+        <h2 className="mt-4 max-w-xl text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl">
+          Crafting <StrokeText>digital</StrokeText> experiences with code and motion.
         </h2>
       </Reveal>
 

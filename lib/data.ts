@@ -103,35 +103,101 @@ export interface ResearchStat {
   value: string;
 }
 
-export const research = {
-  eyebrow: "Research Internship — NIT Durgapur",
-  title: "Brain Disease Detection & Medical Report Generation",
-  period: "Research Internship",
-  summary:
-    "Built a Clinical Decision Support System that classifies Alzheimer's stages from MRI scans and auto-generates a structured diagnostic report — from raw scan to a doctor-readable PDF.",
-  problem:
-    "Manual MRI review for early-stage Alzheimer's is slow and inconsistent across radiologists. The brief was to prototype a CDSS that classifies scans into four clinical stages and produces a report a clinician can act on immediately.",
-  approach: [
-    "Trained a ResNet50 classifier (PyTorch, mixed-precision AMP) across four Alzheimer's stages on MRI scan data.",
-    "Found and fixed a data-leakage issue between train/test splits using perceptual-hash deduplication — a detail that quietly inflated early accuracy numbers.",
-    "Built a FastAPI backend with PostgreSQL (SQLAlchemy + Alembic migrations) to serve predictions and persist patient records.",
-    "Auto-generated structured PDF diagnostic reports with ReportLab, and shipped a lightweight frontend for clinicians to upload scans and review results.",
-    "Deployed and configured the full stack on a supervisor's machine, including a one-click batch startup script for a non-technical end user.",
-  ],
-  stack: [
-    "PyTorch",
-    "ResNet50",
-    "FastAPI",
-    "PostgreSQL",
-    "SQLAlchemy",
-    "ReportLab",
-  ],
-  stats: [
-    { label: "Classes", value: "4-stage" },
-    { label: "Model", value: "ResNet50" },
-    { label: "Training", value: "Mixed precision" },
-  ] satisfies ResearchStat[],
-};
+export interface ExperienceItem {
+  id: string;
+  role: string;
+  organization: string;
+  period: string;
+  location?: string;
+  type: "detailed" | "compact";
+  summary: string;
+  highlights?: string[];
+  problem?: string;
+  approach?: string[];
+  stack: string[];
+  stats?: ResearchStat[];
+}
+
+export const experiences: ExperienceItem[] = [
+  {
+    id: "nit-durgapur",
+    role: "Research Intern — ML & Medical Imaging",
+    organization: "National Institute of Technology, Durgapur",
+    period: "July 2026 – August 2026",
+    location: "Durgapur, WB",
+    type: "detailed",
+    summary:
+      "Built a Clinical Decision Support System that classifies Alzheimer's stages from MRI scans and auto-generates a structured diagnostic report — from raw scan to a doctor-readable PDF.",
+    problem:
+      "Manual MRI review for early-stage Alzheimer's is slow and inconsistent across radiologists. The brief was to prototype a CDSS that classifies scans into four clinical stages and produces a report a clinician can act on immediately.",
+    approach: [
+      "Trained a ResNet50 classifier (PyTorch, mixed-precision AMP) across four Alzheimer's stages on MRI scan data.",
+      "Found and fixed a data-leakage issue between train/test splits using perceptual-hash deduplication — a detail that quietly inflated early accuracy numbers.",
+      "Built a FastAPI backend with PostgreSQL (SQLAlchemy + Alembic migrations) to serve predictions and persist patient records.",
+      "Auto-generated structured PDF diagnostic reports with ReportLab, and shipped a lightweight frontend for clinicians to upload scans and review results.",
+      "Deployed and configured the full stack on a supervisor's machine, including a one-click batch startup script for a non-technical end user.",
+    ],
+    stack: [
+      "PyTorch",
+      "ResNet50",
+      "FastAPI",
+      "PostgreSQL",
+      "SQLAlchemy",
+      "ReportLab",
+    ],
+    stats: [
+      { label: "Classes", value: "4-stage" },
+      { label: "Model", value: "ResNet50" },
+      { label: "Training", value: "Mixed precision" },
+    ],
+  },
+  {
+    id: "investor-insights",
+    role: "Senior Video Editor & YouTube Manager",
+    organization: "Investor Insights",
+    period: "2023 – 2025",
+    location: "Remote",
+    type: "compact",
+    summary:
+      "Led end-to-end video post-production and channel growth strategy for high-impact financial and tech content.",
+    highlights: [
+      "Produced and edited 50+ high-retention long-form finance & equity analysis videos featuring custom motion graphics in After Effects and Premiere Pro.",
+      "Designed dynamic soundscapes, kinetic typography, and data visualization overlays that drove a 35% increase in average viewer watch time.",
+      "Managed complete publishing pipeline, content calendar, thumbnail A/B testing, and audience retention analytics.",
+    ],
+    stack: [
+      "Premiere Pro",
+      "After Effects",
+      "Motion Design",
+      "YouTube Strategy",
+      "Sound Design",
+    ],
+  },
+  {
+    id: "freelance-editor",
+    role: "Freelance Video Editor & Motion Designer",
+    organization: "Independent / Creator Studio",
+    period: "2023 – 2025",
+    location: "Remote",
+    type: "compact",
+    summary:
+      "Delivering bespoke cinematic edits, anime AMVs, and social media reels for digital creators and brands worldwide.",
+    highlights: [
+      "Delivered 30+ bespoke cinematic edits, anime motion pieces, and promotional reels with 100% on-time project completion.",
+      "Implemented custom 3D camera tracking, complex mask transitions, speed ramps, and precision audio sync in DaVinci Resolve & After Effects.",
+      "Collaborated directly with creators from initial storyboard concepts to final 4K rendering and color grading.",
+    ],
+    stack: [
+      "DaVinci Resolve",
+      "After Effects",
+      "VFX",
+      "Anime Edits",
+      "Color Grading",
+    ],
+  },
+];
+
+export const research = experiences[0];
 
 export interface SkillGroup {
   title: string;

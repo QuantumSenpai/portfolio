@@ -1,15 +1,16 @@
 import { reel } from "@/lib/data";
 import { Reveal } from "./ui/reveal";
+import { StrokeText } from "./ui/stroke-text";
 
 export function Reel() {
   return (
     <section id="reel" className="container py-24 sm:py-32">
       <Reveal>
         <span className="eyebrow">005 — Reel</span>
-        <h2 className="mt-4 text-4xl sm:text-5xl">
+        <h2 className="mt-4 text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl">
           Frames I&apos;ve
           <br />
-          cut.
+          <StrokeText>cut.</StrokeText>
         </h2>
       </Reveal>
 

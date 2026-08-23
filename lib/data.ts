@@ -15,6 +15,7 @@ export interface Project {
   category: ProjectCategory;
   href: string;
   linkLabel: "Code" | "Live" | "Play";
+  featured?: boolean;
 }
 
 export const projects: Project[] = [
@@ -27,6 +28,7 @@ export const projects: Project[] = [
     category: "web",
     href: "https://github.com/QuantumSenpai/sakura-timer",
     linkLabel: "Code",
+    featured: true,
   },
   {
     index: "02",
@@ -57,6 +59,7 @@ export const projects: Project[] = [
     category: "ml",
     href: "https://github.com/QuantumSenpai/Sentiment-Analysis-Mini-Project",
     linkLabel: "Code",
+    featured: true,
   },
   {
     index: "05",

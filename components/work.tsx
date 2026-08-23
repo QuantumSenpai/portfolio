@@ -47,7 +47,7 @@ export function Work() {
           </div>
         </Reveal>
 
-        <div className="mt-8 space-y-4">
+        <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 sm:gap-5">
           <AnimatePresence mode="popLayout" initial={false}>
             {visible.map((project) => (
               <ProjectCard key={project.title} project={project} />
@@ -86,7 +86,12 @@ function ProjectCard({ project }: { project: Project }) {
       }}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="group relative block overflow-hidden rounded-2xl border border-line bg-surface/60 p-6 sm:p-7 transition-colors duration-300 hover:border-line-strong hover:bg-surface hover:shadow-md"
+      className={cn(
+        "group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-line bg-surface/60 p-6 sm:p-7 transition-colors duration-300 hover:border-line-strong hover:bg-surface hover:shadow-md",
+        project.featured
+          ? "md:col-span-2 lg:col-span-2 min-h-[250px]"
+          : "col-span-1 min-h-[230px]"
+      )}
     >
       {coords && (
         <div
@@ -100,36 +105,46 @@ function ProjectCard({ project }: { project: Project }) {
         />
       )}
 
-      <div className="relative grid grid-cols-[36px_1fr] items-start gap-4 sm:grid-cols-[54px_1fr_auto] sm:items-center sm:gap-6">
-        <span className="font-mono text-sm font-semibold text-accent-soft sm:text-base">
-          {project.index}
-        </span>
-
+      <div className="relative z-10 flex flex-col justify-between h-full">
         <div>
-          <div className="flex items-center gap-3">
-            <h3 className="font-display text-xl font-bold tracking-tight text-ink transition-colors group-hover:text-accent sm:text-2xl">
-              {project.title}
-            </h3>
+          <div className="flex items-center justify-between gap-4">
+            <span className="font-mono text-xs font-semibold text-accent-soft sm:text-sm">
+              {project.index}
+            </span>
+            <span className="inline-flex items-center gap-1 font-mono text-xs text-ink-dim transition-all group-hover:translate-x-1 group-hover:text-accent">
+              {project.linkLabel} <span className="text-sm leading-none">↗</span>
+            </span>
           </div>
-          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-ink-dim sm:text-base">
+
+          <h3
+            className={cn(
+              "mt-3 font-display font-bold tracking-tight text-ink transition-colors group-hover:text-accent",
+              project.featured ? "text-2xl sm:text-3xl" : "text-xl sm:text-2xl"
+            )}
+          >
+            {project.title}
+          </h3>
+
+          <p
+            className={cn(
+              "mt-2 text-sm leading-relaxed text-ink-dim",
+              project.featured ? "max-w-xl sm:text-base" : "max-w-md"
+            )}
+          >
             {project.description}
           </p>
-
-          <div className="mt-4 flex flex-wrap gap-1.5">
-            {project.tags.map((tag) => (
-              <span
-                key={tag}
-                className="rounded-full border border-line bg-surface-2 px-3 py-1 font-mono text-[0.68rem] text-ink-dim transition-colors group-hover:border-accent/40 group-hover:text-ink"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
         </div>
 
-        <span className="col-span-2 mt-2 inline-flex w-fit items-center gap-1 font-mono text-xs text-ink-dim transition-all group-hover:translate-x-1 group-hover:text-accent sm:col-span-1 sm:mt-0 sm:justify-self-end">
-          {project.linkLabel} <span className="text-base leading-none">↗</span>
-        </span>
+        <div className="mt-6 flex flex-wrap gap-1.5 pt-2">
+          {project.tags.map((tag) => (
+            <span
+              key={tag}
+              className="rounded-full border border-line bg-surface-2 px-3 py-1 font-mono text-[0.68rem] text-ink-dim transition-colors group-hover:border-accent/40 group-hover:text-ink"
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
       </div>
     </motion.a>
   );

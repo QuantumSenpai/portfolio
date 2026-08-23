@@ -19,22 +19,54 @@ const services = [
 
 export function Contact() {
   const [status, setStatus] = useState<Status>("idle");
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const form = e.currentTarget;
     setStatus("loading");
+    setErrorMessage("");
+
+    const formData = new FormData(form);
+    const payload = {
+      name: formData.get("name"),
+      email: formData.get("email"),
+      service: formData.get("service"),
+      message: formData.get("message"),
+    };
 
     try {
-      const res = await fetch(form.action, {
+      const res = await fetch("https://formspree.io/f/xreydgqn", {
         method: "POST",
-        body: new FormData(form),
-        headers: { Accept: "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(payload),
       });
-      if (!res.ok) throw new Error("Submission failed");
-      setStatus("success");
-      form.reset();
-    } catch {
+
+      if (res.ok) {
+        setStatus("success");
+        setErrorMessage("");
+        form.reset();
+      } else {
+        const data = await res.json().catch(() => null);
+        console.error("Formspree submission error response:", data);
+        let msg = "Something went wrong — email itxkisu@gmail.com directly.";
+        if (data && Array.isArray(data.errors) && data.errors.length > 0) {
+          msg = data.errors
+            .map((err: { message?: string; field?: string }) => err.message || err.field)
+            .filter(Boolean)
+            .join(", ") || msg;
+        } else if (data?.error) {
+          msg = data.error;
+        }
+        setErrorMessage(msg);
+        setStatus("error");
+      }
+    } catch (err) {
+      console.error("Formspree submission error:", err);
+      setErrorMessage("Network error — please email itxkisu@gmail.com directly.");
       setStatus("error");
     }
   }
@@ -57,7 +89,7 @@ export function Contact() {
 
       <Reveal delay={0.15} className="mt-12 max-w-xl">
         <form
-          action="https://formspree.io/f/YOUR_FORM_ID"
+          action="https://formspree.io/f/xreydgqn"
           method="POST"
           onSubmit={handleSubmit}
           className="grid gap-5"
@@ -110,7 +142,7 @@ export function Contact() {
                 exit={{ opacity: 0 }}
                 className="font-mono text-sm text-red-500"
               >
-                Something went wrong — email itxkisu@gmail.com directly.
+                {errorMessage || "Something went wrong — email itxkisu@gmail.com directly."}
               </motion.p>
             )}
           </AnimatePresence>

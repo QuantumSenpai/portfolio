@@ -12,9 +12,8 @@ export function Work() {
   const lenis = useLenis();
   const shouldReduceMotion = useReducedMotion();
 
-  // Sort projects by order, featured only in main list
-  const sortedProjects = [...projects].sort((a, b) => a.order - b.order);
-  const featuredProjects = sortedProjects.filter((p) => p.featured);
+  // Featured projects, in the order they appear in lib/data.ts
+  const featuredProjects = projects.filter((project) => project.featured);
 
   // Active project for sticky preview panel (default = row 1)
   const [activeSlug, setActiveSlug] = useState<string>(

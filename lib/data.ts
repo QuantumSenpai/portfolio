@@ -1,4 +1,95 @@
 // ============================================================================
+// HOW TO EDIT
+// ---------------------------------------------------------------------------
+// Every list below renders in ARRAY ORDER. There is no `order` field and
+// nothing is sorted anywhere in the code — to reorder a list, cut and paste
+// the whole object. Adding or removing an item never needs a component edit.
+//
+// Copy a template below, fill it in, and paste it into the matching array.
+// Fields marked OPTIONAL can be left out completely.
+//
+//   project     -> projects[]
+//   otherRepo   -> otherRepos[]
+//   experience  -> experiences[]
+//   skillGroup  -> skillGroups[]
+//   skillItem   -> skillGroups[].items[]
+//   video       -> videos[]
+//   social link -> socials[]
+//   service     -> services[]
+// ============================================================================
+
+/*
+project:
+{
+  slug: "my-project",              // required, unique
+  title: "My Project",             // required
+  year: "2026",                    // required
+  role: "Frontend Developer",      // required
+  description: "One line about it.",// required
+  tags: ["HTML", "CSS", "JS"],      // required, max 3
+  featured: true,                  // required — only featured rows are shown
+  category: "web",                 // OPTIONAL — "web" | "dsa" | "ml" | "game"
+  image: "/work/my-project.webp",  // OPTIONAL — "/work/x.webp" or a full https URL
+  liveUrl: "https://example.com",  // OPTIONAL
+  repoUrl: "https://github.com/…", // OPTIONAL
+  caseStudyHref: "#experience",    // OPTIONAL — internal anchor
+},
+
+otherRepo:
+{
+  name: "my-repo",                 // required, unique
+  language: "TypeScript",          // required
+  url: "https://github.com/…",     // required
+},
+
+experience:
+{
+  id: "my-role",                   // required, unique
+  role: "Role title",              // required
+  org: "Organisation",             // required
+  dates: "2024 – 2026",            // required
+  bullets: ["What you did.", "What you shipped."], // required, max 5
+  tags: ["Tool", "Tool"],          // required
+  location: "Remote",              // OPTIONAL
+  summary: "One or two sentences.", // OPTIONAL
+  stats: [{ label: "4-stage" }],   // OPTIONAL, max 3
+},
+
+skillGroup:
+{
+  label: "Group name",             // required, unique
+  items: [{ name: "Skill" }],      // required, at least one item
+  blurb: "One short sentence.",    // OPTIONAL
+},
+
+skillItem:
+{
+  name: "Skill name",              // required
+  status: "core",                  // OPTIONAL — "core" | "learning"
+  note: "Short clarification.",    // OPTIONAL
+},
+
+video:
+{
+  id: "YouTubeId",                 // required, unique
+  title: "Video title",            // required
+  caption: "After Effects · Edit", // OPTIONAL
+},
+
+social link:
+{
+  label: "GitHub",                 // required, unique
+  url: "https://github.com/…",     // required
+},
+
+service:
+{
+  title: "Web",                    // required, unique
+  line: "One line about the service.", // required
+},
+*/
+
+// ============================================================================
 // EDIT HERE — Contact / Footer
 // ============================================================================
 
@@ -196,13 +287,11 @@ export interface Project {
   liveUrl?: string;
   repoUrl?: string;
   caseStudyHref?: string; // internal anchor like "#experience"
-  order: number;
   category?: ProjectCategory;
 }
 
 export const projects: Project[] = [
   {
-    order: 1,
     slug: "alzheimers-mri-classifier",
     title: "Alzheimer's MRI Classifier",
     year: "2026",
@@ -215,7 +304,6 @@ export const projects: Project[] = [
     category: "ml",
   },
   {
-    order: 2,
     slug: "sakura-timer",
     title: "Sakura Timer",
     year: "2024",
@@ -228,7 +316,6 @@ export const projects: Project[] = [
     category: "web",
   },
   {
-    order: 3,
     slug: "sort-anime",
     title: "SortAnime",
     year: "2024",
@@ -242,7 +329,6 @@ export const projects: Project[] = [
     category: "dsa",
   },
   {
-    order: 4,
     slug: "sentiment-analysis",
     title: "Sentiment Analysis",
     year: "2024",
@@ -255,7 +341,6 @@ export const projects: Project[] = [
     category: "ml",
   },
   {
-    order: 5,
     slug: "cyber-type",
     title: "CyberType",
     year: "2024",
@@ -269,7 +354,6 @@ export const projects: Project[] = [
     category: "web",
   },
   {
-    order: 6,
     slug: "midsem-rush",
     title: "MidSem Rush",
     year: "2024",
@@ -283,7 +367,6 @@ export const projects: Project[] = [
     category: "game",
   },
   {
-    order: 7,
     slug: "wraith",
     title: "Wraith",
     year: "2024",
@@ -296,7 +379,6 @@ export const projects: Project[] = [
     category: "web",
   },
   {
-    order: 8,
     slug: "dev-card",
     title: "Dev Card",
     year: "2024",
@@ -514,18 +596,47 @@ export const aboutSection: AboutSectionConfig = {
   },
 };
 
+export interface SkillItem {
+  name: string;
+  status?: "core" | "learning";
+  note?: string;
+}
+
 export interface SkillGroup {
   label: string;
-  items: string[];
+  blurb?: string;
+  items: SkillItem[];
 }
 
 export const skillGroups: SkillGroup[] = [
-  { label: "Languages & CS", items: ["Java", "C / C++", "DSA", "Python"] },
-  { label: "Web", items: ["HTML / CSS / JS", "Flask"] },
-  { label: "ML / Data", items: ["Machine Learning", "NLP"] },
+  {
+    label: "Languages & CS",
+    items: [
+      { name: "Java" },
+      { name: "C / C++" },
+      { name: "DSA" },
+      { name: "Python" },
+    ],
+  },
+  {
+    label: "Web",
+    items: [{ name: "HTML / CSS / JS" }, { name: "Flask", status: "learning" }],
+  },
+  {
+    label: "ML / Data",
+    items: [
+      { name: "Machine Learning", status: "learning" },
+      { name: "NLP", status: "learning" },
+    ],
+  },
   {
     label: "Video / Motion",
-    items: ["After Effects", "Premiere Pro", "DaVinci Resolve", "Photoshop"],
+    items: [
+      { name: "After Effects" },
+      { name: "Premiere Pro" },
+      { name: "DaVinci Resolve" },
+      { name: "Photoshop" },
+    ],
   },
 ];
 
@@ -593,3 +704,12 @@ export const stats = [
   { label: "Years building", value: 2 },
   { label: "Edits delivered", value: 30 },
 ];
+
+// ---------------------------------------------------------------------------
+// Development-only data checks. The import is guarded and server-only, so the
+// validator is never requested in a production build and never reaches the
+// browser.
+// ---------------------------------------------------------------------------
+if (process.env.NODE_ENV !== "production" && typeof window === "undefined") {
+  void import("./validate-data").then((module) => module.validateData());
+}

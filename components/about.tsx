@@ -1,9 +1,20 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState, type MouseEvent } from "react";
 import Image from "next/image";
-import { motion, useReducedMotion, type Variants } from "framer-motion";
-import { aboutSection, skillGroups, services } from "@/lib/data";
+import {
+  motion,
+  useMotionTemplate,
+  useMotionValue,
+  useReducedMotion,
+  type Variants,
+} from "framer-motion";
+import {
+  aboutSection,
+  skillGroups,
+  services,
+  type SkillGroup,
+} from "@/lib/data";
 import { EASE, DURATION, STAGGER } from "@/lib/motion";
 
 /**
@@ -25,8 +36,8 @@ export function About({ hasPortrait = false }: { hasPortrait?: boolean }) {
     },
   };
 
-  const pillVariants: Variants = {
-    hidden: { opacity: 0, y: 12 },
+  const cardVariants: Variants = {
+    hidden: { opacity: 0, y: 16 },
     visible: {
       opacity: 1,
       y: 0,
@@ -80,33 +91,26 @@ export function About({ hasPortrait = false }: { hasPortrait?: boolean }) {
                 </p>
               </div>
 
-              {/* Skills */}
-              <div className="mt-12">
+              {/* Skills — bento cards */}
+              <motion.div
+                variants={groupVariants}
+                initial={shouldReduceMotion ? false : "hidden"}
+                whileInView="visible"
+                viewport={{ once: true, margin: "-40px" }}
+                className="bento-grid mt-12"
+              >
                 {skillGroups.map((group) => (
-                  <div key={group.label} className="mt-8 first:mt-0">
-                    <h3 className="font-mono text-xs uppercase tracking-widest text-ink-dim">
-                      {group.label}
-                    </h3>
-                    <motion.ul
-                      variants={groupVariants}
-                      initial={shouldReduceMotion ? false : "hidden"}
-                      whileInView="visible"
-                      viewport={{ once: true, margin: "-40px" }}
-                      className="mt-4 flex flex-wrap gap-2"
-                    >
-                      {group.items.map((item) => (
-                        <motion.li
-                          key={item}
-                          variants={pillVariants}
-                          className="rounded-full border border-ink/20 px-3 py-1 font-mono text-xs text-ink"
-                        >
-                          {item}
-                        </motion.li>
-                      ))}
-                    </motion.ul>
-                  </div>
+                  <motion.div
+                    key={group.label}
+                    variants={cardVariants}
+                    className={
+                      group.items.length >= 5 ? "bento-wide" : undefined
+                    }
+                  >
+                    <SkillCard group={group} />
+                  </motion.div>
                 ))}
-              </div>
+              </motion.div>
 
               {/* Services */}
               <div className="mt-12 border-t border-ink/15 pt-8">
@@ -137,6 +141,129 @@ export function About({ hasPortrait = false }: { hasPortrait?: boolean }) {
         </motion.div>
       </div>
     </section>
+  );
+}
+
+/**
+ * One bento card. The spotlight follows the pointer with motion values, so
+ * moving the cursor never triggers a React re-render.
+ */
+function SkillCard({ group }: { group: SkillGroup }) {
+  const shouldReduceMotion = useReducedMotion();
+  const cardRef = useRef<HTMLDivElement>(null);
+  const rectRef = useRef<DOMRect | null>(null);
+
+  const mouseX = useMotionValue(-400);
+  const mouseY = useMotionValue(-400);
+
+  const spotlight = useMotionTemplate`radial-gradient(220px circle at ${mouseX}px ${mouseY}px, color-mix(in srgb, var(--accent) 10%, transparent), transparent 70%)`;
+
+  const [isTouch, setIsTouch] = useState(true);
+
+  useEffect(() => {
+    setIsTouch(window.matchMedia("(pointer: coarse)").matches);
+  }, []);
+
+  const labelId = `skill-group-${group.label
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")}`;
+
+  function track(e: MouseEvent<HTMLDivElement>) {
+    const rect = rectRef.current;
+    if (!rect) return;
+    mouseX.set(e.clientX - rect.left);
+    mouseY.set(e.clientY - rect.top);
+  }
+
+  function handleMouseEnter(e: MouseEvent<HTMLDivElement>) {
+    if (isTouch || shouldReduceMotion) return;
+    rectRef.current = e.currentTarget.getBoundingClientRect();
+    track(e);
+  }
+
+  function handleMouseMove(e: MouseEvent<HTMLDivElement>) {
+    if (isTouch || shouldReduceMotion) return;
+    track(e);
+  }
+
+  function handleMouseLeave() {
+    rectRef.current = null;
+    mouseX.set(-400);
+    mouseY.set(-400);
+  }
+
+  function handleFocus() {
+    if (isTouch) return;
+    const rect = cardRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    mouseX.set(rect.width / 2);
+    mouseY.set(rect.height / 2);
+  }
+
+  function handleBlur() {
+    mouseX.set(-400);
+    mouseY.set(-400);
+  }
+
+  return (
+    <div
+      ref={cardRef}
+      role="group"
+      tabIndex={0}
+      aria-labelledby={labelId}
+      onMouseEnter={handleMouseEnter}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      onFocus={handleFocus}
+      onBlur={handleBlur}
+      className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-ink/15 bg-surface/40 p-6 transition-colors duration-700 hover:border-ink/40 focus-visible:border-ink/40 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-4"
+    >
+      {/* Spotlight that follows the pointer */}
+      <motion.span
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0"
+        style={{ background: spotlight }}
+      />
+
+      <h3
+        id={labelId}
+        style={{ fontWeight: 700, letterSpacing: "-0.015em" }}
+        className="relative font-display text-2xl leading-tight text-ink"
+      >
+        {group.label}
+      </h3>
+
+      {group.blurb && (
+        <p className="relative mt-2 text-[0.9375rem] leading-relaxed text-ink-dim">
+          {group.blurb}
+        </p>
+      )}
+
+      <ul className="relative mt-5 grid grid-cols-2 gap-x-4 gap-y-2">
+        {group.items.map((item) => (
+          <li
+            key={item.name}
+            className="flex items-start gap-2 text-base leading-snug text-ink"
+          >
+            <span
+              aria-hidden="true"
+              className="mt-2 h-1 w-1 shrink-0 rounded-full bg-accent"
+            />
+            <span className="flex flex-wrap items-baseline gap-x-2">
+              {item.name}
+              {item.status === "learning" && (
+                <span className="font-mono text-[0.875rem] uppercase tracking-wider text-accent">
+                  {item.status}
+                </span>
+              )}
+              {item.note && (
+                <span className="text-[0.875rem] text-ink-dim">{item.note}</span>
+              )}
+            </span>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
 

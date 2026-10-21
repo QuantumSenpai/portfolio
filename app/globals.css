@@ -200,6 +200,12 @@ a {
   padding-inline: clamp(1.5rem, 4vw, 4rem);
 }
 
+/* Legacy anchor: the Skills section is now part of #about */
+#skills {
+  display: block;
+  height: 0;
+}
+
 @keyframes marquee {
   from {
     transform: translateX(0);

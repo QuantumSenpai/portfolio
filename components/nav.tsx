@@ -12,7 +12,6 @@ const links = [
   { href: "#work", label: "Work" },
   { href: "#experience", label: "Experience" },
   { href: "#about", label: "About" },
-  { href: "#skills", label: "Skills" },
   { href: "#reel", label: "Reel" },
   { href: "#contact", label: "Contact" },
 ];
@@ -73,7 +72,7 @@ export function Nav() {
     updateHeroHeight();
     window.addEventListener("resize", updateHeroHeight, { passive: true });
 
-    const sectionIds = ["work", "experience", "about", "skills", "reel", "contact"];
+    const sectionIds = ["work", "experience", "about", "reel", "contact"];
     const elements = sectionIds
       .map((id) => document.getElementById(id))
       .filter(Boolean) as HTMLElement[];

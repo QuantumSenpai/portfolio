@@ -288,38 +288,107 @@ export const experiences: ExperienceEntry[] = [
   },
 ];
 
+// ============================================================================
+// EDIT HERE — About / Skills / Services
+// ============================================================================
+
+export interface AboutSectionConfig {
+  eyebrow: string;
+  heading: string;
+  bio: string[]; // max 3 short paragraphs
+  education: { line: string };
+  portrait: { src: string; alt: string; caption: string };
+  /** Original About / Skills copy with no slot in the merged layout — kept so nothing is lost. */
+  legacy: {
+    cardLabel: string;
+    focusAreasLabel: string;
+    principlesLabel: string;
+    focusAreas: string[];
+    principles: { title: string; desc: string }[];
+    skillsEyebrow: string;
+    skillsHeading: string;
+    skillGroupLabels: string[];
+  };
+}
+
+export const aboutSection: AboutSectionConfig = {
+  eyebrow: "003 / About",
+  heading: "Crafting digital experiences with code and motion.",
+  bio: [
+    "CSE student, web developer, video editor and NLP/ML enthusiast from Ghatal, West Bengal. Blending technical engineering with cinematic storytelling and motion aesthetics.",
+    "I believe in clean design, performant code, and visual impact. Every interface should feel responsive, alive, and intuitive to navigate.",
+  ],
+  education: {
+    line: "B.Tech CSE, Adamas University, Barasat · 2026–2028",
+  },
+  portrait: {
+    src: "/profile.jpg",
+    alt: "Krishnendu Adak",
+    caption: "Krishnendu Adak (Kisu)",
+  },
+  legacy: {
+    cardLabel: "Background & Education",
+    focusAreasLabel: "Focus Areas",
+    principlesLabel: "Core Principles",
+    focusAreas: [
+      "Full-Stack Web",
+      "Video Editing",
+      "Motion Graphics",
+      "NLP & ML",
+      "Algorithms",
+    ],
+    principles: [
+      {
+        title: "Precision Engineering",
+        desc: "Writing clean, modular, and maintainable code built to scale.",
+      },
+      {
+        title: "Visual Storytelling",
+        desc: "Elevating concepts with smooth animations and cinematic editing.",
+      },
+      {
+        title: "Continuous Learning",
+        desc: "Exploring machine learning, NLP, and modern web frameworks.",
+      },
+    ],
+    skillsEyebrow: "004 — Toolkit",
+    skillsHeading: "What I work with.",
+    skillGroupLabels: ["Development", "Creative", "AI / ML — learning"],
+  },
+};
+
 export interface SkillGroup {
-  title: string;
-  skills: { name: string; level: number }[];
+  label: string;
+  items: string[];
 }
 
 export const skillGroups: SkillGroup[] = [
+  { label: "Languages & CS", items: ["Java", "C / C++", "DSA", "Python"] },
+  { label: "Web", items: ["HTML / CSS / JS", "Flask"] },
+  { label: "ML / Data", items: ["Machine Learning", "NLP"] },
   {
-    title: "Development",
-    skills: [
-      { name: "Java", level: 85 },
-      { name: "C / C++", level: 80 },
-      { name: "DSA", level: 78 },
-      { name: "HTML / CSS / JS", level: 82 },
-      { name: "Python", level: 65 },
-    ],
+    label: "Video / Motion",
+    items: ["After Effects", "Premiere Pro", "DaVinci Resolve", "Photoshop"],
+  },
+];
+
+export interface Service {
+  title: string;
+  line: string;
+}
+
+export const services: Service[] = [
+  {
+    title: "Web",
+    line: "Frontend pages and interactive tools in HTML, CSS and JavaScript.",
   },
   {
-    title: "Creative",
-    skills: [
-      { name: "After Effects", level: 80 },
-      { name: "Premiere Pro", level: 82 },
-      { name: "DaVinci Resolve", level: 78 },
-      { name: "Photoshop", level: 75 },
-    ],
+    title: "Motion",
+    line: "Motion graphics and animation design in After Effects.",
   },
   {
-    title: "AI / ML — learning",
-    skills: [
-      { name: "Machine Learning", level: 40 },
-      { name: "NLP", level: 35 },
-      { name: "Flask", level: 60 },
-    ],
+    title: "Editing",
+    line: "Video editing, color grading and VFX in Premiere Pro and DaVinci Resolve.",
   },
 ];
 

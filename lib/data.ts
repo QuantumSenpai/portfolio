@@ -1,8 +1,163 @@
-export const socials = {
-  github: "https://github.com/QuantumSenpai",
-  linkedin: "https://www.linkedin.com/in/krishnendu158",
-  instagram: "https://instagram.com/kyzenn.raw",
-  email: "work.krishnendu.dev@gmail.com",
+// ============================================================================
+// EDIT HERE — Contact / Footer
+// ============================================================================
+
+export interface ContactSectionConfig {
+  eyebrow: string;
+  heading: string;
+  subline: string;
+}
+
+export const contactSection: ContactSectionConfig = {
+  eyebrow: "005 / Contact",
+  heading: "Let's build something.",
+  subline:
+    "Open for freelance — video editing, motion design, web development and content writing. Whether you're a startup, creator or fellow student, let's talk.",
+};
+
+export interface ContactFormConfig {
+  endpoint: string; // Formspree — the server forwards the submission here
+  fields: string[];
+  services: string[];
+  submit: string;
+  submitting: string;
+  success: string;
+  consentPrefix: string;
+  consentLink: string;
+  errors: {
+    missingConsent: string;
+    missingFields: string;
+    invalidEmail: string;
+    invalidRequest: string;
+    rateLimited: string;
+    sendFailed: string;
+    fallbackEmail: string;
+  };
+}
+
+export const contactForm: ContactFormConfig = {
+  endpoint: "https://formspree.io/f/xreydgqn",
+  fields: ["Name", "Email", "Service", "Message"],
+  services: [
+    "Video Editing",
+    "Motion Design / VFX",
+    "Web Development",
+    "Content Writing",
+    "College Project Help",
+    "Other",
+  ],
+  submit: "Send message",
+  submitting: "Sending…",
+  success: "Message sent — I'll get back to you soon ⚡",
+  consentPrefix: "I agree to the",
+  consentLink: "privacy policy",
+  errors: {
+    missingConsent: "Please agree to the privacy policy before sending.",
+    missingFields: "Please fill in every field.",
+    invalidEmail: "Please enter a valid email address.",
+    invalidRequest:
+      "Something went wrong — email itxkisu@gmail.com directly.",
+    rateLimited:
+      "Too many messages from this connection — please try again later.",
+    sendFailed:
+      "Network error — please email itxkisu@gmail.com directly.",
+    fallbackEmail: "itxkisu@gmail.com",
+  },
+};
+
+export const email = "work.krishnendu.dev@gmail.com";
+
+export const socials: { label: string; url: string }[] = [
+  { label: "GitHub", url: "https://github.com/QuantumSenpai" },
+  { label: "LinkedIn", url: "https://www.linkedin.com/in/krishnendu158" },
+  { label: "Instagram", url: "https://instagram.com/kyzenn.raw" },
+];
+
+export const availability: { text: string } = {
+  text: "Available for freelance",
+};
+
+export const footer: {
+  copyright: string;
+  signatureAlt: string;
+  signatureText: string;
+} = {
+  copyright: "© {year} — Built with Next.js & Tailwind CSS",
+  signatureAlt: "Krishnendu Adak signature",
+  signatureText: "Kisu",
+};
+
+// ============================================================================
+// EDIT HERE — Privacy
+// ============================================================================
+
+export interface PrivacySection {
+  heading: string;
+  paragraphs: string[];
+}
+
+export interface PrivacyConfig {
+  updated: string;
+  sections: PrivacySection[];
+}
+
+export const privacy: PrivacyConfig = {
+  updated: "22 October 2026",
+  sections: [
+    {
+      heading: "What the contact form collects",
+      paragraphs: [
+        "If you use the contact form on this site, four things are sent to this site's server: your name, your email address, the service you picked from the dropdown and your message. The only other value sent is a consent flag, which is set to true when you tick the privacy policy checkbox.",
+        "Your details are used for one reason: so I can reply to your enquiry.",
+      ],
+    },
+    {
+      heading: "Where your message goes",
+      paragraphs: [
+        "The form posts to the contact endpoint on this site. The server checks that the consent flag is true and that every field is filled in, then forwards the submission to Formspree, which delivers it to my email address.",
+        "Formspree is the only third party that receives what you typed in the form. I do not pass your message to any other service.",
+      ],
+    },
+    {
+      heading: "Rate limiting",
+      paragraphs: [
+        "So the form cannot be used as a spam relay, the server counts submissions per client. Before it is used as a key, the client's IP address is hashed with SHA-256, so the address itself is never stored, logged or sent anywhere.",
+        "The counters live in server memory only, never on disk, and are thrown away when the server restarts. Expired windows are swept from memory on each request. A client is allowed 5 submissions per 10 minute window; anything over that is rejected with a 429 response.",
+      ],
+    },
+    {
+      heading: "Cookies and analytics",
+      paragraphs: [
+        "This site sets no cookies. There is no analytics package, tag manager or tracking script in the code, so nothing about your visit is measured, profiled or shared.",
+        "If you switch between the light and dark theme, that choice is kept in your browser's localStorage under the key 'theme'. It stays on your device and is never sent to me.",
+      ],
+    },
+    {
+      heading: "Fonts and the reel",
+      paragraphs: [
+        "The typefaces are downloaded when this site is built and served from this domain, so your browser never contacts a font provider.",
+        "The reel thumbnails are fetched by the server and re-served from this domain, so no request for them reaches YouTube. Only when you press play on a reel does the video load from youtube-nocookie.com, and YouTube then receives that request in the ordinary way. It happens after you click, not before.",
+      ],
+    },
+    {
+      heading: "How long it is kept",
+      paragraphs: [
+        "Your enquiry stays in my inbox until I delete it. I do not keep a second copy of it in a database, an analytics tool or a mailing list.",
+      ],
+    },
+    {
+      heading: "Your rights",
+      paragraphs: [
+        "You can ask me to correct anything that is wrong, or to delete the details I hold about you. Email me and I will do it.",
+      ],
+    },
+    {
+      heading: "Contact",
+      paragraphs: [
+        "For anything about this page or about the form, email me at work.krishnendu.dev@gmail.com.",
+      ],
+    },
+  ],
 };
 
 // ============================================================================
@@ -392,27 +547,42 @@ export const services: Service[] = [
   },
 ];
 
-export interface ReelItem {
-  title: string;
-  meta: string;
-  youtubeId: string;
+// ============================================================================
+// EDIT HERE — Reel
+// ============================================================================
+
+export interface ReelSectionConfig {
+  eyebrow: string;
+  heading: string;
+  description?: string;
 }
 
-export const reel: ReelItem[] = [
+export const reelSection: ReelSectionConfig = {
+  eyebrow: "004 / Reel",
+  heading: "Frames I've cut.",
+};
+
+export interface ReelVideo {
+  id: string; // YouTube video id — a video without an id is hidden
+  title: string;
+  caption?: string;
+}
+
+export const videos: ReelVideo[] = [
   {
+    id: "RSFbZIeSGmg",
     title: "JJK · Yuta Edit",
-    meta: "After Effects · Anime Edit",
-    youtubeId: "RSFbZIeSGmg",
+    caption: "After Effects · Anime Edit",
   },
   {
+    id: "zp42sJYuLP8",
     title: "Royalty · Solo Leveling",
-    meta: "Motion Design",
-    youtubeId: "zp42sJYuLP8",
+    caption: "Motion Design",
   },
   {
+    id: "PMZbuAV5hYQ",
     title: "JJK S2 Edit",
-    meta: "After Effects · Premiere Pro",
-    youtubeId: "PMZbuAV5hYQ",
+    caption: "After Effects · Premiere Pro",
   },
 ];
 

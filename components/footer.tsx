@@ -1,64 +1,82 @@
-import { socials } from "@/lib/data";
+"use client";
 
-export function Footer() {
-  const currentYear = new Date().getFullYear();
+import Image from "next/image";
+import Link from "next/link";
+import { motion, useReducedMotion } from "framer-motion";
+import { footer } from "@/lib/data";
+import { useLenis } from "@/components/providers/smooth-scroll-provider";
+import { EASE, DURATION } from "@/lib/motion";
+
+export function Footer({ hasSignature = false }: { hasSignature?: boolean }) {
+  const { lenis } = useLenis();
+  const shouldReduceMotion = useReducedMotion();
+
+  const year = new Date().getFullYear();
+  const copyright = footer.copyright.replace("{year}", String(year));
+
+  function handleBackToTop() {
+    if (lenis) {
+      lenis.scrollTo(0, { offset: 0, duration: 1.2 });
+      return;
+    }
+    if (typeof window !== "undefined") {
+      window.scrollTo({ top: 0, behavior: shouldReduceMotion ? "auto" : "smooth" });
+    }
+  }
 
   return (
-    <footer className="border-t border-line bg-surface py-12 transition-colors">
-      <div className="container flex flex-col items-center justify-between gap-6 sm:flex-row">
-        <div className="flex items-center gap-3">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg border border-line bg-surface-2 p-1.5 text-ink shadow-sm">
-            <svg
-              viewBox="0 0 100 100"
-              fill="none"
-              className="h-full w-full fill-current"
-              xmlns="http://www.w3.org/2000/svg"
+    <footer className="relative w-full border-t border-ink/15">
+      {/* Compact row — copyright + back to top */}
+      <div className="mx-auto w-full max-w-[1680px] px-6 md:px-10 lg:px-16">
+        <div className="flex flex-col items-start justify-between gap-4 py-8 sm:flex-row sm:items-center">
+          <p
+            suppressHydrationWarning
+            className="font-mono text-xs text-ink-dim"
+          >
+            {copyright}
+          </p>
+          <div className="flex items-center gap-6">
+            <Link
+              href="/privacy"
+              className="text-sm text-ink-dim transition-colors hover:text-accent focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-4"
             >
-              <path d="M22 18C22 14.6863 24.6863 12 28 12H34C37.3137 12 40 14.6863 40 18V82C40 85.3137 37.3137 88 34 88H28C24.6863 88 22 85.3137 22 82V18Z" />
-              <path d="M47.5 45.2L74.8 17.9C76.8 15.9 80 17.3 80 20.1V34C80 35.6 79.2 37.1 77.9 38L62 50L77.9 62C79.2 62.9 80 64.4 80 66V79.9C80 82.7 76.8 84.1 74.8 82.1L47.5 54.8C44.8 52.1 44.8 47.9 47.5 45.2Z" />
-            </svg>
-          </div>
-          <div className="flex flex-col gap-0.5">
-            <p className="font-display text-base font-bold text-ink">
-              Krishnendu Adak
-            </p>
-            <p className="font-mono text-xs text-ink-dim">
-              © {currentYear} — Built with Next.js &amp; Tailwind CSS
-            </p>
+              Privacy Policy
+            </Link>
+            <button
+              type="button"
+              onClick={handleBackToTop}
+              className="font-mono text-xs text-ink-dim transition-colors hover:text-accent focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-4"
+            >
+              Back to top ↑
+            </button>
           </div>
         </div>
+      </div>
 
-        <div className="flex items-center gap-6 font-mono text-xs text-ink-dim">
-          <a
-            href={socials.github}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="transition-colors hover:text-accent"
+      {/* Signature watermark — clipped so the bottom is cropped by the viewport edge */}
+      <div className="overflow-hidden">
+        <div className="mx-auto w-full max-w-[1680px] px-6 md:px-10 lg:px-16">
+          <motion.div
+            initial={shouldReduceMotion ? false : { opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: DURATION.base, ease: EASE }}
+            viewport={{ once: true, margin: "-60px" }}
           >
-            GitHub
-          </a>
-          <a
-            href={socials.linkedin}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="transition-colors hover:text-accent"
-          >
-            LinkedIn
-          </a>
-          <a
-            href={socials.instagram}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="transition-colors hover:text-accent"
-          >
-            Instagram
-          </a>
-          <a
-            href={`mailto:${socials.email}`}
-            className="transition-colors hover:text-accent"
-          >
-            Email
-          </a>
+            {hasSignature ? (
+              <Image
+                src="/signature.svg"
+                alt={footer.signatureAlt}
+                width={1600}
+                height={220}
+                unoptimized
+                className="h-auto w-full max-h-[220px] object-contain opacity-[0.08] transition-opacity duration-700 hover:opacity-[0.14]"
+              />
+            ) : (
+              <p className="select-none whitespace-nowrap text-center font-display text-[clamp(6rem,24vw,22rem)] font-bold leading-[0.8] tracking-[-0.06em] text-ink/[0.08] transition-colors duration-700 hover:text-accent/[0.14]">
+                {footer.signatureText}
+              </p>
+            )}
+          </motion.div>
         </div>
       </div>
     </footer>

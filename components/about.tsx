@@ -58,7 +58,7 @@ export function About({ hasPortrait = false }: { hasPortrait?: boolean }) {
           viewport={{ once: true, margin: "-60px" }}
         >
           {/* Section heading */}
-          <span className="font-mono text-xs uppercase tracking-widest text-accent">
+          <span className="font-mono text-[13px] uppercase tracking-widest text-accent">
             {aboutSection.eyebrow}
           </span>
           <h2
@@ -69,27 +69,43 @@ export function About({ hasPortrait = false }: { hasPortrait?: boolean }) {
           </h2>
 
           <div className="mt-12 grid gap-10 md:grid-cols-12 md:gap-x-8 lg:gap-x-12 xl:gap-x-16">
-            {/* Left: portrait */}
+            {/* Left: portrait + name */}
             <div className="max-w-[240px] md:col-span-4 md:max-w-none">
               <Portrait hasPortrait={hasPortrait} />
-              <p className="mt-3 font-mono text-xs text-ink-dim">
-                {aboutSection.portrait.caption}
+
+              {/* Name block — "Krishnendu Adak" + "(Kisu)" */}
+              <p
+                style={{ fontWeight: 700, letterSpacing: "-0.015em" }}
+                className="mt-6 font-display text-[clamp(1.5rem,2.2vw,2.25rem)] leading-tight text-ink"
+              >
+                {aboutSection.portrait.name}{" "}
+                <span className="text-ink-dim">
+                  {`(${aboutSection.portrait.nickname})`}
+                </span>
+              </p>
+              <p className="mt-2 text-[0.9375rem] leading-relaxed text-ink-dim">
+                {aboutSection.portrait.role}
               </p>
             </div>
 
             {/* Right: bio, skills, services */}
             <div className="md:col-span-7 md:col-start-6">
               {/* Bio */}
-              <div className="max-w-[60ch] space-y-4">
+              <div className="max-w-[60ch] space-y-6">
                 {aboutSection.bio.map((paragraph) => (
-                  <p key={paragraph} className="text-base leading-relaxed text-ink-dim">
+                  <p
+                    key={paragraph}
+                    className="text-[clamp(1.0625rem,1.3vw,1.25rem)] leading-[1.7] text-ink-dim"
+                  >
                     {paragraph}
                   </p>
                 ))}
-                <p className="font-mono text-xs text-ink-dim">
-                  {aboutSection.education.line}
-                </p>
               </div>
+
+              {/* Education */}
+              <p className="mt-6 max-w-[60ch] border-t border-ink/10 pt-6 text-[0.9375rem] leading-relaxed text-ink-dim">
+                {aboutSection.education.line}
+              </p>
 
               {/* Skills — bento cards */}
               <motion.div
@@ -117,7 +133,7 @@ export function About({ hasPortrait = false }: { hasPortrait?: boolean }) {
                 <div className="grid gap-8 sm:grid-cols-3 md:grid-cols-1 xl:grid-cols-3">
                   {services.map((service, i) => (
                     <div key={service.title}>
-                      <span className="font-mono text-xs tabular-nums text-ink-dim">
+                      <span className="font-mono text-sm tabular-nums tracking-[0.04em] text-ink-dim">
                         {String(i + 1).padStart(2, "0")}
                       </span>
                       <h4
@@ -125,11 +141,11 @@ export function About({ hasPortrait = false }: { hasPortrait?: boolean }) {
                           fontWeight: 700,
                           letterSpacing: "-0.015em",
                         }}
-                        className="mt-3 font-display text-xl leading-tight text-ink sm:text-2xl"
+                        className="mt-3 font-display text-[1.375rem] leading-tight text-ink sm:text-[1.5rem]"
                       >
                         {service.title}
                       </h4>
-                      <p className="mt-2 text-sm leading-relaxed text-ink-dim">
+                      <p className="mt-2 text-base leading-relaxed text-ink-dim">
                         {service.line}
                       </p>
                     </div>

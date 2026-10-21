@@ -536,7 +536,14 @@ export interface AboutSectionConfig {
   heading: string;
   bio: string[]; // max 3 short paragraphs
   education: { line: string };
-  portrait: { src: string; alt: string; caption: string };
+  portrait: {
+    src: string;
+    alt: string;
+    caption: string;
+    name: string;
+    nickname: string;
+    role: string;
+  };
   /** Original About / Skills copy with no slot in the merged layout — kept so nothing is lost. */
   legacy: {
     cardLabel: string;
@@ -564,6 +571,9 @@ export const aboutSection: AboutSectionConfig = {
     src: "/profile.jpg",
     alt: "Krishnendu Adak",
     caption: "Krishnendu Adak (Kisu)",
+    name: "Krishnendu Adak",
+    nickname: "Kisu",
+    role: "CSE student · web developer · video editor",
   },
   legacy: {
     cardLabel: "Background & Education",

@@ -80,7 +80,7 @@ export function Work() {
       <div className="mx-auto w-full max-w-[1680px] px-6 md:px-10 lg:px-16">
         {/* Section Heading */}
         <div className="mb-14 sm:mb-20">
-          <span className="font-mono text-xs uppercase tracking-widest text-accent">
+          <span className="font-mono text-[13px] uppercase tracking-widest text-accent">
             {workSection.eyebrow}
           </span>
           <h2
@@ -156,7 +156,7 @@ export function Work() {
 
                       {/* Left: Index + Title (translateX 12px & accent on hover) + Role */}
                       <div className="flex items-baseline gap-6 lg:gap-8 min-w-0 pr-6 relative z-10">
-                        <span className="font-mono text-xs tabular-nums text-ink-dim shrink-0">
+                        <span className="font-mono text-sm tabular-nums tracking-[0.04em] text-ink-dim shrink-0">
                           {formattedIndex}
                         </span>
                         <div className="flex flex-col min-w-0">
@@ -176,7 +176,7 @@ export function Work() {
                       </div>
 
                       {/* Right: Year + Arrow (rotates 45deg -> 0deg and fills accent) */}
-                      <div className="flex items-center gap-6 shrink-0 font-mono text-xs text-ink-dim pl-6 relative z-10">
+                      <div className="flex items-center gap-6 shrink-0 font-mono text-sm tracking-[0.04em] text-ink-dim pl-6 relative z-10">
                         <span className="tabular-nums">{project.year}</span>
                         <span
                           aria-hidden="true"
@@ -216,7 +216,7 @@ export function Work() {
             </div>
 
             {/* Under the panel: small mono line with Live / Repo links */}
-            <div className="mt-4 flex items-center justify-between px-1 font-mono text-xs text-ink-dim">
+            <div className="mt-4 flex items-center justify-between px-1 font-mono text-sm tracking-[0.04em] text-ink-dim">
               <div className="flex items-center gap-4">
                 {activeProject.liveUrl && (
                   <a
@@ -288,14 +288,14 @@ export function Work() {
         {/* All Repositories Section */}
         <div className="mt-20 sm:mt-28 border-t border-ink/15 pt-10 sm:pt-14">
           <div className="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-baseline">
-            <span className="font-mono text-xs uppercase tracking-widest text-ink-dim">
+            <span className="font-mono text-[13px] uppercase tracking-widest text-ink-dim">
               {workSection.allReposLabel}
             </span>
             <a
               href={workSection.githubUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="group inline-flex items-center gap-2 font-mono text-xs text-ink-dim transition-colors hover:text-accent focus-visible:outline-accent"
+              className="group inline-flex items-center gap-2 font-mono text-sm tracking-[0.04em] text-ink-dim transition-colors hover:text-accent focus-visible:outline-accent"
             >
               <span>View all on GitHub</span>
               <span className="transition-transform duration-200 group-hover:translate-x-1">
@@ -304,7 +304,7 @@ export function Work() {
             </a>
           </div>
 
-          <div className="divide-y divide-ink/10 border-y border-ink/10 font-mono text-xs">
+          <div className="divide-y divide-ink/10 border-y border-ink/10 font-mono text-sm tracking-[0.04em]">
             {otherRepos.map((repo) => (
               <a
                 key={repo.name}
@@ -388,10 +388,10 @@ function ProjectMediaView({
 
       {/* Bottom-left caption: title + tags in mono 12px */}
       <div className="absolute bottom-4 left-4 right-4 z-10 flex flex-col gap-1 pointer-events-none">
-        <span className="font-mono text-xs font-semibold text-ink tracking-tight line-clamp-1">
+        <span className="font-mono text-sm font-semibold text-ink tracking-tight line-clamp-1">
           {project.title}
         </span>
-        <div className="flex flex-wrap items-center gap-1.5 font-mono text-[11px] text-ink-dim">
+        <div className="flex flex-wrap items-center gap-1.5 font-mono text-sm tracking-[0.04em] text-ink-dim">
           {project.tags.slice(0, 3).map((tag, i) => (
             <span key={tag} className="flex items-center gap-1.5">
               <span>{tag}</span>
@@ -424,7 +424,7 @@ function MobileProjectCard({
       </div>
 
       {/* Meta: Index + Year */}
-      <div className="mt-5 flex items-baseline justify-between font-mono text-xs text-ink-dim">
+      <div className="mt-5 flex items-baseline justify-between font-mono text-sm tracking-[0.04em] text-ink-dim">
         <span className="tabular-nums font-semibold text-accent">
           {formattedIndex}
         </span>
@@ -449,7 +449,7 @@ function MobileProjectCard({
         {project.tags.slice(0, 3).map((tag) => (
           <span
             key={tag}
-            className="rounded-full border border-line bg-surface-2/60 px-3 py-1 font-mono text-[11px] text-ink-dim"
+            className="rounded-full border border-line bg-surface-2/60 px-3 py-1 font-mono text-sm tracking-[0.04em] text-ink-dim"
           >
             {tag}
           </span>
@@ -457,7 +457,7 @@ function MobileProjectCard({
       </div>
 
       {/* Links */}
-      <div className="mt-6 flex items-center gap-4 border-t border-ink/10 pt-4 font-mono text-xs">
+      <div className="mt-6 flex items-center gap-4 border-t border-ink/10 pt-4 font-mono text-sm tracking-[0.04em]">
         {project.liveUrl && (
           <a
             href={project.liveUrl}

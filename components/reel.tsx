@@ -48,7 +48,7 @@ export function Reel() {
           viewport={{ once: true, margin: "-60px" }}
           className="mb-14 sm:mb-20"
         >
-          <span className="font-mono text-xs uppercase tracking-widest text-accent">
+          <span className="font-mono text-[13px] uppercase tracking-widest text-accent">
             {reelSection.eyebrow}
           </span>
           <h2

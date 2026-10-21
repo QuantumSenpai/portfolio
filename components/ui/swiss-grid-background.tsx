@@ -1,100 +1,146 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import {
+  motion,
+  useMotionTemplate,
+  useMotionValue,
+  useReducedMotion,
+  useSpring,
+} from "framer-motion";
 
+const GRID_SIZE = "60px 60px";
+const GRID_IMAGE = `
+  linear-gradient(to right, var(--ink) 1px, transparent 1px),
+  linear-gradient(to bottom, var(--ink) 1px, transparent 1px)
+`;
+/** Radius of the cursor glow and of the mask that reveals the brighter grid. */
+const CURSOR_RADIUS = 360;
+/** Maximum opacity of the soft cursor glow. */
+const GLOW_MAX_OPACITY = 0.07;
+/** Opacity of the brighter grid copy that follows the cursor. */
+const CURSOR_GRID_OPACITY = 0.1;
+
+const SPRING = { stiffness: 120, damping: 24, mass: 0.6 };
+
+/**
+ * Hero-only swiss grid. It is rendered inside the hero section, so the rest of
+ * the page keeps a clean, flat background.
+ */
 export function SwissGridBackground() {
-  const glowRef = useRef<HTMLDivElement>(null);
+  const shouldReduceMotion = useReducedMotion();
+  const hostRef = useRef<HTMLDivElement>(null);
+
+  const pointerX = useMotionValue(-1000);
+  const pointerY = useMotionValue(-1000);
+
+  // The cursor position is springy, so the grid and the glow trail slightly.
+  const x = useSpring(pointerX, SPRING);
+  const y = useSpring(pointerY, SPRING);
+
+  const glowOpacity = useMotionValue(0);
+
+  // The brighter grid copy is revealed around the cursor through this mask.
+  const cursorMask = useMotionTemplate`radial-gradient(${CURSOR_RADIUS}px circle at ${x}px ${y}px, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.55) 42%, rgba(0, 0, 0, 0) 72%)`;
+  const glowBackground = useMotionTemplate`radial-gradient(${CURSOR_RADIUS}px circle at ${x}px ${y}px, var(--accent) 0%, transparent 68%)`;
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
+    const host = hostRef.current;
+    if (!host) return;
+
+    // No pointer effect on touch devices or when motion is reduced.
     if (window.matchMedia("(pointer: coarse)").matches) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (shouldReduceMotion) return;
 
-    let rafId: number = 0;
-    let targetX = -1000;
-    let targetY = -1000;
+    let bounds = host.getBoundingClientRect();
+    let inView = true;
+    let pageVisible = !document.hidden;
 
-    function onPointerMove(e: PointerEvent) {
-      targetX = e.clientX;
-      targetY = e.clientY;
+    const refreshBounds = () => {
+      bounds = host.getBoundingClientRect();
+    };
 
-      if (!rafId) {
-        rafId = requestAnimationFrame(() => {
-          if (glowRef.current) {
-            // Constant radius (260px radius = 520px diameter), moves with transform only, never resize
-            glowRef.current.style.transform = `translate3d(${targetX - 260}px, ${targetY - 260}px, 0)`;
-            glowRef.current.style.opacity = "0.25";
-          }
-          rafId = 0;
-        });
-      }
-    }
+    const hide = () => {
+      glowOpacity.set(0);
+      pointerX.set(-1000);
+      pointerY.set(-1000);
+    };
 
-    function onPointerLeave() {
-      if (glowRef.current) {
-        glowRef.current.style.opacity = "0";
-      }
-    }
+    const onPointerMove = (event: PointerEvent) => {
+      // Pause while the hero is off-screen or the tab is in the background.
+      if (!inView || !pageVisible) return;
+      pointerX.set(event.clientX - bounds.left);
+      pointerY.set(event.clientY - bounds.top);
+      glowOpacity.set(GLOW_MAX_OPACITY);
+    };
 
-    window.addEventListener("pointermove", onPointerMove, { passive: true });
-    document.addEventListener("mouseleave", onPointerLeave);
+    const onVisibilityChange = () => {
+      pageVisible = !document.hidden;
+      if (!pageVisible) hide();
+    };
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        inView = entry.isIntersecting;
+        if (!inView) hide();
+      },
+      { threshold: 0 }
+    );
+
+    refreshBounds();
+    observer.observe(host);
+    window.addEventListener("scroll", refreshBounds, { passive: true });
+    window.addEventListener("resize", refreshBounds, { passive: true });
+    host.addEventListener("pointermove", onPointerMove, { passive: true });
+    host.addEventListener("pointerleave", hide);
+    document.addEventListener("visibilitychange", onVisibilityChange);
 
     return () => {
-      window.removeEventListener("pointermove", onPointerMove);
-      document.removeEventListener("mouseleave", onPointerLeave);
-      if (rafId) cancelAnimationFrame(rafId);
+      observer.disconnect();
+      window.removeEventListener("scroll", refreshBounds);
+      window.removeEventListener("resize", refreshBounds);
+      host.removeEventListener("pointermove", onPointerMove);
+      host.removeEventListener("pointerleave", hide);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
     };
-  }, []);
+  }, [shouldReduceMotion, pointerX, pointerY, glowOpacity]);
 
   return (
     <div
+      ref={hostRef}
       aria-hidden="true"
-      className="pointer-events-none fixed inset-0 z-0 overflow-hidden"
+      className="pointer-events-none absolute inset-0 z-0 overflow-hidden"
+      style={{ contain: "strict" }}
     >
-      {/* Faint, even pattern across whole hero (opacity ~0.05) smoothly fading toward all edges with no visible rectangles */}
+      {/* Base grid — very low contrast, fading out before the bottom of the hero */}
       <div
-        className="absolute inset-0 opacity-[0.05]"
+        className="absolute inset-0"
         style={{
-          backgroundImage: `
-            linear-gradient(to right, var(--ink) 1px, transparent 1px),
-            linear-gradient(to bottom, var(--ink) 1px, transparent 1px)
-          `,
-          backgroundSize: "60px 60px",
+          opacity: "var(--grid-line-opacity)",
+          backgroundImage: GRID_IMAGE,
+          backgroundSize: GRID_SIZE,
           maskImage:
-            "radial-gradient(ellipse 90% 80% at 50% 50%, rgba(0, 0, 0, 1) 30%, rgba(0, 0, 0, 0) 95%)",
+            "radial-gradient(ellipse 120% 85% at 50% 28%, rgba(0, 0, 0, 1) 22%, rgba(0, 0, 0, 0) 78%)",
           WebkitMaskImage:
-            "radial-gradient(ellipse 90% 80% at 50% 50%, rgba(0, 0, 0, 1) 30%, rgba(0, 0, 0, 0) 95%)",
+            "radial-gradient(ellipse 120% 85% at 50% 28%, rgba(0, 0, 0, 1) 22%, rgba(0, 0, 0, 0) 78%)",
         }}
       />
 
-      {/* Subtle cursor glow: constant 260px radius, moves with transform only, never resizes */}
-      <div
-        ref={glowRef}
-        className="absolute left-0 top-0 h-[520px] w-[520px] rounded-full transition-opacity duration-500 ease-out"
+      {/* Soft cursor glow */}
+      <motion.div
+        className="absolute inset-0"
+        style={{ opacity: glowOpacity, background: glowBackground }}
+      />
+
+      {/* Brighter copy of the grid, revealed around the cursor */}
+      <motion.div
+        className="absolute inset-0"
         style={{
-          opacity: 0,
-          transform: "translate3d(-1000px, -1000px, 0)",
-          backgroundImage: `
-            linear-gradient(to right, var(--accent) 1px, transparent 1px),
-            linear-gradient(to bottom, var(--accent) 1px, transparent 1px)
-          `,
-          backgroundSize: "60px 60px",
-          maskImage: `
-            radial-gradient(
-              circle at 50% 50%,
-              rgba(0, 0, 0, 0.4) 0%,
-              rgba(0, 0, 0, 0.15) 45%,
-              transparent 80%
-            )
-          `,
-          WebkitMaskImage: `
-            radial-gradient(
-              circle at 50% 50%,
-              rgba(0, 0, 0, 0.4) 0%,
-              rgba(0, 0, 0, 0.15) 45%,
-              transparent 80%
-            )
-          `,
+          opacity: CURSOR_GRID_OPACITY,
+          backgroundImage: GRID_IMAGE,
+          backgroundSize: GRID_SIZE,
+          maskImage: cursorMask,
+          WebkitMaskImage: cursorMask,
         }}
       />
     </div>

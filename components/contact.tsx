@@ -241,7 +241,7 @@ export function Contact() {
           <div className="grid gap-12 lg:grid-cols-12 lg:gap-x-8 xl:gap-x-12">
             {/* Left: cols 1-5 */}
             <motion.div variants={itemVariants} className="lg:col-span-5">
-              <span className="font-mono text-xs uppercase tracking-widest text-accent">
+              <span className="font-mono text-[13px] uppercase tracking-widest text-accent">
                 {contactSection.eyebrow}
               </span>
               <h2
@@ -281,7 +281,7 @@ export function Contact() {
                   type="button"
                   onClick={handleCopy}
                   aria-live="polite"
-                  className="inline-flex shrink-0 items-center gap-2 rounded-full border border-ink/20 px-4 py-2 font-mono text-xs text-ink-dim transition-colors hover:border-accent hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+                  className="inline-flex shrink-0 items-center gap-2 rounded-full border border-ink/20 px-4 py-2 font-mono text-sm tracking-[0.04em] text-ink-dim transition-colors hover:border-accent hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
                 >
                   {copied ? "Copied" : "Copy email"}
                 </button>
@@ -296,7 +296,7 @@ export function Contact() {
                     target="_blank"
                     rel="noopener noreferrer"
                     style={HOVER_TRANSITION}
-                    className="group inline-flex items-center gap-1.5 font-mono text-xs text-ink-dim transition-colors hover:text-accent focus-visible:text-accent focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-4"
+                    className="group inline-flex items-center gap-1.5 font-mono text-sm tracking-[0.04em] text-ink-dim transition-colors hover:text-accent focus-visible:text-accent focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-4"
                   >
                     <span>{social.label}</span>
                     <span
@@ -310,7 +310,7 @@ export function Contact() {
               </div>
 
               {/* Availability */}
-              <div className="mt-10 inline-flex items-center gap-2 font-mono text-xs text-ink-dim">
+              <div className="mt-10 inline-flex items-center gap-2 font-mono text-sm tracking-[0.04em] text-ink-dim">
                 <span aria-hidden="true" className="relative flex h-1.5 w-1.5">
                   <span className="pulse-dot absolute inline-flex h-full w-full rounded-full bg-accent/60" />
                   <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-accent" />

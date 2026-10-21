@@ -31,7 +31,7 @@ export function Footer({ hasSignature = false }: { hasSignature?: boolean }) {
         <div className="flex flex-col items-start justify-between gap-4 py-8 sm:flex-row sm:items-center">
           <p
             suppressHydrationWarning
-            className="font-mono text-xs text-ink-dim"
+            className="font-mono text-sm tracking-[0.04em] text-ink-dim"
           >
             {copyright}
           </p>
@@ -45,7 +45,7 @@ export function Footer({ hasSignature = false }: { hasSignature?: boolean }) {
             <button
               type="button"
               onClick={handleBackToTop}
-              className="font-mono text-xs text-ink-dim transition-colors hover:text-accent focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-4"
+              className="font-mono text-sm tracking-[0.04em] text-ink-dim transition-colors hover:text-accent focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-4"
             >
               Back to top ↑
             </button>

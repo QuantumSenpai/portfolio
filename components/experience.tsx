@@ -62,7 +62,7 @@ export function Experience() {
           viewport={{ once: true, margin: "-60px" }}
           className="mb-14 sm:mb-20"
         >
-          <span className="font-mono text-xs uppercase tracking-widest text-accent">
+          <span className="font-mono text-[13px] uppercase tracking-widest text-accent">
             {experienceSection.eyebrow}
           </span>
           <h2
@@ -152,7 +152,7 @@ function ExperienceRow({
 
         <div className="relative z-10 flex items-baseline gap-6 lg:gap-8">
           {/* Index */}
-          <span className="shrink-0 font-mono text-xs tabular-nums text-ink-dim">
+          <span className="shrink-0 font-mono text-sm tabular-nums tracking-[0.04em] text-ink-dim">
             {formattedIndex}
           </span>
 
@@ -171,7 +171,7 @@ function ExperienceRow({
             </h3>
 
             {/* Organisation + dates */}
-            <p className="mt-3 font-mono text-xs text-ink-dim">{meta}</p>
+            <p className="mt-3 font-mono text-sm tracking-[0.04em] text-ink-dim">{meta}</p>
 
             {/* Summary */}
             {entry.summary && (
@@ -202,7 +202,7 @@ function ExperienceRow({
                 {entry.stats.map((stat) => (
                   <span
                     key={stat.label}
-                    className="rounded-full border border-accent/30 bg-accent/10 px-2.5 py-1 font-mono text-[11px] text-accent"
+                    className="rounded-full border border-accent/30 bg-accent/10 px-2.5 py-1 font-mono text-sm tracking-[0.04em] text-accent"
                   >
                     {stat.label}
                   </span>
@@ -215,7 +215,7 @@ function ExperienceRow({
               {entry.tags.map((tag) => (
                 <span
                   key={tag}
-                  className="rounded-full border border-ink/15 bg-ink/[0.03] px-2.5 py-1 font-mono text-[11px] text-ink-dim"
+                  className="rounded-full border border-ink/15 bg-ink/[0.03] px-2.5 py-1 font-mono text-sm tracking-[0.04em] text-ink-dim"
                 >
                   {tag}
                 </span>

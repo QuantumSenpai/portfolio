@@ -53,7 +53,7 @@ export function Nav() {
 
   useEffect(() => {
     function onScroll() {
-      const isScrolled = window.scrollY > 40;
+      const isScrolled = window.scrollY > 8;
       if (isScrolled !== scrolledRef.current) {
         scrolledRef.current = isScrolled;
         setScrolled(isScrolled);
@@ -210,8 +210,7 @@ export function Nav() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [open]);
 
-  const isOverInverted = active === "#work";
-
+  // The header always uses its own theme tokens, even over an inverted section.
   return (
     <>
       {/* 1px accent scroll-progress line fixed at top */}
@@ -223,11 +222,8 @@ export function Nav() {
 
       <header
         className={cn(
-          "fixed inset-x-0 top-0 z-50 transition-all duration-300",
-          scrolled &&
-            (isOverInverted
-              ? "border-b border-line bg-bg/85 backdrop-blur-md"
-              : "border-b border-line bg-bg/85")
+          "fixed inset-x-0 top-0 z-50 border-b border-ink/10 bg-bg/92 transition-[backdrop-filter] duration-300",
+          scrolled ? "backdrop-blur-md" : "backdrop-blur-none"
         )}
       >
         <div className="mx-auto flex w-full max-w-[1680px] items-center justify-between px-6 py-5 md:px-10 lg:px-16">
@@ -254,7 +250,7 @@ export function Nav() {
                 <a
                   key={link.href}
                   href={link.href}
-                  className="relative rounded-full px-3.5 py-1.5 text-xs font-medium transition-colors sm:text-sm"
+                  className="relative rounded-full px-3.5 py-1.5 text-sm font-medium transition-colors"
                 >
                   <span
                     className={cn(

@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
 import { Magnetic } from "./ui/magnetic-button";
+import { SwissGridBackground } from "./ui/swiss-grid-background";
 import { EASE, DURATION } from "@/lib/motion";
 import { formatISTTime } from "@/lib/utils";
 
@@ -40,13 +41,16 @@ export function Hero() {
       id="top"
       className="relative flex min-h-[100svh] flex-col justify-between overflow-x-hidden pb-8 pt-24 sm:pb-10 sm:pt-28"
     >
-      <div className="mx-auto flex w-full max-w-[1680px] flex-1 flex-col justify-between px-6 md:px-10 lg:px-16">
+      {/* The swiss grid lives only inside the hero */}
+      <SwissGridBackground />
+
+      <div className="relative z-10 mx-auto flex w-full max-w-[1680px] flex-1 flex-col justify-between px-6 md:px-10 lg:px-16">
         {/* a) Meta row */}
         <motion.div
           initial={shouldReduceMotion ? false : { opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: DURATION.base, delay: 0.28, ease: EASE }}
-          className="flex flex-col gap-2 font-mono text-xs text-ink-dim sm:flex-row sm:items-center sm:justify-between sm:gap-4"
+          className="flex flex-col gap-2 font-mono text-sm tracking-[0.04em] text-ink-dim sm:flex-row sm:items-center sm:justify-between sm:gap-4"
         >
           <div className="inline-flex items-center gap-2">
             <span className="relative flex h-1.5 w-1.5">
@@ -176,7 +180,7 @@ export function Hero() {
           initial={shouldReduceMotion ? false : { opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: DURATION.base, delay: 0.46, ease: EASE }}
-          className="flex items-center justify-between font-mono text-xs text-ink-dim pt-4"
+          className="flex items-center justify-between font-mono text-sm tracking-[0.04em] text-ink-dim pt-4"
         >
           <motion.div
             style={shouldReduceMotion ? undefined : { opacity: scrollCueOpacity }}

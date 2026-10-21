@@ -1,107 +1,149 @@
-import { createHash } from "node:crypto";
 import { NextResponse } from "next/server";
 import { contactForm } from "@/lib/data";
+import { rateLimitSubmission } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 
-/** Rate limit: 5 submissions per 10 minutes, per hashed client IP. */
-const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
-const RATE_LIMIT_MAX = 5;
-const HASH_SALT = "kisu-contact-form";
+/** Reject anything bigger than 10KB before parsing it. */
+const MAX_BODY_BYTES = 10 * 1024;
+const NAME_MAX = 80;
+const EMAIL_MAX = 120;
+const MESSAGE_MIN = 10;
+const MESSAGE_MAX = 2000;
+/** Submissions sent faster than this are treated as automated. */
+const MIN_ELAPSED_MS = 3000;
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
-type Bucket = { count: number; resetAt: number };
-
-/** In-memory only — never written to disk, never shared between instances. */
-const buckets = new Map<string, Bucket>();
-
-function hashClient(value: string) {
-  return createHash("sha256").update(`${HASH_SALT}:${value}`).digest("hex");
+function fail(status: number, message: string, headers?: HeadersInit) {
+  return NextResponse.json({ error: message }, { status, headers });
 }
 
-function clientKey(request: Request) {
-  const forwarded = request.headers.get("x-forwarded-for") ?? "";
-  const ip =
-    forwarded.split(",")[0].trim() ||
-    request.headers.get("x-real-ip") ||
-    "unknown";
-  return hashClient(ip);
+function str(value: unknown): string {
+  return typeof value === "string" ? value.trim() : "";
 }
 
-function rateLimit(key: string) {
-  const now = Date.now();
+/** The Origin/Referer host must match the host the request was made to. */
+function isSameOrigin(request: Request): boolean {
+  const allowed = new Set<string>();
 
-  // Drop every window that has already expired.
-  for (const [existingKey, bucket] of buckets) {
-    if (bucket.resetAt <= now) buckets.delete(existingKey);
+  const requestHost = request.headers.get("host");
+  if (requestHost) allowed.add(requestHost);
+
+  const siteUrl = process.env.SITE_URL;
+  if (siteUrl) {
+    try {
+      allowed.add(new URL(siteUrl).host);
+    } catch {
+      // An unparseable SITE_URL is ignored.
+    }
   }
 
-  const bucket = buckets.get(key);
-  if (!bucket) {
-    const resetAt = now + RATE_LIMIT_WINDOW_MS;
-    buckets.set(key, { count: 1, resetAt });
-    return { allowed: true, remaining: RATE_LIMIT_MAX - 1, resetAt };
+  if (allowed.size === 0) return false;
+
+  for (const candidate of [
+    request.headers.get("origin"),
+    request.headers.get("referer"),
+  ]) {
+    if (!candidate) continue;
+    try {
+      if (allowed.has(new URL(candidate).host)) return true;
+    } catch {
+      // Not a URL — ignore.
+    }
   }
 
-  bucket.count += 1;
-  buckets.set(key, bucket);
-
-  return {
-    allowed: bucket.count <= RATE_LIMIT_MAX,
-    remaining: Math.max(0, RATE_LIMIT_MAX - bucket.count),
-    resetAt: bucket.resetAt,
-  };
+  return false;
 }
 
 export async function POST(request: Request) {
+  // 1. Body size
+  const declared = Number(request.headers.get("content-length") ?? "0");
+  if (Number.isFinite(declared) && declared > MAX_BODY_BYTES) {
+    return fail(413, contactForm.errors.invalidRequest);
+  }
+
+  let raw: string;
+  try {
+    raw = await request.text();
+  } catch {
+    return fail(400, contactForm.errors.invalidRequest);
+  }
+
+  if (raw.length > MAX_BODY_BYTES) {
+    return fail(413, contactForm.errors.invalidRequest);
+  }
+
   let payload: unknown;
   try {
-    payload = await request.json();
+    payload = JSON.parse(raw);
   } catch {
-    return NextResponse.json(
-      { error: contactForm.errors.invalidRequest },
-      { status: 400 }
-    );
+    return fail(400, contactForm.errors.invalidRequest);
   }
 
   const body = (payload ?? {}) as Record<string, unknown>;
 
-  // Consent is required — the client always sends consent: true.
+  // 2. Honeypot — look like it worked, send nothing.
+  if (str(body.company) !== "") {
+    return NextResponse.json({ ok: true });
+  }
+
+  // 3. Submitted too quickly
+  const startedAt = Number(body.startedAt);
+  if (
+    !Number.isFinite(startedAt) ||
+    startedAt <= 0 ||
+    Date.now() - startedAt < MIN_ELAPSED_MS
+  ) {
+    return fail(400, contactForm.errors.invalidRequest);
+  }
+
+  // 4. Same-origin only
+  if (!isSameOrigin(request)) {
+    return fail(403, contactForm.errors.invalidRequest);
+  }
+
+  // 5. Consent
   if (body.consent !== true) {
-    return NextResponse.json(
-      { error: contactForm.errors.missingConsent },
-      { status: 400 }
-    );
+    return fail(400, contactForm.errors.missingConsent);
   }
 
-  const name = typeof body.name === "string" ? body.name.trim() : "";
-  const email = typeof body.email === "string" ? body.email.trim() : "";
-  const service = typeof body.service === "string" ? body.service.trim() : "";
-  const message = typeof body.message === "string" ? body.message.trim() : "";
+  // 6. Fields
+  const name = str(body.name);
+  const email = str(body.email);
+  const service = str(body.service);
+  const message = str(body.message);
 
-  if (!name || !email || !service || !message) {
-    return NextResponse.json(
-      { error: contactForm.errors.missingFields },
-      { status: 400 }
-    );
+  if (!name || name.length > NAME_MAX) {
+    return fail(400, contactForm.errors.invalidFields);
+  }
+  if (!email || email.length > EMAIL_MAX || !EMAIL_RE.test(email)) {
+    return fail(400, contactForm.errors.invalidEmail);
+  }
+  if (!contactForm.services.includes(service)) {
+    return fail(400, contactForm.errors.invalidFields);
+  }
+  if (message.length < MESSAGE_MIN || message.length > MESSAGE_MAX) {
+    return fail(400, contactForm.errors.invalidFields);
   }
 
-  const limit = rateLimit(clientKey(request));
+  // 7. Rate limit
+  const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "";
+  const limit = await rateLimitSubmission(ip);
   if (!limit.allowed) {
-    return NextResponse.json(
-      { error: contactForm.errors.rateLimited },
-      {
-        status: 429,
-        headers: {
-          "Retry-After": String(
-            Math.max(1, Math.ceil((limit.resetAt - Date.now()) / 1000))
-          ),
-        },
-      }
-    );
+    return fail(429, contactForm.errors.rateLimited, {
+      "Retry-After": String(limit.retryAfterSeconds),
+    });
+  }
+
+  // 8. Forward to Formspree
+  const formId = process.env.FORMSPREE_FORM_ID;
+  if (!formId) {
+    console.error("[contact] FORMSPREE_FORM_ID is not configured");
+    return fail(500, contactForm.errors.sendFailed);
   }
 
   try {
-    const response = await fetch(contactForm.endpoint, {
+    const upstream = await fetch(`https://formspree.io/f/${formId}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -111,17 +153,13 @@ export async function POST(request: Request) {
       cache: "no-store",
     });
 
-    if (!response.ok) {
-      return NextResponse.json(
-        { error: contactForm.errors.sendFailed },
-        { status: 502 }
-      );
+    if (!upstream.ok) {
+      console.error("[contact] upstream submission failed", upstream.status);
+      return fail(502, contactForm.errors.sendFailed);
     }
   } catch {
-    return NextResponse.json(
-      { error: contactForm.errors.sendFailed },
-      { status: 502 }
-    );
+    console.error("[contact] upstream request failed");
+    return fail(502, contactForm.errors.sendFailed);
   }
 
   return NextResponse.json({ ok: true });

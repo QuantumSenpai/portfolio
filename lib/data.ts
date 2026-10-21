@@ -16,7 +16,6 @@ export const contactSection: ContactSectionConfig = {
 };
 
 export interface ContactFormConfig {
-  endpoint: string; // Formspree — the server forwards the submission here
   fields: string[];
   services: string[];
   submit: string;
@@ -27,6 +26,7 @@ export interface ContactFormConfig {
   errors: {
     missingConsent: string;
     missingFields: string;
+    invalidFields: string;
     invalidEmail: string;
     invalidRequest: string;
     rateLimited: string;
@@ -36,7 +36,6 @@ export interface ContactFormConfig {
 }
 
 export const contactForm: ContactFormConfig = {
-  endpoint: "https://formspree.io/f/xreydgqn",
   fields: ["Name", "Email", "Service", "Message"],
   services: [
     "Video Editing",
@@ -54,11 +53,11 @@ export const contactForm: ContactFormConfig = {
   errors: {
     missingConsent: "Please agree to the privacy policy before sending.",
     missingFields: "Please fill in every field.",
+    invalidFields: "Please check the details you entered and try again.",
     invalidEmail: "Please enter a valid email address.",
     invalidRequest:
       "Something went wrong — email itxkisu@gmail.com directly.",
-    rateLimited:
-      "Too many messages from this connection — please try again later.",
+    rateLimited: "Too many messages — please try later or email me directly.",
     sendFailed:
       "Network error — please email itxkisu@gmail.com directly.",
     fallbackEmail: "itxkisu@gmail.com",
@@ -108,13 +107,15 @@ export const privacy: PrivacyConfig = {
       heading: "What the contact form collects",
       paragraphs: [
         "If you use the contact form on this site, four things are sent to this site's server: your name, your email address, the service you picked from the dropdown and your message. The only other value sent is a consent flag, which is set to true when you tick the privacy policy checkbox.",
+        "Two technical values travel with the form as well: the time the page was opened, which is used to turn away submissions that are sent almost instantly, and a hidden field that should stay empty. If that hidden field is filled in, the submission is quietly discarded and nothing reaches my inbox.",
         "Your details are used for one reason: so I can reply to your enquiry.",
       ],
     },
     {
       heading: "Where your message goes",
       paragraphs: [
-        "The form posts to the contact endpoint on this site. The server checks that the consent flag is true and that every field is filled in, then forwards the submission to Formspree, which delivers it to my email address.",
+        "The form posts to the contact endpoint on this site. The server checks that the consent flag is true, that the request came from this site, and that every field is filled in, then forwards the submission to Formspree, which delivers it to my email address.",
+        "The Formspree form id is kept as a server-side environment variable. It is never included in the page or sent to your browser.",
         "Formspree is the only third party that receives what you typed in the form. I do not pass your message to any other service.",
       ],
     },
@@ -122,14 +123,15 @@ export const privacy: PrivacyConfig = {
       heading: "Rate limiting",
       paragraphs: [
         "So the form cannot be used as a spam relay, the server counts submissions per client. Before it is used as a key, the client's IP address is hashed with SHA-256, so the address itself is never stored, logged or sent anywhere.",
-        "The counters live in server memory only, never on disk, and are thrown away when the server restarts. Expired windows are swept from memory on each request. A client is allowed 5 submissions per 10 minute window; anything over that is rejected with a 429 response.",
+        "The limits are 3 submissions per hour and 10 submissions per day from the same address, and 25 submissions per day from every visitor combined, which protects the quota on the mail service. A request over any of those limits is refused with a 429 response.",
+        "Where those counters are kept depends on the deployment. When an Upstash Redis database is configured, the counters are stored there and Upstash acts as a processor of the hashed address. When it is not configured, the counters are kept in the server's own memory, which is emptied whenever the server restarts.",
       ],
     },
     {
       heading: "Cookies and analytics",
       paragraphs: [
-        "This site sets no cookies. There is no analytics package, tag manager or tracking script in the code, so nothing about your visit is measured, profiled or shared.",
-        "If you switch between the light and dark theme, that choice is kept in your browser's localStorage under the key 'theme'. It stays on your device and is never sent to me.",
+        "This site sets no cookies. There is no analytics or tracking package, tag manager or tracking script in the code, so nothing about your visit is measured, profiled or shared.",
+        "Two things are stored in your browser's localStorage, and neither is ever sent to me: your light or dark theme choice, under the key 'theme', and the time of your last successful contact form submission, under the key 'contact:cooldown', which is used to stop the form being sent again straight away.",
       ],
     },
     {

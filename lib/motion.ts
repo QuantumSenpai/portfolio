@@ -10,6 +10,11 @@ export const DURATION = {
 
 export const STAGGER = 0.06;
 
+/** Signature wipe reveal. */
+export const SIGNATURE_DURATION = 2.4;
+/** cubic-bezier(.65, 0, .35, 1) */
+export const SIGNATURE_EASE = [0.65, 0, 0.35, 1] as const;
+
 export const LENIS_CONFIG = {
   lerp: 0.2,
   wheelMultiplier: 1,

@@ -167,14 +167,51 @@ export const availability: { text: string } = {
   text: "Available for freelance",
 };
 
+export interface FooterLink {
+  label: string;
+  href: string;
+  external?: boolean;
+}
+
+export interface FooterColumn {
+  title: string;
+  links: FooterLink[];
+}
+
 export const footer: {
   copyright: string;
   signatureAlt: string;
   signatureText: string;
+  columns: FooterColumn[];
 } = {
   copyright: "© {year} — Built with Next.js & Tailwind CSS",
   signatureAlt: "Krishnendu Adak signature",
-  signatureText: "Kisu",
+  signatureText: "Krishnendu",
+  columns: [
+    {
+      title: "Navigate",
+      links: [
+        { label: "Work", href: "#work" },
+        { label: "Experience", href: "#experience" },
+        { label: "About", href: "#about" },
+        { label: "GitHub", href: "https://github.com/QuantumSenpai" },
+        { label: "Reel", href: "#reel" },
+        { label: "Contact", href: "#contact" },
+      ],
+    },
+    {
+      title: "Elsewhere",
+      links: socials.map((social) => ({
+        label: social.label,
+        href: social.url,
+        external: true,
+      })),
+    },
+    {
+      title: "Legal",
+      links: [{ label: "Privacy Policy", href: "/privacy" }],
+    },
+  ],
 };
 
 // ============================================================================

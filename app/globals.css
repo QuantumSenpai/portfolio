@@ -83,6 +83,7 @@
   --font-display: var(--font-display);
   --font-body: var(--font-body);
   --font-mono: var(--font-mono);
+  --font-signature: var(--font-signature);
 
   --text-hero: clamp(3.25rem, 8.6vw, 10rem);
   --text-h2: clamp(2rem, 3.2vw, 3.5rem);
@@ -216,6 +217,41 @@ a {
   .bento-wide {
     grid-column: span 2;
   }
+}
+
+/* Signature wipe — a soft-edged linear wipe from left to right.
+   --p is registered so the browser can interpolate it. */
+@property --p {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 0%;
+}
+
+@keyframes signature-wipe {
+  from {
+    --p: 0%;
+  }
+  to {
+    --p: 100%;
+  }
+}
+
+.signature-wipe {
+  mask-image: linear-gradient(
+    90deg,
+    #000 0 var(--p),
+    transparent calc(var(--p) + 12%)
+  );
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    #000 0 var(--p),
+    transparent calc(var(--p) + 12%)
+  );
+}
+
+.signature-wipe-run {
+  animation: signature-wipe var(--signature-duration, 2.4s)
+    var(--signature-ease, cubic-bezier(0.65, 0, 0.35, 1)) forwards;
 }
 
 /* Legacy anchor: the Skills section is now part of #about */

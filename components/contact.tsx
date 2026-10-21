@@ -18,9 +18,9 @@ import {
   contactForm,
   contactSection,
   email,
-  socials,
 } from "@/lib/data";
 import { EASE, DURATION, STAGGER } from "@/lib/motion";
+import { Footer } from "@/components/footer";
 
 /**
  * Shared hover transition.
@@ -42,7 +42,11 @@ type Status = "idle" | "sending" | "success" | "error";
 const FIELD_CLASS =
   "w-full border-b border-ink/20 bg-transparent pb-2 text-base text-ink transition-colors placeholder:text-ink-dim/60 focus:border-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg";
 
-export function Contact() {
+export function Contact({
+  hasSignature = false,
+}: {
+  hasSignature?: boolean;
+}) {
   const shouldReduceMotion = useReducedMotion();
 
   const [status, setStatus] = useState<Status>("idle");
@@ -287,28 +291,6 @@ export function Contact() {
                 </button>
               </div>
 
-              {/* Socials */}
-              <div className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-4">
-                {socials.map((social) => (
-                  <a
-                    key={social.url}
-                    href={social.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={HOVER_TRANSITION}
-                    className="group inline-flex items-center gap-1.5 font-mono text-sm tracking-[0.04em] text-ink-dim transition-colors hover:text-accent focus-visible:text-accent focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-4"
-                  >
-                    <span>{social.label}</span>
-                    <span
-                      aria-hidden="true"
-                      className="inline-block text-sm leading-none transition-transform rotate-45 group-hover:rotate-0 group-focus-visible:rotate-0"
-                    >
-                      ↗
-                    </span>
-                  </a>
-                ))}
-              </div>
-
               {/* Availability */}
               <div className="mt-10 inline-flex items-center gap-2 font-mono text-sm tracking-[0.04em] text-ink-dim">
                 <span aria-hidden="true" className="relative flex h-1.5 w-1.5">
@@ -457,6 +439,9 @@ export function Contact() {
           </div>
         </motion.div>
       </div>
+
+      {/* The closing section ends with the footer */}
+      <Footer hasSignature={hasSignature} />
     </section>
   );
 }

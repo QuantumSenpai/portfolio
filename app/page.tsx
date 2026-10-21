@@ -8,7 +8,6 @@ import { Experience } from "@/components/experience";
 import { About } from "@/components/about";
 import { Reel } from "@/components/reel";
 import { Contact } from "@/components/contact";
-import { Footer } from "@/components/footer";
 
 /** public/profile.jpg must be a real image — an empty/0-byte file is treated as missing. */
 function portraitIsLoadable() {
@@ -39,9 +38,8 @@ export default function Home() {
         <Experience />
         <About hasPortrait={portraitIsLoadable()} />
         <Reel />
-        <Contact />
+        <Contact hasSignature={signatureExists()} />
       </main>
-      <Footer hasSignature={signatureExists()} />
     </>
   );
 }

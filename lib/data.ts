@@ -2,94 +2,182 @@ export const socials = {
   github: "https://github.com/QuantumSenpai",
   linkedin: "https://www.linkedin.com/in/krishnendu158",
   instagram: "https://instagram.com/kyzenn.raw",
-  email: "itxkisu@gmail.com",
+  email: "work.krishnendu.dev@gmail.com",
+};
+
+// ============================================================================
+// EDIT HERE — all Work text, links and images
+// ============================================================================
+
+export interface WorkSectionConfig {
+  eyebrow: string;
+  heading: string;
+  allReposLabel: string;
+  allReposHref: string;
+  githubUrl: string;
+}
+
+export const workSection: WorkSectionConfig = {
+  eyebrow: "001 / Work",
+  heading: "Selected work",
+  allReposLabel: "All repositories",
+  allReposHref: "https://github.com/QuantumSenpai?tab=repositories",
+  githubUrl: "https://github.com/QuantumSenpai?tab=repositories",
 };
 
 export type ProjectCategory = "web" | "dsa" | "ml" | "game";
 
 export interface Project {
-  index: string;
+  slug: string;
   title: string;
-  description: string;
-  tags: string[];
-  category: ProjectCategory;
-  href: string;
-  linkLabel: "Code" | "Live" | "Play";
-  featured?: boolean;
+  year: string;
+  role: string;
+  description: string; // one line
+  tags: string[]; // max 3
+  featured: boolean;
+  image?: string; // optional string: either "/work/x.webp" OR full https URL, e.g. Cloudinary
+  liveUrl?: string;
+  repoUrl?: string;
+  caseStudyHref?: string; // internal anchor like "#experience"
+  order: number;
+  category?: ProjectCategory;
 }
 
 export const projects: Project[] = [
   {
-    index: "01",
+    order: 1,
+    slug: "alzheimers-mri-classifier",
+    title: "Alzheimer's MRI Classifier",
+    year: "2026",
+    role: "Research Intern — ML & Medical Imaging",
+    description:
+      "Clinical Decision Support System that classifies Alzheimer's stages from MRI scans and auto-generates structured diagnostic reports.",
+    tags: ["PyTorch", "FastAPI", "PostgreSQL"],
+    featured: true,
+    caseStudyHref: "#experience",
+    category: "ml",
+  },
+  {
+    order: 2,
+    slug: "sakura-timer",
     title: "Sakura Timer",
+    year: "2024",
+    role: "Frontend Developer & Designer",
     description:
       "Anime lofi pomodoro study timer with falling sakura petals, ambient mood and focus tracking.",
     tags: ["HTML", "CSS", "JS"],
-    category: "web",
-    href: "https://github.com/QuantumSenpai/sakura-timer",
-    linkLabel: "Code",
     featured: true,
-  },
-  {
-    index: "02",
-    title: "Wraith",
-    description:
-      "A dark, cinematic web project built with precision and a haunting aesthetic.",
-    tags: ["HTML", "CSS", "JS"],
+    repoUrl: "https://github.com/QuantumSenpai/sakura-timer",
     category: "web",
-    href: "https://github.com/QuantumSenpai/wraith",
-    linkLabel: "Code",
   },
   {
-    index: "03",
+    order: 3,
+    slug: "sort-anime",
     title: "SortAnime",
+    year: "2024",
+    role: "Creator & Developer",
     description:
       "Type numbers, watch them sort in real time — 10 algorithms, dual visualization mode.",
-    tags: ["JS", "DSA", "UI"],
+    tags: ["JavaScript", "DSA", "UI"],
+    featured: true,
+    liveUrl: "https://quantumsenpai.github.io/Sort-Visualizer",
+    repoUrl: "https://github.com/QuantumSenpai/Sort-Visualizer",
     category: "dsa",
-    href: "https://quantumsenpai.github.io/Sort-Visualizer",
-    linkLabel: "Live",
   },
   {
-    index: "04",
+    order: 4,
+    slug: "sentiment-analysis",
     title: "Sentiment Analysis",
+    year: "2024",
+    role: "ML Engineer",
     description:
       "NLP-powered customer review insight extraction using Python, NLTK, TextBlob and Flask.",
     tags: ["Python", "NLP", "Flask"],
-    category: "ml",
-    href: "https://github.com/QuantumSenpai/Sentiment-Analysis-Mini-Project",
-    linkLabel: "Code",
     featured: true,
+    repoUrl: "https://github.com/QuantumSenpai/Sentiment-Analysis-Mini-Project",
+    category: "ml",
   },
   {
-    index: "05",
-    title: "Dev Card",
-    description:
-      "Anime lofi developer card — spinning gradient ring, live clock and 3D tilt.",
-    tags: ["HTML", "CSS", "JS"],
-    category: "web",
-    href: "https://quantumsenpai.github.io/dev-card",
-    linkLabel: "Live",
-  },
-  {
-    index: "06",
+    order: 5,
+    slug: "cyber-type",
     title: "CyberType",
+    year: "2024",
+    role: "Frontend Developer",
     description:
       "Neon cyberpunk typing speed test — live WPM, rank system from Recruit to Cyber God.",
     tags: ["HTML", "CSS", "JS"],
+    featured: true,
+    liveUrl: "https://quantumsenpai.github.io/Cyber-Type",
+    repoUrl: "https://github.com/QuantumSenpai/Cyber-Type",
     category: "web",
-    href: "https://quantumsenpai.github.io/Cyber-Type",
-    linkLabel: "Live",
   },
   {
-    index: "07",
+    order: 6,
+    slug: "midsem-rush",
     title: "MidSem Rush",
+    year: "2024",
+    role: "Game Developer",
     description:
       "Dodge deadlines, slow your HOD and strike with an anime thunder sword. A student runner game.",
-    tags: ["HTML", "CSS", "JS", "Game"],
+    tags: ["HTML", "JS", "Game"],
+    featured: true,
+    liveUrl: "https://quantumsenpai.github.io/Midsem-Rush",
+    repoUrl: "https://github.com/QuantumSenpai/Midsem-Rush",
     category: "game",
-    href: "https://quantumsenpai.github.io/Midsem-Rush",
-    linkLabel: "Play",
+  },
+  {
+    order: 7,
+    slug: "wraith",
+    title: "Wraith",
+    year: "2024",
+    role: "Creative Developer",
+    description:
+      "A dark, cinematic web project built with precision and a haunting aesthetic.",
+    tags: ["HTML", "CSS", "JS"],
+    featured: false,
+    repoUrl: "https://github.com/QuantumSenpai/wraith",
+    category: "web",
+  },
+  {
+    order: 8,
+    slug: "dev-card",
+    title: "Dev Card",
+    year: "2024",
+    role: "Frontend Developer",
+    description:
+      "Anime lofi developer card — spinning gradient ring, live clock and 3D tilt.",
+    tags: ["HTML", "CSS", "JS"],
+    featured: false,
+    liveUrl: "https://quantumsenpai.github.io/dev-card",
+    repoUrl: "https://github.com/QuantumSenpai/dev-card",
+    category: "web",
+  },
+];
+
+export interface OtherRepo {
+  name: string;
+  language: string;
+  url: string;
+}
+
+export const otherRepos: OtherRepo[] = [
+  // TODO replace
+  {
+    name: "wraith",
+    language: "JavaScript",
+    url: "https://github.com/QuantumSenpai/wraith",
+  },
+  // TODO replace
+  {
+    name: "dev-card",
+    language: "CSS",
+    url: "https://github.com/QuantumSenpai/dev-card",
+  },
+  // TODO replace
+  {
+    name: "Sort-Visualizer",
+    language: "JavaScript",
+    url: "https://github.com/QuantumSenpai/Sort-Visualizer",
   },
 ];
 

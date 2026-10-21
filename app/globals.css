@@ -5,10 +5,10 @@
   --surface: #ffffff;
   --surface-2: #eaf0ff;
   --ink: #0e1b33;
-  --ink-dim: #5b6b85;
+  --ink-dim: #4a5a75;
   --accent: #3770bf;
   --accent-soft: #8dc2ff;
-  --pop: #b9e34f;
+  --timeline-stroke: var(--accent);
   --line: rgba(14, 27, 51, 0.1);
   --line-strong: rgba(14, 27, 51, 0.2);
   --shadow: rgba(14, 27, 51, 0.08);
@@ -21,13 +21,48 @@
   --surface: #121729;
   --surface-2: #171d33;
   --ink: #f3f6ff;
-  --ink-dim: #8b96b8;
+  --ink-dim: #9aa5c4;
   --accent: #8dc2ff;
   --accent-soft: #3770bf;
-  --pop: #cef26d;
+  --timeline-stroke: #bcdcff;
   --line: rgba(243, 246, 255, 0.09);
   --line-strong: rgba(243, 246, 255, 0.16);
   --shadow: rgba(0, 0, 0, 0.4);
+}
+
+/* Tone Invert: swaps theme values to the opposite theme scoped to section */
+[data-tone="invert"] {
+  --bg: #0a0e18;
+  --surface: #121729;
+  --surface-2: #171d33;
+  --ink: #f3f6ff;
+  --ink-dim: #9aa5c4;
+  --accent: #8dc2ff;
+  --accent-soft: #3770bf;
+  --line: rgba(243, 246, 255, 0.09);
+  --line-strong: rgba(243, 246, 255, 0.16);
+  --shadow: rgba(0, 0, 0, 0.4);
+
+  background-color: var(--bg);
+  color: var(--ink);
+  transition: background-color 0.6s var(--ease), color 0.6s var(--ease);
+}
+
+.dark [data-tone="invert"] {
+  --bg: #f3f6ff;
+  --surface: #ffffff;
+  --surface-2: #eaf0ff;
+  --ink: #0e1b33;
+  --ink-dim: #4a5a75;
+  --accent: #3770bf;
+  --accent-soft: #8dc2ff;
+  --line: rgba(14, 27, 51, 0.1);
+  --line-strong: rgba(14, 27, 51, 0.2);
+  --shadow: rgba(14, 27, 51, 0.08);
+
+  background-color: var(--bg);
+  color: var(--ink);
+  transition: background-color 0.6s var(--ease), color 0.6s var(--ease);
 }
 
 @theme inline {
@@ -38,27 +73,22 @@
   --color-ink-dim: var(--ink-dim);
   --color-accent: var(--accent);
   --color-accent-soft: var(--accent-soft);
-  --color-pop: var(--pop);
   --color-line: var(--line);
   --color-line-strong: var(--line-strong);
 
   --font-display: var(--font-display);
   --font-body: var(--font-body);
   --font-mono: var(--font-mono);
+
+  --text-hero: clamp(3.25rem, 8.6vw, 10rem);
+  --text-h2: clamp(2rem, 3.2vw, 3.5rem);
 }
 
 * {
   box-sizing: border-box;
 }
 
-html {
-  scroll-behavior: smooth;
-}
-
 @media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
   *,
   *::before,
   *::after {
@@ -72,6 +102,8 @@ body {
   background: var(--bg);
   color: var(--ink);
   font-family: var(--font-body);
+  font-size: clamp(1rem, 0.96rem + 0.2vw, 1.125rem);
+  line-height: 1.5;
   transition: background-color 0.4s var(--ease), color 0.4s var(--ease);
   -webkit-font-smoothing: antialiased;
 }
@@ -82,8 +114,29 @@ h3,
 h4 {
   font-family: var(--font-display);
   font-weight: 800;
-  letter-spacing: -0.025em;
+  letter-spacing: -0.05em;
+  text-wrap: balance;
   margin: 0;
+}
+
+p {
+  text-wrap: pretty;
+  margin: 0;
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Primary buttons: background var(--ink), text var(--bg) */
+.btn-primary {
+  background: var(--ink);
+  color: var(--bg);
+  transition: transform 0.3s var(--ease), opacity 0.3s var(--ease);
+}
+
+.btn-primary:hover {
+  opacity: 0.92;
 }
 
 .text-stroke {
@@ -92,8 +145,19 @@ h4 {
   color: transparent;
 }
 
-p {
-  margin: 0;
+.timeline-stroke {
+  font-style: italic;
+  -webkit-text-stroke: 2px var(--timeline-stroke);
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  cursor: pointer;
+  transition: -webkit-text-fill-color 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              color 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.timeline-stroke:hover {
+  -webkit-text-fill-color: var(--accent);
+  color: var(--accent);
 }
 
 a {
@@ -102,7 +166,7 @@ a {
 }
 
 ::selection {
-  background: var(--pop);
+  background: color-mix(in srgb, var(--accent) 25%, transparent);
   color: var(--ink);
 }
 
@@ -124,16 +188,16 @@ a {
 
 .eyebrow {
   font-family: var(--font-mono);
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--accent);
 }
 
 .container {
-  max-width: 1200px;
+  max-width: 1680px;
   margin: 0 auto;
-  padding-inline: clamp(1.25rem, 5vw, 4rem);
+  padding-inline: clamp(1.5rem, 4vw, 4rem);
 }
 
 @keyframes marquee {

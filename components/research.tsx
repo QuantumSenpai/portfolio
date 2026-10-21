@@ -1,1 +1,0 @@
-export { Experience as Research, Experience } from "./experience";

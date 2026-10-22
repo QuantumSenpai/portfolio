@@ -1,97 +1,4 @@
-// ============================================================================
-// HOW TO EDIT
-// ---------------------------------------------------------------------------
-// Every list below renders in ARRAY ORDER. There is no `order` field and
-// nothing is sorted anywhere in the code — to reorder a list, cut and paste
-// the whole object. Adding or removing an item never needs a component edit.
-//
-// Copy a template below, fill it in, and paste it into the matching array.
-// Fields marked OPTIONAL can be left out completely.
-//
-//   project     -> projects[]
-//   otherRepo   -> otherRepos[]
-//   experience  -> experiences[]
-//   skillGroup  -> skillGroups[]
-//   skillItem   -> skillGroups[].items[]
-//   video       -> videos[]
-//   social link -> socials[]
-//   service     -> services[]
-// ============================================================================
 
-/*
-project:
-{
-  slug: "my-project",              // required, unique
-  title: "My Project",             // required
-  year: "2026",                    // required
-  role: "Frontend Developer",      // required
-  description: "One line about it.",// required
-  tags: ["HTML", "CSS", "JS"],      // required, max 3
-  featured: true,                  // required — only featured rows are shown
-  category: "web",                 // OPTIONAL — "web" | "dsa" | "ml" | "game"
-  image: "/work/my-project.webp",  // OPTIONAL — "/work/x.webp" or a full https URL
-  liveUrl: "https://example.com",  // OPTIONAL
-  repoUrl: "https://github.com/…", // OPTIONAL
-  caseStudyHref: "#experience",    // OPTIONAL — internal anchor
-},
-
-otherRepo:
-{
-  name: "my-repo",                 // required, unique
-  language: "TypeScript",          // required
-  url: "https://github.com/…",     // required
-},
-
-experience:
-{
-  id: "my-role",                   // required, unique
-  role: "Role title",              // required
-  org: "Organisation",             // required
-  dates: "2024 – 2026",            // required
-  bullets: ["What you did.", "What you shipped."], // required, max 5
-  tags: ["Tool", "Tool"],          // required
-  location: "Remote",              // OPTIONAL
-  summary: "One or two sentences.", // OPTIONAL
-  stats: [{ label: "4-stage" }],   // OPTIONAL, max 3
-},
-
-skillGroup:
-{
-  label: "Group name",             // required, unique
-  items: [{ name: "Skill" }],      // required, at least one item
-  blurb: "One short sentence.",    // OPTIONAL
-},
-
-skillItem:
-{
-  name: "Skill name",              // required
-  status: "core",                  // OPTIONAL — "core" | "learning"
-  note: "Short clarification.",    // OPTIONAL
-},
-
-video:
-{
-  id: "YouTubeId",                 // required, unique
-  title: "Video title",            // required
-  caption: "After Effects · Edit", // OPTIONAL
-},
-
-social link:
-{
-  label: "GitHub",                 // required, unique
-  url: "https://github.com/…",     // required
-},
-
-service:
-{
-  title: "Web",                    // required, unique
-  line: "One line about the service.", // required
-},
-*/
-
-// ============================================================================
-// EDIT HERE — Contact / Footer
-// ============================================================================
 
 export interface ContactSectionConfig {
   eyebrow: string;
@@ -265,10 +172,6 @@ export const footer: {
   ],
 };
 
-// ============================================================================
-// EDIT HERE — Privacy
-// ============================================================================
-
 export interface PrivacySection {
   heading: string;
   paragraphs: string[];
@@ -341,10 +244,6 @@ export const privacy: PrivacyConfig = {
   ],
 };
 
-// ============================================================================
-// EDIT HERE — all Work text, links and images
-// ============================================================================
-
 export interface WorkSectionConfig {
   eyebrow: string;
   heading: string;
@@ -368,13 +267,13 @@ export interface Project {
   title: string;
   year: string;
   role: string;
-  description: string; // one line
-  tags: string[]; // max 3
+  description: string;
+  tags: string[];
   featured: boolean;
-  image?: string; // optional string: either "/work/x.webp" OR full https URL, e.g. Cloudinary
+  image?: string;
   liveUrl?: string;
   repoUrl?: string;
-  caseStudyHref?: string; // internal anchor like "#experience"
+  caseStudyHref?: string;
   category?: ProjectCategory;
 }
 
@@ -488,29 +387,25 @@ export interface OtherRepo {
 }
 
 export const otherRepos: OtherRepo[] = [
-  // TODO replace
+
   {
     name: "wraith",
     language: "JavaScript",
     url: "https://github.com/QuantumSenpai/wraith",
   },
-  // TODO replace
+
   {
     name: "dev-card",
     language: "CSS",
     url: "https://github.com/QuantumSenpai/dev-card",
   },
-  // TODO replace
+
   {
     name: "Sort-Visualizer",
     language: "JavaScript",
     url: "https://github.com/QuantumSenpai/Sort-Visualizer",
   },
 ];
-
-// ============================================================================
-// EDIT HERE — Experience
-// ============================================================================
 
 export interface ExperienceSectionConfig {
   eyebrow: string;
@@ -532,7 +427,7 @@ export interface ExperienceEntry {
   location?: string;
   dates: string;
   summary?: string;
-  bullets: string[]; // up to 5 — the first entry uses 5, the rest use 3
+  bullets: string[];
   stats?: { label: string }[];
   tags: string[];
 }
@@ -607,14 +502,10 @@ export const experiences: ExperienceEntry[] = [
   },
 ];
 
-// ============================================================================
-// EDIT HERE — About / Skills / Services
-// ============================================================================
-
 export interface AboutSectionConfig {
   eyebrow: string;
   heading: string;
-  bio: string[]; // max 3 short paragraphs
+  bio: string[];
   education: { line: string };
   portrait: {
     src: string;
@@ -624,7 +515,7 @@ export interface AboutSectionConfig {
     nickname: string;
     role: string;
   };
-  /** Original About / Skills copy with no slot in the merged layout — kept so nothing is lost. */
+
   legacy: {
     cardLabel: string;
     focusAreasLabel: string;
@@ -750,15 +641,11 @@ export const services: Service[] = [
   },
 ];
 
-// ============================================================================
-// EDIT HERE — Reel
-// ============================================================================
-
 export interface ReelSectionConfig {
   eyebrow: string;
   heading: string;
   description?: string;
-  /** Optional — the channel link is hidden when this is missing. */
+
   channelUrl?: string;
 }
 
@@ -768,11 +655,11 @@ export const reelSection: ReelSectionConfig = {
 };
 
 export interface ReelVideo {
-  id: string; // YouTube video id — a video without an id is hidden
+  id: string;
   title: string;
   caption?: string;
   kind: "video" | "short";
-  thumb?: string; // optional custom thumbnail — local path or full URL
+  thumb?: string;
 }
 
 export const videos: ReelVideo[] = [
@@ -802,11 +689,6 @@ export const stats = [
   { label: "Edits delivered", value: 30 },
 ];
 
-// ---------------------------------------------------------------------------
-// Development-only data checks. The import is guarded and server-only, so the
-// validator is never requested in a production build and never reaches the
-// browser.
-// ---------------------------------------------------------------------------
 if (process.env.NODE_ENV !== "production" && typeof window === "undefined") {
   void import("./validate-data").then((module) => module.validateData());
 }

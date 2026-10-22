@@ -10,12 +10,10 @@ export const DURATION = {
 
 export const STAGGER = 0.06;
 
-
-/** Signature wipe reveal. */
 export const SIGNATURE_DURATION = 2.4;
-/** cubic-bezier(.65, 0, .35, 1) */
+
 export const SIGNATURE_EASE = [0.65, 0, 0.35, 1] as const;
-/** The script face used for the signature. */
+
 export const SIGNATURE_FONT = "Herr Von Muellerhoff";
 
 export const LENIS_CONFIG = {
@@ -42,7 +40,6 @@ export const transitionSlow: Transition = {
   ease: EASE,
 };
 
-// Line-mask reveal: y moves from "110%" to 0 inside an overflow-hidden wrapper
 export const lineMaskVariants: Variants = {
   hidden: { y: "110%" },
   visible: (custom?: { delay?: number; duration?: number }) => ({
@@ -55,7 +52,6 @@ export const lineMaskVariants: Variants = {
   }),
 };
 
-// Fade-up: opacity + y (16 -> 0)
 export const fadeUpVariants: Variants = {
   hidden: { opacity: 0, y: 16 },
   visible: (custom?: { delay?: number; duration?: number }) => ({

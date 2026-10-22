@@ -16,7 +16,7 @@ export function Magnetic({ children, className, strength = 0.35 }: MagneticProps
   const x = useMotionValue(0);
   const y = useMotionValue(0);
 
-  // useSpring with stiffness 300, damping 30 (no size jumps, smooth physical spring)
+
   const springX = useSpring(x, { stiffness: 300, damping: 30 });
   const springY = useSpring(y, { stiffness: 300, damping: 30 });
 
@@ -25,7 +25,7 @@ export function Magnetic({ children, className, strength = 0.35 }: MagneticProps
     if (window.matchMedia("(pointer: coarse)").matches) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    // Cache the bounding rect on mouse enter, avoiding layout reads per move event
+
     const rect = ref.current.getBoundingClientRect();
     rectRef.current = {
       left: rect.left,
@@ -53,7 +53,7 @@ export function Magnetic({ children, className, strength = 0.35 }: MagneticProps
     const relX = e.clientX - (left + width / 2);
     const relY = e.clientY - (top + height / 2);
 
-    // Clamp magnetic movement to max 8px
+
     const clampedX = Math.max(-8, Math.min(8, relX * strength));
     const clampedY = Math.max(-8, Math.min(8, relY * strength));
 

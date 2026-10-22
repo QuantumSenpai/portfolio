@@ -12,10 +12,10 @@ export function Work() {
   const lenis = useLenis();
   const shouldReduceMotion = useReducedMotion();
 
-  // Featured projects, in the order they appear in lib/data.ts
+
   const featuredProjects = projects.filter((project) => project.featured);
 
-  // Active project for sticky preview panel (default = row 1)
+
   const [activeSlug, setActiveSlug] = useState<string>(
     featuredProjects[0]?.slug ?? ""
   );
@@ -78,7 +78,7 @@ export function Work() {
       className="relative w-full py-24 sm:py-32"
     >
       <div className="mx-auto w-full max-w-[1680px] px-5 md:px-10 lg:px-16">
-        {/* Section Heading */}
+
         <div className="mb-14 sm:mb-20">
           <span className="font-mono text-[13px] uppercase tracking-widest text-accent">
             {workSection.eyebrow}
@@ -91,9 +91,9 @@ export function Work() {
           </h2>
         </div>
 
-        {/* Desktop View: Two Columns (Left = Rows, Right = Sticky Panel) */}
+
         <div className="hidden lg:grid lg:grid-cols-12 lg:gap-12 xl:gap-16 items-start">
-          {/* Left Column (cols 1-8): Project rows */}
+
           <div className="lg:col-span-8">
             <motion.div
               variants={containerVariants}
@@ -142,19 +142,19 @@ export function Work() {
                         "transition-opacity duration-[0.7s] ease-[cubic-bezier(0.16,1,0.3,1)]"
                       )}
                     >
-                      {/* Row background tint via absolute layer (ink at 4%) */}
+
                       <span
                         aria-hidden="true"
                         className="pointer-events-none absolute inset-0 -mx-4 rounded-lg bg-ink/[0.04] opacity-0 px-4 transition-opacity duration-[0.7s] ease-[cubic-bezier(0.16,1,0.3,1)] [@media(hover:hover)]:group-hover:opacity-100 group-focus-visible:opacity-100"
                       />
 
-                      {/* 1px accent underline scales scaleX 0 -> 1 from left */}
+
                       <span
                         aria-hidden="true"
                         className="pointer-events-none absolute bottom-0 left-0 right-0 h-px origin-left scale-x-0 bg-accent transition-transform duration-[0.7s] ease-[cubic-bezier(0.16,1,0.3,1)] [@media(hover:hover)]:group-hover:scale-x-100 group-focus-visible:scale-x-100"
                       />
 
-                      {/* Left: Index + Title (translateX 12px & accent on hover) + Role */}
+
                       <div className="flex items-baseline gap-6 lg:gap-8 min-w-0 pr-6 relative z-10">
                         <span className="font-mono text-sm tabular-nums tracking-[0.04em] text-ink-dim shrink-0">
                           {formattedIndex}
@@ -175,7 +175,7 @@ export function Work() {
                         </div>
                       </div>
 
-                      {/* Right: Year + Arrow (rotates 45deg -> 0deg and fills accent) */}
+
                       <div className="flex items-center gap-6 shrink-0 font-mono text-sm tracking-[0.04em] text-ink-dim pl-6 relative z-10">
                         <span className="tabular-nums">{project.year}</span>
                         <span
@@ -192,7 +192,7 @@ export function Work() {
             </motion.div>
           </div>
 
-          {/* Right Column (cols 9-12): ONE sticky preview panel */}
+
           <div className="lg:col-span-4 sticky top-[112px]">
             <div className="relative aspect-[16/10] w-full overflow-hidden rounded-2xl border border-ink/15 bg-surface shadow-md">
               <AnimatePresence mode="sync">
@@ -215,7 +215,7 @@ export function Work() {
               </AnimatePresence>
             </div>
 
-            {/* Under the panel: small mono line with Live / Repo links */}
+
             <div className="mt-4 flex items-center justify-between px-1 font-mono text-sm tracking-[0.04em] text-ink-dim">
               <div className="flex items-center gap-4">
                 {activeProject.liveUrl && (
@@ -266,7 +266,7 @@ export function Work() {
           </div>
         </div>
 
-        {/* Mobile / Touch View (<1024px or pointer: coarse): Stacked cards */}
+
         <div className="flex flex-col gap-8 lg:hidden">
           <motion.div
             variants={containerVariants}
@@ -285,7 +285,7 @@ export function Work() {
           </motion.div>
         </div>
 
-        {/* All Repositories Section */}
+
         <div className="mt-20 sm:mt-28 border-t border-ink/15 pt-10 sm:pt-14">
           <div className="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-baseline">
             <span className="font-mono text-[13px] uppercase tracking-widest text-ink-dim">
@@ -331,9 +331,6 @@ export function Work() {
   );
 }
 
-/**
- * Shared image-or-placeholder component for both desktop panel and mobile cards
- */
 function ProjectMediaView({
   project,
   index,
@@ -357,10 +354,10 @@ function ProjectMediaView({
     );
   }
 
-  // Designed Placeholder: surface gradient, faint grid pattern, large index number, bottom-left caption
+
   return (
     <div className="relative h-full w-full overflow-hidden bg-surface select-none">
-      {/* Surface gradient built from the accent at 8-14% opacity */}
+
       <div
         className="absolute inset-0"
         style={{
@@ -368,7 +365,7 @@ function ProjectMediaView({
         }}
       />
 
-      {/* Faint grid pattern */}
+
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 opacity-[0.06]"
@@ -378,7 +375,7 @@ function ProjectMediaView({
         }}
       />
 
-      {/* Large index number in Cabinet Grotesk at ink 12% opacity */}
+
       <span
         aria-hidden="true"
         className="pointer-events-none absolute -top-3 -right-2 font-display text-8xl lg:text-9xl font-bold tracking-tighter text-ink/[0.12] tabular-nums"
@@ -386,7 +383,7 @@ function ProjectMediaView({
         {formattedIndex}
       </span>
 
-      {/* Bottom-left caption: title + tags in mono 12px */}
+
       <div className="absolute bottom-4 left-4 right-4 z-10 flex flex-col gap-1 pointer-events-none">
         <span className="font-mono text-sm font-semibold text-ink tracking-tight line-clamp-1">
           {project.title}
@@ -418,12 +415,12 @@ function MobileProjectCard({
 
   return (
     <div className="flex flex-col rounded-2xl border border-ink/15 bg-surface/30 p-5 sm:p-6 transition-colors">
-      {/* Image area (16/10) using the same image-or-placeholder component */}
+
       <div className="relative aspect-[16/10] w-full overflow-hidden rounded-xl border border-line">
         <ProjectMediaView project={project} index={index} />
       </div>
 
-      {/* Meta: Index + Year */}
+
       <div className="mt-5 flex items-baseline justify-between font-mono text-sm tracking-[0.04em] text-ink-dim">
         <span className="tabular-nums font-semibold text-accent">
           {formattedIndex}
@@ -431,7 +428,7 @@ function MobileProjectCard({
         <span className="tabular-nums">{project.year}</span>
       </div>
 
-      {/* Title */}
+
       <h3
         style={{ fontWeight: 700, letterSpacing: "-0.015em" }}
         className="mt-2 font-display text-ink text-[clamp(1.75rem,5vw,2.25rem)] leading-tight"
@@ -439,12 +436,12 @@ function MobileProjectCard({
         {project.title}
       </h3>
 
-      {/* Role */}
+
       <p className="mt-1.5 text-sm text-ink-dim font-normal">
         {project.role}
       </p>
 
-      {/* Tags */}
+
       <div className="mt-4 flex flex-wrap gap-2">
         {project.tags.slice(0, 3).map((tag) => (
           <span
@@ -456,7 +453,7 @@ function MobileProjectCard({
         ))}
       </div>
 
-      {/* Links */}
+
       <div className="mt-6 flex items-center gap-4 border-t border-ink/10 pt-4 font-mono text-sm tracking-[0.04em]">
         {project.liveUrl && (
           <a

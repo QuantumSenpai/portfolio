@@ -39,8 +39,8 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
   const lenisRef = useRef<Lenis | null>(null);
 
   useEffect(() => {
-    // 2. Lenis is created ONLY when (pointer: fine) matches AND prefers-reduced-motion is not set.
-    // On touch devices/phones: Lenis must NOT be created at all (native scroll).
+
+
     if (typeof window === "undefined") return;
 
     const isFinePointer = window.matchMedia("(pointer: fine)").matches;
@@ -50,13 +50,13 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
       return;
     }
 
-    // 3. Exactly ONE Lenis instance (check React strict mode / double mount creates no duplicate).
+
     if (lenisRef.current) {
       lenisRef.current.destroy();
       lenisRef.current = null;
     }
 
-    // 1. Lenis config from lib/motion.ts (lerp 0.2, wheelMultiplier 1, smoothWheel true, syncTouch false, autoRaf true)
+
     const instance = new Lenis({
       ...LENIS_CONFIG,
     });
@@ -64,7 +64,7 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
     lenisRef.current = instance;
     setLenis(instance);
 
-    // Intercept clicks on a[href^="#"] and use lenis.scrollTo(target, { offset: -72, duration: 1.2 })
+
     function handleClick(e: MouseEvent) {
       const targetAnchor = (e.target as HTMLElement).closest('a[href^="#"]');
       if (!targetAnchor) return;

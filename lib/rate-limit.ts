@@ -2,11 +2,10 @@ import { createHash } from "node:crypto";
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 
-/** Per-IP sliding window: 3 submissions per hour. */
 const PER_IP_HOURLY = 3;
-/** Per-IP sliding window: 10 submissions per day. */
+
 const PER_IP_DAILY = 10;
-/** Global cap per day across every visitor — protects the Formspree quota. */
+
 const GLOBAL_DAILY = 25;
 
 const HOUR_MS = 60 * 60 * 1000;
@@ -17,14 +16,9 @@ export type RateLimitResult = {
   retryAfterSeconds: number;
 };
 
-/** The IP address is only ever used as a hash key — it is never stored or logged. */
 export function hashIp(ip: string): string {
   return createHash("sha256").update(ip).digest("hex");
 }
-
-/* ------------------------------------------------------------------ */
-/* Upstash (shared, survives restarts) — used only when its env is set */
-/* ------------------------------------------------------------------ */
 
 let upstashLimiters: {
   ipHourly: Ratelimit;
@@ -65,10 +59,6 @@ function getUpstash() {
   return upstashLimiters;
 }
 
-/* ------------------------------------------------------------------ */
-/* In-memory fallback — only used when Upstash is not configured        */
-/* ------------------------------------------------------------------ */
-
 type Bucket = { count: number; resetAt: number };
 const memory = new Map<string, Bucket>();
 
@@ -105,11 +95,8 @@ function memoryLimit(
   };
 }
 
-/* ------------------------------------------------------------------ */
-
 let warned = false;
 
-/** Log exactly one warning, never anything about the client. */
 function warnOnce(reason: string) {
   if (warned) return;
   warned = true;
@@ -129,10 +116,6 @@ function toResult(results: { success: boolean; reset: number }[]) {
   };
 }
 
-/**
- * Counts one submission against the per-IP hourly window, the per-IP daily
- * window and the global daily cap.
- */
 export async function rateLimitSubmission(
   ip: string
 ): Promise<RateLimitResult> {

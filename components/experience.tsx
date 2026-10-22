@@ -10,11 +10,6 @@ import {
 import { EASE, DURATION, STAGGER } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 
-/**
- * Shared hover / focus transition.
- * Duration + easing are pulled from lib/motion.ts so every section animates
- * identically. Only transform + opacity are animated — never layout properties.
- */
 const HOVER_TRANSITION = {
   transitionDuration: `${DURATION.base}s`,
   transitionTimingFunction: `cubic-bezier(${EASE.join(", ")})`,
@@ -23,7 +18,7 @@ const HOVER_TRANSITION = {
 export function Experience() {
   const shouldReduceMotion = useReducedMotion();
 
-  // Which row is hovered / focused — every other row dims to 55%
+
   const [activeId, setActiveId] = useState<string | null>(null);
 
   const headingVariants: Variants = {
@@ -54,7 +49,7 @@ export function Experience() {
   return (
     <section id="experience" className="relative w-full py-24 sm:py-32">
       <div className="mx-auto w-full max-w-[1680px] px-5 md:px-10 lg:px-16">
-        {/* Section heading */}
+
         <motion.div
           variants={headingVariants}
           initial={shouldReduceMotion ? false : "hidden"}
@@ -76,7 +71,7 @@ export function Experience() {
           </p>
         </motion.div>
 
-        {/* Experience rows */}
+
         <motion.div
           role="list"
           variants={listVariants}
@@ -136,14 +131,14 @@ function ExperienceRow({
           dimmed ? "opacity-55" : "opacity-100"
         )}
       >
-        {/* Row background tint — ink at 4% */}
+
         <span
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 bg-ink/[0.04] opacity-0 transition-opacity [@media(hover:hover)]:group-hover:opacity-100 group-focus-visible:opacity-100"
           style={HOVER_TRANSITION}
         />
 
-        {/* 1px accent underline — scaleX 0 -> 1 from the left */}
+
         <span
           aria-hidden="true"
           className="pointer-events-none absolute bottom-0 left-0 right-0 h-px origin-left scale-x-0 bg-accent transition-transform [@media(hover:hover)]:group-hover:scale-x-100 group-focus-visible:scale-x-100"
@@ -151,13 +146,13 @@ function ExperienceRow({
         />
 
         <div className="relative z-10 flex items-baseline gap-6 lg:gap-8">
-          {/* Index */}
+
           <span className="shrink-0 font-mono text-sm tabular-nums tracking-[0.04em] text-ink-dim">
             {formattedIndex}
           </span>
 
           <div className="min-w-0 flex-1">
-            {/* Role */}
+
             <h3
               id={titleId}
               style={{
@@ -170,17 +165,17 @@ function ExperienceRow({
               {entry.role}
             </h3>
 
-            {/* Organisation + dates */}
+
             <p className="mt-3 font-mono text-sm tracking-[0.04em] text-ink-dim">{meta}</p>
 
-            {/* Summary */}
+
             {entry.summary && (
               <p className="mt-4 max-w-[60ch] text-sm leading-relaxed text-ink">
                 {entry.summary}
               </p>
             )}
 
-            {/* Bullets — always visible */}
+
             <ul className="mt-6 space-y-2.5">
               {entry.bullets.map((bullet) => (
                 <li
@@ -196,7 +191,7 @@ function ExperienceRow({
               ))}
             </ul>
 
-            {/* Stats */}
+
             {entry.stats && entry.stats.length > 0 && (
               <div className="mt-6 flex flex-wrap gap-1.5">
                 {entry.stats.map((stat) => (
@@ -210,7 +205,7 @@ function ExperienceRow({
               </div>
             )}
 
-            {/* Tags */}
+
             <div className="mt-6 flex flex-wrap gap-1.5">
               {entry.tags.map((tag) => (
                 <span

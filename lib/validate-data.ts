@@ -1,12 +1,4 @@
-/**
- * Development-only data checks.
- *
- * This module is never imported in production — `lib/data.ts` loads it with a
- * guarded dynamic import, so it costs nothing in a production build.
- *
- * Every check prints a clear `[data]` error naming the list, the index and the
- * field that is wrong.
- */
+
 
 import {
   aboutSection,
@@ -92,8 +84,6 @@ function checkDuplicates(where: string, values: string[], field: string) {
   }
 }
 
-/* ------------------------------- projects ------------------------------- */
-
 function validateProjects() {
   projects.forEach((project, index) => {
     const where = `projects[${index}]`;
@@ -129,8 +119,6 @@ function validateProjects() {
   );
 }
 
-/* ------------------------------ other repos ----------------------------- */
-
 function validateOtherRepos() {
   otherRepos.forEach((repo, index) => {
     const where = `otherRepos[${index}]`;
@@ -145,8 +133,6 @@ function validateOtherRepos() {
     "name"
   );
 }
-
-/* ------------------------------ experiences ----------------------------- */
 
 function validateExperiences() {
   experiences.forEach((entry, index) => {
@@ -196,8 +182,6 @@ function validateExperiences() {
   );
 }
 
-/* ------------------------------ skill groups ---------------------------- */
-
 function validateSkillGroups() {
   const allNames: string[] = [];
 
@@ -233,8 +217,6 @@ function validateSkillGroups() {
   checkDuplicates("skillGroups.items", allNames, "skill name");
 }
 
-/* -------------------------------- videos -------------------------------- */
-
 function validateVideos() {
   videos.forEach((video, index) => {
     const where = `videos[${index}]`;
@@ -256,8 +238,6 @@ function validateVideos() {
   );
 }
 
-/* ------------------------------- socials -------------------------------- */
-
 function validateSocials() {
   socials.forEach((social, index) => {
     const where = `socials[${index}]`;
@@ -272,8 +252,6 @@ function validateSocials() {
   );
 }
 
-/* ------------------------------- services ------------------------------- */
-
 function validateServices() {
   services.forEach((service, index) => {
     const where = `services[${index}]`;
@@ -287,8 +265,6 @@ function validateServices() {
     "title"
   );
 }
-
-/* --------------------------- section copy ------------------------------- */
 
 function validateSectionCopy() {
   const sections: [string, { eyebrow?: string; heading?: string }][] = [
@@ -366,7 +342,6 @@ function validateSectionCopy() {
   });
 }
 
-/** Runs every check. Only called in development. */
 export function validateData() {
   validateProjects();
   validateOtherRepos();

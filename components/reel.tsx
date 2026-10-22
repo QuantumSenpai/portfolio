@@ -6,16 +6,11 @@ import { motion, useReducedMotion, type Variants } from "framer-motion";
 import { reelSection, videos, type ReelVideo } from "@/lib/data";
 import { EASE, DURATION, STAGGER } from "@/lib/motion";
 
-/**
- * Shared hover transition.
- * Duration + easing come from lib/motion.ts so every section animates the same.
- */
 const HOVER_TRANSITION = {
   transitionDuration: `${DURATION.base}s`,
   transitionTimingFunction: `cubic-bezier(${EASE.join(", ")})`,
 };
 
-/** The small "Play" pill that fades in over a thumbnail. */
 const PLAY_PILL =
   "pointer-events-none absolute bottom-3 left-3 inline-flex items-center gap-1.5 rounded-full bg-ink/85 px-3 py-1.5 font-mono text-sm tracking-[0.04em] text-bg opacity-0 transition-opacity group-hover/play:opacity-100 group-focus-visible/play:opacity-100 [@media(pointer:coarse)]:opacity-100";
 
@@ -38,7 +33,7 @@ export function Reel() {
     },
   };
 
-  // A video without an id is hidden.
+
   const playable = videos.filter((video) => video.id && video.id.trim() !== "");
   const edits = playable.filter((video) => video.kind !== "short");
   const shorts = playable.filter((video) => video.kind === "short");
@@ -46,7 +41,7 @@ export function Reel() {
   return (
     <section id="reel" className="relative w-full py-24 sm:py-32">
       <div className="mx-auto w-full max-w-[1680px] px-5 md:px-10 lg:px-16">
-        {/* Section heading */}
+
         <motion.div
           initial={shouldReduceMotion ? false : { opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -80,7 +75,7 @@ export function Reel() {
           )}
         </motion.div>
 
-        {/* Edits */}
+
         {edits.length > 0 && (
           <motion.div
             variants={containerVariants}
@@ -97,17 +92,13 @@ export function Reel() {
           </motion.div>
         )}
 
-        {/* Shorts — only when there is at least one */}
+
         {shorts.length > 0 && <ShortsRail shorts={shorts} />}
       </div>
     </section>
   );
 }
 
-/**
- * A 16:9 edit. The thumbnail is a real button; no iframe is mounted until the
- * visitor activates it.
- */
 function EditCard({ video }: { video: ReelVideo }) {
   const [playing, setPlaying] = useState(false);
 
@@ -163,7 +154,6 @@ function EditCard({ video }: { video: ReelVideo }) {
   );
 }
 
-/** Horizontal rail of 9:16 shorts. */
 function ShortsRail({ shorts }: { shorts: ReelVideo[] }) {
   const railRef = useRef<HTMLDivElement>(null);
   const [isFinePointer, setIsFinePointer] = useState(false);
@@ -266,7 +256,6 @@ function ShortsRail({ shorts }: { shorts: ReelVideo[] }) {
   );
 }
 
-/** A 9:16 short. */
 function ShortCard({ video }: { video: ReelVideo }) {
   const [playing, setPlaying] = useState(false);
 

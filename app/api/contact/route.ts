@@ -4,13 +4,12 @@ import { rateLimitSubmission } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 
-/** Reject anything bigger than 10KB before parsing it. */
 const MAX_BODY_BYTES = 10 * 1024;
 const NAME_MAX = 80;
 const EMAIL_MAX = 120;
 const MESSAGE_MIN = 10;
 const MESSAGE_MAX = 2000;
-/** Submissions sent faster than this are treated as automated. */
+
 const MIN_ELAPSED_MS = 3000;
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
@@ -22,7 +21,6 @@ function str(value: unknown): string {
   return typeof value === "string" ? value.trim() : "";
 }
 
-/** The Origin/Referer host must match the host the request was made to. */
 function isSameOrigin(request: Request): boolean {
   const allowed = new Set<string>();
 
@@ -34,7 +32,7 @@ function isSameOrigin(request: Request): boolean {
     try {
       allowed.add(new URL(siteUrl).host);
     } catch {
-      // An unparseable SITE_URL is ignored.
+
     }
   }
 
@@ -48,7 +46,7 @@ function isSameOrigin(request: Request): boolean {
     try {
       if (allowed.has(new URL(candidate).host)) return true;
     } catch {
-      // Not a URL — ignore.
+
     }
   }
 
@@ -56,7 +54,7 @@ function isSameOrigin(request: Request): boolean {
 }
 
 export async function POST(request: Request) {
-  // 1. Body size
+
   const declared = Number(request.headers.get("content-length") ?? "0");
   if (Number.isFinite(declared) && declared > MAX_BODY_BYTES) {
     return fail(413, contactForm.errors.invalidRequest);
@@ -82,12 +80,12 @@ export async function POST(request: Request) {
 
   const body = (payload ?? {}) as Record<string, unknown>;
 
-  // 2. Honeypot — look like it worked, send nothing.
+
   if (str(body.company) !== "") {
     return NextResponse.json({ ok: true });
   }
 
-  // 3. Submitted too quickly
+
   const startedAt = Number(body.startedAt);
   if (
     !Number.isFinite(startedAt) ||
@@ -97,17 +95,17 @@ export async function POST(request: Request) {
     return fail(400, contactForm.errors.invalidRequest);
   }
 
-  // 4. Same-origin only
+
   if (!isSameOrigin(request)) {
     return fail(403, contactForm.errors.invalidRequest);
   }
 
-  // 5. Consent
+
   if (body.consent !== true) {
     return fail(400, contactForm.errors.missingConsent);
   }
 
-  // 6. Fields
+
   const name = str(body.name);
   const email = str(body.email);
   const service = str(body.service);
@@ -126,7 +124,7 @@ export async function POST(request: Request) {
     return fail(400, contactForm.errors.invalidFields);
   }
 
-  // 7. Rate limit
+
   const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "";
   const limit = await rateLimitSubmission(ip);
   if (!limit.allowed) {
@@ -135,7 +133,7 @@ export async function POST(request: Request) {
     });
   }
 
-  // 8. Forward to Formspree
+
   const formId = process.env.FORMSPREE_FORM_ID;
   if (!formId) {
     console.error("[contact] FORMSPREE_FORM_ID is not configured");

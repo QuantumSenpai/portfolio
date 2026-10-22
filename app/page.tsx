@@ -11,7 +11,6 @@ import { GitHubActivity } from "@/components/github-activity";
 import { Reel } from "@/components/reel";
 import { Contact } from "@/components/contact";
 
-/** public/profile.jpg must be a real image — an empty/0-byte file is treated as missing. */
 function portraitIsLoadable() {
   try {
     return statSync(join(process.cwd(), "public", "profile.jpg")).size > 0;
@@ -20,7 +19,6 @@ function portraitIsLoadable() {
   }
 }
 
-/** public/signature.svg is optional — the footer falls back to the text watermark. */
 function signatureExists() {
   try {
     return statSync(join(process.cwd(), "public", "signature.svg")).size > 0;

@@ -31,8 +31,6 @@
   --grid-line-opacity: 0.03;
   --heatmap-empty: color-mix(in srgb, var(--ink) 8%, transparent);
 }
-
-/* Tone Invert: swaps theme values to the opposite theme scoped to section */
 [data-tone="invert"] {
   --bg: #0a0e18;
   --surface: #121729;
@@ -130,8 +128,6 @@ p {
 .tabular-nums {
   font-variant-numeric: tabular-nums;
 }
-
-/* Primary buttons: background var(--ink), text var(--bg) */
 .btn-primary {
   background: var(--ink);
   color: var(--bg);
@@ -174,9 +170,6 @@ a {
   background: var(--line-strong);
   border-radius: 999px;
 }
-
-/* Skills masonry — one column on mobile, two from 1024px. The column count
-   never depends on the number of cards. */
 .masonry {
   column-count: 1;
   column-gap: 2rem;
@@ -187,9 +180,6 @@ a {
     column-count: 2;
   }
 }
-
-/* GitHub contribution cells — fade in with a left-to-right stagger.
-   --i is the week index; the total delay is capped at ~1.2s. */
 @keyframes github-cell-in {
   from {
     opacity: 0;
@@ -213,9 +203,6 @@ a {
     transform: none;
   }
 }
-
-/* Signature wipe — a soft-edged linear wipe from left to right.
-   --p is registered so the browser can interpolate it. */
 @property --p {
   syntax: "<percentage>";
   inherits: false;
@@ -248,14 +235,10 @@ a {
   animation: signature-wipe var(--signature-duration, 2.4s)
     var(--signature-ease, cubic-bezier(0.65, 0, 0.35, 1)) forwards;
 }
-
-/* Legacy anchor: the Skills section is now part of #about */
 #skills {
   display: block;
   height: 0;
 }
-
-/* Availability dot — opacity-only pulse (no transform), off under reduced motion */
 @keyframes pulse-dot {
   0%,
   100% {

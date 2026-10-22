@@ -18,10 +18,6 @@ import {
 } from "@/lib/data";
 import { EASE, DURATION, STAGGER } from "@/lib/motion";
 
-/**
- * Shared hover transition.
- * Duration + easing come from lib/motion.ts so every section animates the same.
- */
 const HOVER_TRANSITION = {
   transitionDuration: `${DURATION.base}s`,
   transitionTimingFunction: `cubic-bezier(${EASE.join(", ")})`,
@@ -50,7 +46,7 @@ export function About({ hasPortrait = false }: { hasPortrait?: boolean }) {
 
   return (
     <section id="about" className="relative w-full py-24 sm:py-32">
-      {/* Legacy anchor: the Skills section now lives here */}
+
       <span id="skills" />
 
       <div className="mx-auto w-full max-w-[1680px] px-5 md:px-10 lg:px-16">
@@ -60,7 +56,7 @@ export function About({ hasPortrait = false }: { hasPortrait?: boolean }) {
           transition={{ duration: DURATION.base, ease: EASE }}
           viewport={{ once: true, margin: "-60px" }}
         >
-          {/* Section heading */}
+
           <span className="font-mono text-[13px] uppercase tracking-widest text-accent">
             {aboutSection.eyebrow}
           </span>
@@ -72,11 +68,11 @@ export function About({ hasPortrait = false }: { hasPortrait?: boolean }) {
           </h2>
 
           <div className="mt-12 grid gap-12 md:grid-cols-12 md:gap-x-8 lg:gap-x-12 xl:gap-x-16">
-            {/* Left: portrait + name */}
+
             <div className="max-w-[240px] md:col-span-4 md:max-w-none">
               <Portrait hasPortrait={hasPortrait} />
 
-              {/* Name block — "Krishnendu Adak" + "(Kisu)" */}
+
               <p
                 style={{ fontWeight: 700, letterSpacing: "-0.015em" }}
                 className="mt-6 font-display text-[clamp(1.5rem,2.2vw,2.25rem)] leading-tight text-ink"
@@ -91,9 +87,9 @@ export function About({ hasPortrait = false }: { hasPortrait?: boolean }) {
               </p>
             </div>
 
-            {/* Right: bio, skills, services */}
+
             <div className="md:col-span-7 md:col-start-6">
-              {/* Bio */}
+
               <div className="max-w-[62ch] space-y-6 pb-8">
                 {aboutSection.bio.map((paragraph) => (
                   <p
@@ -105,12 +101,12 @@ export function About({ hasPortrait = false }: { hasPortrait?: boolean }) {
                 ))}
               </div>
 
-              {/* Education */}
+
               <p className="mt-8 max-w-[62ch] border-t border-ink/10 pt-6 text-[0.9375rem] leading-relaxed text-ink-dim">
                 {aboutSection.education.line}
               </p>
 
-              {/* Skills — bento cards */}
+
               <motion.div
                 variants={groupVariants}
                 initial={shouldReduceMotion ? false : "hidden"}
@@ -129,7 +125,7 @@ export function About({ hasPortrait = false }: { hasPortrait?: boolean }) {
                 ))}
               </motion.div>
 
-              {/* Services */}
+
               <div className="mt-12 border-t border-ink/15 pt-8">
                 <div className="grid gap-8 sm:grid-cols-3 md:grid-cols-1 xl:grid-cols-3">
                   {services.map((service, i) => (
@@ -161,10 +157,6 @@ export function About({ hasPortrait = false }: { hasPortrait?: boolean }) {
   );
 }
 
-/**
- * One bento card. The spotlight follows the pointer with motion values, so
- * moving the cursor never triggers a React re-render.
- */
 function SkillCard({ group }: { group: SkillGroup }) {
   const shouldReduceMotion = useReducedMotion();
   const [expanded, setExpanded] = useState(false);
@@ -240,7 +232,7 @@ function SkillCard({ group }: { group: SkillGroup }) {
       onBlur={handleBlur}
       className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-ink/15 bg-surface/40 p-6 transition-colors duration-700 [@media(hover:hover)]:hover:border-ink/40 focus-visible:border-ink/40 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-4"
     >
-      {/* Spotlight that follows the pointer */}
+
       <motion.span
         aria-hidden="true"
         className="pointer-events-none absolute inset-0"
@@ -339,11 +331,10 @@ function Portrait({ hasPortrait }: { hasPortrait: boolean }) {
   );
 }
 
-/** Shown when public/profile.jpg is empty or fails to load. */
 function PortraitPlaceholder() {
   return (
     <div className="relative aspect-[4/5] w-full overflow-hidden rounded-2xl border border-ink/15 bg-surface select-none">
-      {/* Accent gradient at 10% opacity */}
+
       <div
         aria-hidden="true"
         className="absolute inset-0"
@@ -352,7 +343,7 @@ function PortraitPlaceholder() {
         }}
       />
 
-      {/* Faint grid pattern */}
+
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 opacity-[0.06]"
@@ -362,7 +353,7 @@ function PortraitPlaceholder() {
         }}
       />
 
-      {/* Monogram in Cabinet Grotesk at ink 12% opacity */}
+
       <span
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 flex items-center justify-center font-display text-8xl font-bold tracking-tighter text-ink/[0.12]"

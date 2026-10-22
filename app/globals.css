@@ -205,17 +205,16 @@ a {
   padding-inline: clamp(1.5rem, 4vw, 4rem);
 }
 
-/* Bento grid — the column count follows the container width, never the number
-   of cards. A card with 5+ items spans two columns (see components/about.tsx). */
-.bento-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
+/* Skills masonry — one column on mobile, two from 1024px. The column count
+   never depends on the number of cards. */
+.masonry {
+  column-count: 1;
+  column-gap: 2rem;
 }
 
-@media (min-width: 768px) {
-  .bento-wide {
-    grid-column: span 2;
+@media (min-width: 1024px) {
+  .masonry {
+    column-count: 2;
   }
 }
 

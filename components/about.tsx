@@ -14,6 +14,7 @@ import {
   skillGroups,
   services,
   type SkillGroup,
+  type SkillItem as SkillItemType,
 } from "@/lib/data";
 import { EASE, DURATION, STAGGER } from "@/lib/motion";
 
@@ -25,6 +26,8 @@ const HOVER_TRANSITION = {
   transitionDuration: `${DURATION.base}s`,
   transitionTimingFunction: `cubic-bezier(${EASE.join(", ")})`,
 };
+
+const SKILLS_VISIBLE = 8;
 
 export function About({ hasPortrait = false }: { hasPortrait?: boolean }) {
   const shouldReduceMotion = useReducedMotion();
@@ -68,7 +71,7 @@ export function About({ hasPortrait = false }: { hasPortrait?: boolean }) {
             {aboutSection.heading}
           </h2>
 
-          <div className="mt-12 grid gap-10 md:grid-cols-12 md:gap-x-8 lg:gap-x-12 xl:gap-x-16">
+          <div className="mt-12 grid gap-12 md:grid-cols-12 md:gap-x-8 lg:gap-x-12 xl:gap-x-16">
             {/* Left: portrait + name */}
             <div className="max-w-[240px] md:col-span-4 md:max-w-none">
               <Portrait hasPortrait={hasPortrait} />
@@ -78,8 +81,8 @@ export function About({ hasPortrait = false }: { hasPortrait?: boolean }) {
                 style={{ fontWeight: 700, letterSpacing: "-0.015em" }}
                 className="mt-6 font-display text-[clamp(1.5rem,2.2vw,2.25rem)] leading-tight text-ink"
               >
-                {aboutSection.portrait.name}{" "}
-                <span className="text-ink-dim">
+                {aboutSection.portrait.name}
+                <span className="ml-3 font-medium text-ink-dim">
                   {`(${aboutSection.portrait.nickname})`}
                 </span>
               </p>
@@ -91,7 +94,7 @@ export function About({ hasPortrait = false }: { hasPortrait?: boolean }) {
             {/* Right: bio, skills, services */}
             <div className="md:col-span-7 md:col-start-6">
               {/* Bio */}
-              <div className="max-w-[60ch] space-y-6">
+              <div className="max-w-[62ch] space-y-6 pb-8">
                 {aboutSection.bio.map((paragraph) => (
                   <p
                     key={paragraph}
@@ -103,7 +106,7 @@ export function About({ hasPortrait = false }: { hasPortrait?: boolean }) {
               </div>
 
               {/* Education */}
-              <p className="mt-6 max-w-[60ch] border-t border-ink/10 pt-6 text-[0.9375rem] leading-relaxed text-ink-dim">
+              <p className="mt-8 max-w-[62ch] border-t border-ink/10 pt-6 text-[0.9375rem] leading-relaxed text-ink-dim">
                 {aboutSection.education.line}
               </p>
 
@@ -113,15 +116,13 @@ export function About({ hasPortrait = false }: { hasPortrait?: boolean }) {
                 initial={shouldReduceMotion ? false : "hidden"}
                 whileInView="visible"
                 viewport={{ once: true, margin: "-40px" }}
-                className="bento-grid mt-12"
+                className="masonry mt-12"
               >
                 {skillGroups.map((group) => (
                   <motion.div
                     key={group.label}
                     variants={cardVariants}
-                    className={
-                      group.items.length >= 5 ? "bento-wide" : undefined
-                    }
+                    className="mb-8 break-inside-avoid"
                   >
                     <SkillCard group={group} />
                   </motion.div>
@@ -141,7 +142,7 @@ export function About({ hasPortrait = false }: { hasPortrait?: boolean }) {
                           fontWeight: 700,
                           letterSpacing: "-0.015em",
                         }}
-                        className="mt-3 font-display text-[1.375rem] leading-tight text-ink sm:text-[1.5rem]"
+                        className="mt-4 font-display text-[1.375rem] leading-tight text-ink sm:text-[1.5rem]"
                       >
                         {service.title}
                       </h4>
@@ -166,6 +167,11 @@ export function About({ hasPortrait = false }: { hasPortrait?: boolean }) {
  */
 function SkillCard({ group }: { group: SkillGroup }) {
   const shouldReduceMotion = useReducedMotion();
+  const [expanded, setExpanded] = useState(false);
+  const visibleItems = expanded
+    ? group.items
+    : group.items.slice(0, SKILLS_VISIBLE);
+  const hiddenItems = group.items.slice(SKILLS_VISIBLE);
   const cardRef = useRef<HTMLDivElement>(null);
   const rectRef = useRef<DOMRect | null>(null);
 
@@ -255,31 +261,60 @@ function SkillCard({ group }: { group: SkillGroup }) {
         </p>
       )}
 
-      <ul className="relative mt-5 grid grid-cols-2 gap-x-4 gap-y-2">
-        {group.items.map((item) => (
-          <li
-            key={item.name}
-            className="flex items-start gap-2 text-base leading-snug text-ink"
-          >
-            <span
-              aria-hidden="true"
-              className="mt-2 h-1 w-1 shrink-0 rounded-full bg-accent"
-            />
-            <span className="flex flex-wrap items-baseline gap-x-2">
-              {item.name}
-              {item.status === "learning" && (
-                <span className="font-mono text-[0.875rem] uppercase tracking-wider text-accent">
-                  {item.status}
-                </span>
-              )}
-              {item.note && (
-                <span className="text-[0.875rem] text-ink-dim">{item.note}</span>
-              )}
-            </span>
-          </li>
+      <ul className="relative mt-6 grid grid-cols-2 gap-x-4 gap-y-2">
+        {visibleItems.map((item) => (
+          <SkillItem key={item.name} item={item} />
         ))}
       </ul>
+
+      {hiddenItems.length > 0 && (
+        <>
+          <div
+            className="grid transition-[grid-template-rows]"
+            style={{
+              gridTemplateRows: expanded ? "1fr" : "0fr",
+              ...HOVER_TRANSITION,
+            }}
+          >
+            <div className="overflow-hidden">
+              <ul className="mt-2 grid grid-cols-2 gap-x-4 gap-y-2">
+                {hiddenItems.map((item) => (
+                  <SkillItem key={item.name} item={item} />
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setExpanded((value) => !value)}
+            aria-expanded={expanded}
+            className="mt-2 inline-flex min-h-[44px] items-center text-[0.9375rem] text-ink-dim transition-colors hover:text-accent focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-4"
+          >
+            Show all {group.items.length}
+          </button>
+        </>
+      )}
     </div>
+  );
+}
+
+function SkillItem({ item }: { item: SkillItemType }) {
+  return (
+    <li className="flex items-start gap-2 text-base leading-snug text-ink">
+      <span aria-hidden="true" className="mt-2 h-1 w-1 shrink-0 rounded-full bg-accent" />
+      <span className="flex flex-wrap items-baseline gap-x-2">
+        {item.name}
+        {item.status === "learning" && (
+          <span className="font-mono text-[0.875rem] uppercase tracking-wider text-accent">
+            {item.status}
+          </span>
+        )}
+        {item.note && (
+          <span className="text-[0.875rem] text-ink-dim">{item.note}</span>
+        )}
+      </span>
+    </li>
   );
 }
 

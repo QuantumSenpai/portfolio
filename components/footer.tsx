@@ -5,11 +5,7 @@ import Image from "next/image";
 import { motion, useInView, useReducedMotion } from "framer-motion";
 import { footer } from "@/lib/data";
 import { useLenis } from "@/components/providers/smooth-scroll-provider";
-import {
-  EASE,
-  SIGNATURE_DURATION,
-  SIGNATURE_EASE,
-} from "@/lib/motion";
+import { EASE, SIGNATURE_DURATION, SIGNATURE_EASE } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 
 export function Footer({ hasSignature = false }: { hasSignature?: boolean }) {
@@ -25,48 +21,48 @@ export function Footer({ hasSignature = false }: { hasSignature?: boolean }) {
       return;
     }
     if (typeof window !== "undefined") {
-      window.scrollTo({ top: 0, behavior: shouldReduceMotion ? "auto" : "smooth" });
+      window.scrollTo({
+        top: 0,
+        behavior: shouldReduceMotion ? "auto" : "smooth",
+      });
     }
   }
 
   return (
     <footer className="w-full border-t border-ink/15">
       <div className="mx-auto w-full max-w-[1680px] px-6 md:px-10 lg:px-16">
-        {/* Link columns */}
-        <div className="grid gap-10 py-14 sm:grid-cols-3 sm:gap-8">
-          {footer.columns.map((column) => (
-            <div key={column.title}>
-              <h3 className="font-mono text-sm tracking-[0.04em] text-ink-dim">
-                {column.title}
-              </h3>
-              <ul className="mt-4 space-y-2">
-                {column.links.map((link) => (
-                  <li key={`${column.title}-${link.label}`}>
-                    <a
-                      href={link.href}
-                      target={link.external ? "_blank" : undefined}
-                      rel={link.external ? "noopener noreferrer" : undefined}
-                      className="text-base text-ink transition-colors hover:text-accent focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-4"
-                    >
-                      {link.label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+        <div className="grid gap-8 pb-16 pt-16 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start lg:gap-x-16">
+          <div className="grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-3 lg:max-w-2xl lg:gap-x-12">
+            {footer.columns.map((column) => (
+              <div key={column.title}>
+                <h3 className="mb-6 text-sm text-ink-dim">{column.title}</h3>
+                <ul>
+                  {column.links.map((link) => (
+                    <li key={`${column.title}-${link.label}`}>
+                      <a
+                        href={link.href}
+                        target={link.external ? "_blank" : undefined}
+                        rel={link.external ? "noopener noreferrer" : undefined}
+                        className="inline-flex min-h-[44px] items-center py-2 text-base text-ink transition-colors hover:text-accent focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-4"
+                      >
+                        {link.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+
+          <div className="flex justify-center lg:justify-end">
+            <Signature hasSignature={hasSignature} />
+          </div>
         </div>
 
-        {/* Signature */}
-        <div className="flex justify-center pb-2 md:justify-start">
-          <Signature hasSignature={hasSignature} />
-        </div>
-
-        {/* Bottom bar */}
-        <div className="flex flex-col items-start justify-between gap-6 py-8 sm:flex-row sm:items-center">
+        <div className="flex flex-col items-start justify-between gap-6 border-t border-ink/10 py-8 sm:flex-row sm:items-center">
           <p
             suppressHydrationWarning
-            className="font-mono text-sm tracking-[0.04em] text-ink-dim"
+            className="text-[0.9375rem] text-ink-dim"
           >
             {copyright}
           </p>
@@ -74,7 +70,7 @@ export function Footer({ hasSignature = false }: { hasSignature?: boolean }) {
           <div className="flex items-center gap-4">
             <span
               aria-hidden="true"
-              className="hidden text-sm tracking-[0.04em] text-ink-dim sm:inline"
+              className="hidden text-[0.9375rem] text-ink-dim sm:inline"
             >
               Back to top
             </span>
@@ -95,10 +91,6 @@ export function Footer({ hasSignature = false }: { hasSignature?: boolean }) {
   );
 }
 
-/**
- * The signature. The text (or the SVG file) is revealed with a soft-edged
- * linear wipe, and an underline flourish draws itself straight after.
- */
 function Signature({ hasSignature }: { hasSignature: boolean }) {
   const shouldReduceMotion = useReducedMotion();
   const ref = useRef<HTMLDivElement>(null);
@@ -112,7 +104,7 @@ function Signature({ hasSignature }: { hasSignature: boolean }) {
   return (
     <div
       ref={ref}
-      className="relative flex h-[200px] w-full max-w-[640px] flex-col justify-end overflow-hidden"
+      className="relative flex w-full max-w-[640px] flex-col justify-end overflow-visible min-h-[calc(clamp(4rem,9vw,8rem)*1.1)]"
     >
       <div
         className={wipe}
@@ -131,13 +123,12 @@ function Signature({ hasSignature }: { hasSignature: boolean }) {
             className="h-auto w-full object-contain"
           />
         ) : (
-          <span className="block select-none whitespace-nowrap font-signature text-[clamp(4.5rem,12vw,10rem)] leading-[0.85] text-ink/[0.92] -rotate-3">
+          <span className="block select-none whitespace-nowrap p-[0.12em] font-signature text-[clamp(4rem,9vw,8rem)] leading-[1.1] text-ink/[0.92] -rotate-3">
             {footer.signatureText}
           </span>
         )}
       </div>
 
-      {/* Underline flourish — draws right after the wipe */}
       <svg
         aria-hidden="true"
         viewBox="0 0 420 24"

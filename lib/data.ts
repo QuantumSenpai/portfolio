@@ -715,6 +715,8 @@ export interface ReelSectionConfig {
   eyebrow: string;
   heading: string;
   description?: string;
+  /** Optional — the channel link is hidden when this is missing. */
+  channelUrl?: string;
 }
 
 export const reelSection: ReelSectionConfig = {
@@ -726,6 +728,8 @@ export interface ReelVideo {
   id: string; // YouTube video id — a video without an id is hidden
   title: string;
   caption?: string;
+  kind: "video" | "short";
+  thumb?: string; // optional custom thumbnail — local path or full URL
 }
 
 export const videos: ReelVideo[] = [
@@ -733,16 +737,19 @@ export const videos: ReelVideo[] = [
     id: "RSFbZIeSGmg",
     title: "JJK · Yuta Edit",
     caption: "After Effects · Anime Edit",
+    kind: "video",
   },
   {
     id: "zp42sJYuLP8",
     title: "Royalty · Solo Leveling",
     caption: "Motion Design",
+    kind: "video",
   },
   {
     id: "PMZbuAV5hYQ",
     title: "JJK S2 Edit",
     caption: "After Effects · Premiere Pro",
+    kind: "video",
   },
 ];
 

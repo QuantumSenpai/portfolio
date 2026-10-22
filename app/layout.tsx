@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import { JetBrains_Mono, Mrs_Saint_Delafield } from "next/font/google";
+import { Herr_Von_Muellerhoff, JetBrains_Mono } from "next/font/google";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { SmoothScroll } from "@/components/providers/smooth-scroll-provider";
 import "./globals.css";
@@ -60,8 +60,7 @@ const jetbrainsMono = JetBrains_Mono({
   display: "swap",
 });
 
-/** Script face used for the signature at the bottom of the page. */
-const signatureFont = Mrs_Saint_Delafield({
+const signatureFont = Herr_Von_Muellerhoff({
   subsets: ["latin"],
   weight: "400",
   fallback: ["Mea Culpa"],

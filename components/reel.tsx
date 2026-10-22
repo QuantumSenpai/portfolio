@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { motion, useReducedMotion, type Variants } from "framer-motion";
 import { reelSection, videos, type ReelVideo } from "@/lib/data";
@@ -14,6 +14,10 @@ const HOVER_TRANSITION = {
   transitionDuration: `${DURATION.base}s`,
   transitionTimingFunction: `cubic-bezier(${EASE.join(", ")})`,
 };
+
+/** The small "Play" pill that fades in over a thumbnail. */
+const PLAY_PILL =
+  "pointer-events-none absolute bottom-3 left-3 inline-flex items-center gap-1.5 rounded-full bg-ink/85 px-3 py-1.5 font-mono text-sm tracking-[0.04em] text-bg opacity-0 transition-opacity group-hover/play:opacity-100 group-focus-visible/play:opacity-100 [@media(pointer:coarse)]:opacity-100";
 
 export function Reel() {
   const shouldReduceMotion = useReducedMotion();
@@ -35,10 +39,12 @@ export function Reel() {
   };
 
   // A video without an id is hidden.
-  const items = videos.filter((video) => video.id && video.id.trim() !== "");
+  const playable = videos.filter((video) => video.id && video.id.trim() !== "");
+  const edits = playable.filter((video) => video.kind !== "short");
+  const shorts = playable.filter((video) => video.kind === "short");
 
   return (
-    <section id="reel" data-tone="invert" className="relative w-full py-24 sm:py-32">
+    <section id="reel" className="relative w-full py-24 sm:py-32">
       <div className="mx-auto w-full max-w-[1680px] px-6 md:px-10 lg:px-16">
         {/* Section heading */}
         <motion.div
@@ -46,7 +52,6 @@ export function Reel() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: DURATION.base, ease: EASE }}
           viewport={{ once: true, margin: "-60px" }}
-          className="mb-14 sm:mb-20"
         >
           <span className="font-mono text-[13px] uppercase tracking-widest text-accent">
             {reelSection.eyebrow}
@@ -58,39 +63,55 @@ export function Reel() {
             {reelSection.heading}
           </h2>
           {reelSection.description && (
-            <p className="mt-4 max-w-xl text-base text-ink-dim sm:text-lg">
+            <p className="mt-4 max-w-xl text-base leading-relaxed text-ink-dim sm:text-lg">
               {reelSection.description}
             </p>
           )}
+          {reelSection.channelUrl && (
+            <a
+              href={reelSection.channelUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-4 inline-flex items-center gap-1.5 font-mono text-sm tracking-[0.04em] text-ink-dim transition-colors hover:text-accent focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-4"
+            >
+              <span>YouTube</span>
+              <span aria-hidden="true">↗</span>
+            </a>
+          )}
         </motion.div>
 
-        {/* Videos */}
-        <motion.div
-          variants={containerVariants}
-          initial={shouldReduceMotion ? false : "hidden"}
-          whileInView="visible"
-          viewport={{ once: true, margin: "-60px" }}
-          className="grid grid-cols-1 gap-8 lg:grid-cols-3"
-        >
-          {items.map((video) => (
-            <motion.div key={video.id} variants={cardVariants}>
-              <VideoCard video={video} />
-            </motion.div>
-          ))}
-        </motion.div>
+        {/* Edits */}
+        {edits.length > 0 && (
+          <motion.div
+            variants={containerVariants}
+            initial={shouldReduceMotion ? false : "hidden"}
+            whileInView="visible"
+            viewport={{ once: true, margin: "-60px" }}
+            className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-3"
+          >
+            {edits.map((video) => (
+              <motion.div key={video.id} variants={cardVariants}>
+                <EditCard video={video} />
+              </motion.div>
+            ))}
+          </motion.div>
+        )}
+
+        {/* Shorts — only when there is at least one */}
+        {shorts.length > 0 && <ShortsRail shorts={shorts} />}
       </div>
     </section>
   );
 }
 
 /**
- * YouTube facade — the thumbnail is a real button. No iframe is mounted
- * until the user activates it (click, Enter or Space).
+ * A 16:9 edit. The thumbnail is a real button; no iframe is mounted until the
+ * visitor activates it.
  */
-function VideoCard({ video }: { video: ReelVideo }) {
+function EditCard({ video }: { video: ReelVideo }) {
   const [playing, setPlaying] = useState(false);
 
-  const thumbnail = `https://i.ytimg.com/vi/${video.id}/hqdefault.jpg`;
+  const thumbnail = video.thumb ?? `https://i.ytimg.com/vi/${video.id}/hqdefault.jpg`;
 
   return (
     <div>
@@ -119,30 +140,174 @@ function VideoCard({ video }: { video: ReelVideo }) {
               className="object-cover transition-transform group-hover/play:scale-[1.03] group-focus-visible/play:scale-[1.03]"
               style={HOVER_TRANSITION}
             />
-
-            {/* Circular play button */}
-            <span
-              aria-hidden="true"
-              className="pointer-events-none relative flex h-16 w-16 items-center justify-center rounded-full bg-ink/90 text-bg transition-transform group-hover/play:scale-[1.08] group-focus-visible/play:scale-[1.08] group-focus-visible/play:ring-2 group-focus-visible/play:ring-accent"
-              style={HOVER_TRANSITION}
-            >
-              <svg
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                className="h-5 w-5 translate-x-[1px]"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path d="M8 5.14v13.72a1 1 0 0 0 1.52.85l10.8-6.86a1 1 0 0 0 0-1.7L9.52 4.29A1 1 0 0 0 8 5.14Z" />
-              </svg>
+            <span className={PLAY_PILL} style={HOVER_TRANSITION}>
+              <span aria-hidden="true" className="text-xs leading-none">
+                ▶
+              </span>
+              Play
             </span>
           </button>
         )}
       </div>
 
-      <p className="mt-4 text-sm text-ink-dim">
-        <span className="text-ink">{video.title}</span>
-        {video.caption ? ` — ${video.caption}` : null}
-      </p>
+      <h3
+        style={{ fontWeight: 700, letterSpacing: "-0.015em" }}
+        className="mt-4 font-display text-xl leading-tight text-ink"
+      >
+        {video.title}
+      </h3>
+      {video.caption && (
+        <p className="mt-1 text-sm text-ink-dim">{video.caption}</p>
+      )}
+    </div>
+  );
+}
+
+/** Horizontal rail of 9:16 shorts. */
+function ShortsRail({ shorts }: { shorts: ReelVideo[] }) {
+  const railRef = useRef<HTMLDivElement>(null);
+  const [isFinePointer, setIsFinePointer] = useState(false);
+  const [canPrev, setCanPrev] = useState(false);
+  const [canNext, setCanNext] = useState(false);
+
+  useEffect(() => {
+    setIsFinePointer(window.matchMedia("(pointer: fine)").matches);
+  }, []);
+
+  useEffect(() => {
+    const rail = railRef.current;
+    if (!rail) return;
+
+    function update() {
+      const element = railRef.current;
+      if (!element) return;
+      const max = element.scrollWidth - element.clientWidth;
+      setCanPrev(element.scrollLeft > 4);
+      setCanNext(element.scrollLeft < max - 4);
+    }
+
+    update();
+    rail.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    return () => {
+      rail.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+    };
+  }, []);
+
+  function scrollByCard(direction: -1 | 1) {
+    const rail = railRef.current;
+    if (!rail) return;
+    const card = rail.querySelector<HTMLElement>("[data-short-card]");
+    const amount = card ? card.offsetWidth + 16 : 240;
+    rail.scrollBy({ left: direction * amount, behavior: "smooth" });
+  }
+
+  return (
+    <div className="mt-14">
+      <div className="flex items-center justify-between gap-6">
+        <h3
+          style={{ fontWeight: 700, letterSpacing: "-0.015em" }}
+          className="font-display text-2xl leading-tight text-ink"
+        >
+          Shorts
+        </h3>
+
+        {isFinePointer && (
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => scrollByCard(-1)}
+              disabled={!canPrev}
+              aria-label="Previous short"
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-ink/20 text-ink transition-colors hover:border-accent hover:text-accent focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-4 disabled:opacity-40 disabled:hover:border-ink/20 disabled:hover:text-ink"
+            >
+              <span aria-hidden="true">←</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => scrollByCard(1)}
+              disabled={!canNext}
+              aria-label="Next short"
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-ink/20 text-ink transition-colors hover:border-accent hover:text-accent focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-4 disabled:opacity-40 disabled:hover:border-ink/20 disabled:hover:text-ink"
+            >
+              <span aria-hidden="true">→</span>
+            </button>
+          </div>
+        )}
+      </div>
+
+      <div
+        ref={railRef}
+        data-lenis-prevent
+        className="mt-6 flex snap-x snap-mandatory gap-4 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      >
+        {shorts.map((short) => (
+          <div
+            key={short.id}
+            data-short-card
+            className="w-[clamp(200px,22vw,280px)] shrink-0 snap-start"
+          >
+            <ShortCard video={short} />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/** A 9:16 short. */
+function ShortCard({ video }: { video: ReelVideo }) {
+  const [playing, setPlaying] = useState(false);
+
+  const thumbnail =
+    video.thumb ?? `https://i.ytimg.com/vi/${video.id}/hqdefault.jpg`;
+
+  return (
+    <div>
+      <div className="relative aspect-[9/16] w-full overflow-hidden rounded-xl border border-ink/15 bg-surface">
+        {playing ? (
+          <iframe
+            src={`https://www.youtube-nocookie.com/embed/${video.id}?autoplay=1&rel=0`}
+            title={video.title}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+            loading="lazy"
+            className="absolute inset-0 h-full w-full"
+          />
+        ) : (
+          <button
+            type="button"
+            onClick={() => setPlaying(true)}
+            aria-label={`Play: ${video.title}`}
+            className="group/play absolute inset-0 flex h-full w-full items-center justify-center focus-visible:outline-2 focus-visible:outline-accent focus-visible:-outline-offset-2"
+          >
+            <Image
+              src={thumbnail}
+              alt=""
+              fill
+              sizes="(min-width: 1024px) 22vw, 200px"
+              className="scale-[1.4] object-cover"
+            />
+            <span className={PLAY_PILL} style={HOVER_TRANSITION}>
+              <span aria-hidden="true" className="text-xs leading-none">
+                ▶
+              </span>
+              Play
+            </span>
+          </button>
+        )}
+      </div>
+
+      <h4
+        style={{ fontWeight: 700, letterSpacing: "-0.015em" }}
+        className="mt-3 font-display text-base leading-tight text-ink"
+      >
+        {video.title}
+      </h4>
+      {video.caption && (
+        <p className="mt-1 text-sm text-ink-dim">{video.caption}</p>
+      )}
     </div>
   );
 }

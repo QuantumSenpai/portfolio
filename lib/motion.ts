@@ -14,6 +14,8 @@ export const STAGGER = 0.06;
 export const SIGNATURE_DURATION = 2.4;
 /** cubic-bezier(.65, 0, .35, 1) */
 export const SIGNATURE_EASE = [0.65, 0, 0.35, 1] as const;
+/** The script face used for the signature. */
+export const SIGNATURE_FONT = "Herr Von Muellerhoff";
 
 export const LENIS_CONFIG = {
   lerp: 0.2,

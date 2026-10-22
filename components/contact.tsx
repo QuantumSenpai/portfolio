@@ -22,25 +22,19 @@ import {
 import { EASE, DURATION, STAGGER } from "@/lib/motion";
 import { Footer } from "@/components/footer";
 
-/**
- * Shared hover transition.
- * Duration + easing come from lib/motion.ts so every section animates the same.
- */
 const HOVER_TRANSITION = {
   transitionDuration: `${DURATION.base}s`,
   transitionTimingFunction: `cubic-bezier(${EASE.join(", ")})`,
 };
 
-/** The server refuses submissions sent faster than this. */
 const MIN_ELAPSED_MS = 3000;
-/** Client-side cooldown between two successful submissions. */
 const COOLDOWN_MS = 60 * 1000;
 const COOLDOWN_KEY = "contact:cooldown";
 
 type Status = "idle" | "sending" | "success" | "error";
 
 const FIELD_CLASS =
-  "w-full border-b border-ink/20 bg-transparent pb-2 text-base text-ink transition-colors placeholder:text-ink-dim/60 focus:border-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg";
+  "w-full border-b border-ink/20 bg-transparent pb-2 text-[1.0625rem] text-ink transition-colors placeholder:text-ink-dim/60 focus:border-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg";
 
 export function Contact({
   hasSignature = false,
@@ -63,14 +57,12 @@ export function Contact({
 
   const [nameLabel, emailLabel, serviceLabel, messageLabel] = contactForm.fields;
 
-  // Timestamp the form was opened + unlock the button after the minimum delay.
   useEffect(() => {
     setStartedAt(String(Date.now()));
     const timer = setTimeout(() => setReady(true), MIN_ELAPSED_MS);
     return () => clearTimeout(timer);
   }, []);
 
-  // Pick up a cooldown left over from a previous submission.
   useEffect(() => {
     let last = 0;
     try {
@@ -85,7 +77,6 @@ export function Contact({
     }
   }, []);
 
-  // Count the cooldown down.
   useEffect(() => {
     if (!cooldownUntil) return;
     const remaining = cooldownUntil - Date.now();
@@ -110,7 +101,6 @@ export function Contact({
       await navigator.clipboard.writeText(email);
       didCopy = true;
     } catch {
-      // Fallback: select the email text so it can be copied manually.
       const node = emailRef.current;
       if (node && typeof window !== "undefined") {
         try {
@@ -204,7 +194,7 @@ export function Contact({
       try {
         window.localStorage.setItem(COOLDOWN_KEY, String(now));
       } catch {
-        // Storage unavailable — the cooldown is simply not remembered.
+        setCooldownUntil(0);
       }
       setCooldownUntil(now + COOLDOWN_MS);
       setStatus("success");
@@ -230,8 +220,7 @@ export function Contact({
     },
   };
 
-  const disabled =
-    status === "sending" || !ready || cooldownUntil > 0;
+  const disabled = status === "sending" || !ready || cooldownUntil > 0;
 
   return (
     <section id="contact" className="relative w-full py-24 sm:py-32">
@@ -243,8 +232,10 @@ export function Contact({
           viewport={{ once: true, margin: "-60px" }}
         >
           <div className="grid gap-12 lg:grid-cols-12 lg:gap-x-8 xl:gap-x-12">
-            {/* Left: cols 1-5 */}
-            <motion.div variants={itemVariants} className="lg:col-span-5">
+            <motion.div
+              variants={itemVariants}
+              className="pb-16 sm:pb-24 lg:col-span-5"
+            >
               <span className="font-mono text-[13px] uppercase tracking-widest text-accent">
                 {contactSection.eyebrow}
               </span>
@@ -258,60 +249,56 @@ export function Contact({
                 {contactSection.subline}
               </p>
 
-              {/* Email call to action */}
-              <div className="mt-10 flex flex-col items-start gap-5 sm:flex-row sm:items-center sm:gap-6">
-                <a
-                  href={`mailto:${email}`}
-                  style={HOVER_TRANSITION}
-                  className="group relative inline-flex max-w-full items-baseline gap-2 font-mono text-[clamp(0.875rem,3.4vw,2.5rem)] leading-none text-ink transition-colors focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-4 sm:gap-4"
+              <a
+                href={`mailto:${email}`}
+                style={HOVER_TRANSITION}
+                className="group relative mt-8 inline-flex max-w-full items-center gap-2 text-[clamp(1.25rem,2.4vw,2rem)] leading-tight text-ink transition-colors focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-4 max-[379px]:[overflow-wrap:anywhere]"
+              >
+                <span ref={emailRef}>{email}</span>
+                <span
+                  aria-hidden="true"
+                  className="inline-block text-lg leading-none text-ink-dim transition-transform rotate-45 group-hover:rotate-0 group-focus-visible:rotate-0 group-hover:text-accent group-focus-visible:text-accent"
                 >
-                  <span ref={emailRef} className="break-all">
-                    {email}
-                  </span>
-                  <span
-                    aria-hidden="true"
-                    className="inline-block text-xl leading-none text-ink-dim transition-transform rotate-45 group-hover:rotate-0 group-focus-visible:rotate-0 group-hover:text-accent group-focus-visible:text-accent"
-                  >
-                    ↗
-                  </span>
-                  {/* Accent underline — scaleX 0 -> 1 from the left */}
-                  <span
-                    aria-hidden="true"
-                    className="absolute bottom-0 left-0 right-0 h-px origin-left scale-x-0 bg-accent transition-transform group-hover:scale-x-100 group-focus-visible:scale-x-100"
-                  />
-                </a>
+                  ↗
+                </span>
+                <span
+                  aria-hidden="true"
+                  className="absolute bottom-0 left-0 right-0 h-px origin-left scale-x-0 bg-accent transition-transform group-hover:scale-x-100 group-focus-visible:scale-x-100"
+                />
+              </a>
 
+              <div className="mt-8 flex flex-wrap items-center gap-3 max-[479px]:flex-col max-[479px]:items-stretch">
                 <button
                   type="button"
                   onClick={handleCopy}
                   aria-live="polite"
-                  className="inline-flex shrink-0 items-center gap-2 rounded-full border border-ink/20 px-4 py-2 font-mono text-sm tracking-[0.04em] text-ink-dim transition-colors hover:border-accent hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+                  className="inline-flex h-11 items-center justify-center gap-2 rounded-full border border-ink/15 px-5 text-[0.9375rem] leading-none text-ink-dim transition-colors hover:border-accent hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
                 >
                   {copied ? "Copied" : "Copy email"}
                 </button>
-              </div>
 
-              {/* Availability */}
-              <div className="mt-10 inline-flex items-center gap-2 font-mono text-sm tracking-[0.04em] text-ink-dim">
-                <span aria-hidden="true" className="relative flex h-1.5 w-1.5">
-                  <span className="pulse-dot absolute inline-flex h-full w-full rounded-full bg-accent/60" />
-                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-accent" />
-                </span>
-                <span>{availability.text}</span>
+                <div className="inline-flex h-11 items-center justify-center gap-2.5 rounded-full border border-ink/15 px-5 text-[0.9375rem] leading-none text-ink-dim">
+                  <span
+                    aria-hidden="true"
+                    className="relative flex h-2 w-2 items-center justify-center"
+                  >
+                    <span className="pulse-dot absolute inline-flex h-full w-full rounded-full bg-accent/60" />
+                    <span className="relative inline-flex h-2 w-2 rounded-full bg-accent" />
+                  </span>
+                  <span>{availability.text}</span>
+                </div>
               </div>
             </motion.div>
 
-            {/* Right: cols 7-12 — the form */}
             <motion.div
               variants={itemVariants}
-              className="lg:col-start-7 lg:col-span-6"
+              className="pb-16 sm:pb-24 lg:col-start-7 lg:col-span-6"
             >
               <form
                 noValidate
                 onSubmit={handleSubmit}
-                className="relative grid gap-6"
+                className="relative grid gap-7"
               >
-                {/* Honeypot — humans never see or fill this */}
                 <div
                   aria-hidden="true"
                   className="absolute -left-[10000px] top-auto h-px w-px overflow-hidden"
@@ -324,10 +311,9 @@ export function Contact({
                   />
                 </div>
 
-                {/* When the form was opened */}
                 <input type="hidden" name="startedAt" value={startedAt} />
 
-                <div className="grid gap-6 sm:grid-cols-2">
+                <div className="grid gap-7 sm:grid-cols-2">
                   <Field label={nameLabel}>
                     <input
                       type="text"
@@ -367,11 +353,10 @@ export function Contact({
                     rows={4}
                     required
                     maxLength={2000}
-                    className={`${FIELD_CLASS} resize-none`}
+                    className={`${FIELD_CLASS} min-h-[140px] resize-none`}
                   />
                 </Field>
 
-                {/* Privacy consent */}
                 <div className="flex items-start gap-3">
                   <input
                     id="privacy-consent"
@@ -384,7 +369,7 @@ export function Contact({
                   />
                   <label
                     htmlFor="privacy-consent"
-                    className="text-sm leading-relaxed text-ink-dim"
+                    className="text-[0.9375rem] leading-relaxed text-ink-dim"
                   >
                     {contactForm.consentPrefix}{" "}
                     <a
@@ -396,18 +381,18 @@ export function Contact({
                   </label>
                 </div>
 
-                <div className="flex flex-wrap items-center gap-4">
+                <div className="flex flex-col items-start gap-4 min-[640px]:flex-row min-[640px]:items-center">
                   <button
                     type="submit"
                     disabled={disabled}
-                    className="btn-primary inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-medium transition-opacity disabled:opacity-60 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
+                    className="btn-primary inline-flex h-[52px] items-center justify-center rounded-full px-7 text-base font-medium transition-opacity disabled:opacity-60 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
                   >
                     {status === "sending"
                       ? contactForm.submitting
                       : contactForm.submit}
                   </button>
 
-                  <div aria-live="polite" className="font-mono text-sm">
+                  <div aria-live="polite" className="text-base">
                     <AnimatePresence mode="wait">
                       {status === "success" && (
                         <motion.p
@@ -440,7 +425,6 @@ export function Contact({
         </motion.div>
       </div>
 
-      {/* The closing section ends with the footer */}
       <Footer hasSignature={hasSignature} />
     </section>
   );
@@ -449,7 +433,7 @@ export function Contact({
 function Field({ label, children }: { label: string; children: ReactNode }) {
   return (
     <label className="block">
-      <span className="mb-2 block font-mono text-sm text-ink-dim">{label}</span>
+      <span className="mb-2 block text-[0.9375rem] text-ink-dim">{label}</span>
       {children}
     </label>
   );

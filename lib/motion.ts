@@ -10,6 +10,7 @@ export const DURATION = {
 
 export const STAGGER = 0.06;
 
+
 /** Signature wipe reveal. */
 export const SIGNATURE_DURATION = 2.4;
 /** cubic-bezier(.65, 0, .35, 1) */

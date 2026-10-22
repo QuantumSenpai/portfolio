@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion, type Variants } from "framer-motion";
 import { Magnetic } from "./ui/magnetic-button";
 import { SwissGridBackground } from "./ui/swiss-grid-background";
-import { EASE, DURATION } from "@/lib/motion";
+import { EASE, DURATION, STAGGER } from "@/lib/motion";
+import { heroLinks } from "@/lib/data";
 import { formatISTTime } from "@/lib/utils";
 
 export function Hero() {
@@ -23,41 +24,52 @@ export function Hero() {
     return () => clearInterval(interval);
   }, []);
 
-  const { scrollYProgress } = useScroll({
-    target: heroRef,
-    offset: ["start start", "end start"],
-  });
+  const containerVariants: Variants = {
+    hidden: {},
+    visible: {
+      transition: { staggerChildren: STAGGER },
+    },
+  };
 
-  const line1ParallaxY = useTransform(scrollYProgress, [0, 1], ["0%", "-8%"]);
-  const line2ParallaxY = useTransform(scrollYProgress, [0, 1], ["0%", "-16%"]);
-  const headlineOpacity = useTransform(scrollYProgress, [0, 1], [1, 0.15]);
-  const subcopyOpacity = useTransform(scrollYProgress, [0, 0.45], [1, 0]);
-  const scrollCueOpacity = useTransform(scrollYProgress, [0, 0.1], [1, 0]);
+  const itemVariants: Variants = {
+    hidden: { opacity: 0, y: 16 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: DURATION.base, ease: EASE },
+    },
+  };
 
   return (
     <section
       ref={heroRef}
       id="top"
-      className="relative flex min-h-[100svh] flex-col justify-between overflow-x-hidden pb-8 pt-24 sm:pb-10 sm:pt-28"
+      className="relative flex min-h-[100svh] flex-col overflow-x-hidden pb-8 pt-24 sm:pt-28"
     >
       <SwissGridBackground />
 
-      <div className="relative z-10 mx-auto flex w-full max-w-[1680px] flex-1 flex-col justify-between px-5 md:px-10 lg:px-16">
+      <motion.div
+        variants={containerVariants}
+        initial={shouldReduceMotion ? false : "hidden"}
+        animate="visible"
+        className="relative z-10 mx-auto flex w-full max-w-[1680px] flex-1 flex-col px-5 md:px-10 lg:px-16"
+      >
         <motion.div
-          initial={shouldReduceMotion ? false : { opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: DURATION.base, delay: 0.28, ease: EASE }}
-          className="flex flex-col gap-2 font-mono text-sm tracking-[0.04em] text-ink-dim sm:flex-row sm:items-center sm:justify-between sm:gap-4"
+          variants={itemVariants}
+          className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between"
         >
-          <div className="inline-flex items-center gap-2">
-            <span className="relative flex h-1.5 w-1.5">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-75" />
-              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-accent" />
+          <div className="inline-flex h-11 items-center gap-2.5 rounded-full border border-ink/15 px-5 text-[0.9375rem] leading-none text-ink-dim">
+            <span
+              aria-hidden="true"
+              className="relative flex h-2 w-2 items-center justify-center"
+            >
+              <span className="pulse-dot absolute inline-flex h-full w-full rounded-full bg-accent/60" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-accent" />
             </span>
             <span>Available for freelance</span>
           </div>
 
-          <div className="tabular-nums">
+          <div className="text-[0.9375rem] tabular-nums text-ink-dim">
             <span>Ghatal, IN · </span>
             <span className="inline-block min-w-[5ch] text-left">
               {mounted && time ? time : "--:--"}
@@ -66,137 +78,82 @@ export function Hero() {
           </div>
         </motion.div>
 
-        <div className="my-auto py-2">
-          <h1 className="text-[clamp(2.5rem,8.6vw,10rem)] font-display font-[800] leading-[0.95] tracking-[-0.05em] text-ink [text-wrap:balance]">
-            <span className="block overflow-hidden pb-[0.14em] -mb-[0.14em]">
-              <motion.span
-                initial={shouldReduceMotion ? false : { y: "115%" }}
-                animate={{ y: 0 }}
-                transition={{ duration: DURATION.slow, delay: 0.08, ease: EASE }}
-                className="block"
-              >
-                <motion.span
-                  style={
-                    shouldReduceMotion
-                      ? undefined
-                      : {
-                          y: line1ParallaxY,
-                          opacity: headlineOpacity,
-                        }
-                  }
-                  className="inline-block max-w-full"
-                >
-                  Building on screen,
-                </motion.span>
-              </motion.span>
-            </span>
-
-            <span className="block overflow-hidden pb-[0.14em] -mb-[0.14em]">
-              <motion.span
-                initial={shouldReduceMotion ? false : { y: "115%" }}
-                animate={{ y: 0 }}
-                transition={{ duration: DURATION.slow, delay: 0.2, ease: EASE }}
-                className="block"
-              >
-                <motion.span
-                  style={
-                    shouldReduceMotion
-                      ? undefined
-                      : {
-                          y: line2ParallaxY,
-                          opacity: headlineOpacity,
-                        }
-                  }
-                  className="inline-block max-w-full"
-                >
-                  cutting on{" "}
-                  <span className="timeline-stroke inline-block">timeline.</span>
-                </motion.span>
-              </motion.span>
-            </span>
+        <div className="my-auto py-8">
+          <h1 className="font-display text-[clamp(2.5rem,7vw,6.5rem)] font-bold leading-[1.0] tracking-[-0.03em] text-ink [text-wrap:balance]">
+            <motion.span variants={itemVariants} className="sm:block">
+              Building on screen,
+            </motion.span>{" "}
+            <motion.span variants={itemVariants} className="sm:block">
+              cutting on <span className="timeline-stroke">timeline.</span>
+            </motion.span>
           </h1>
 
-          <div className="mt-[40px] grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
-            <div className="md:col-span-8 lg:col-span-6">
-              <motion.div
-                initial={shouldReduceMotion ? false : { opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: DURATION.base, delay: 0.34, ease: EASE }}
-              >
-                <motion.p
-                  style={shouldReduceMotion ? undefined : { opacity: subcopyOpacity }}
-                  className="max-w-[52ch] text-[1.0625rem] leading-relaxed text-ink-dim [text-wrap:pretty]"
-                >
-                  CSE student and full-stack developer who also cuts cinematic video and motion.
-                  Exploring applied ML.
-                </motion.p>
-              </motion.div>
+          <motion.p
+            variants={itemVariants}
+            className="mt-8 max-w-[52ch] text-[clamp(1.0625rem,1.5vw,1.25rem)] leading-relaxed text-ink-dim [text-wrap:pretty]"
+          >
+            CSE student and full-stack developer who also cuts cinematic video and
+            motion. Exploring applied ML.
+          </motion.p>
 
-              <motion.div
-                initial={shouldReduceMotion ? false : { opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: DURATION.base, delay: 0.4, ease: EASE }}
+          <motion.div
+            variants={itemVariants}
+            className="mt-8 flex flex-col items-stretch gap-4 sm:flex-row sm:items-center"
+          >
+            <Magnetic>
+              <a
+                href="#work"
+                className="btn-primary inline-flex h-[52px] items-center justify-center rounded-full px-6 text-sm font-medium transition-transform hover:-translate-y-0.5"
               >
-                <motion.div
-                  style={shouldReduceMotion ? undefined : { opacity: subcopyOpacity }}
-                  className="mt-[32px] flex flex-col items-stretch gap-4 sm:flex-row sm:items-center sm:gap-6"
-                >
-                  <Magnetic>
-                    <a
-                      href="#work"
-                      className="btn-primary inline-flex items-center justify-center rounded-full px-7 py-3.5 text-sm font-medium transition-transform [@media(hover:hover)]:hover:-translate-y-0.5"
-                    >
-                      View work
-                    </a>
-                  </Magnetic>
-                  <a
-                    href="#contact"
-                    className="group relative inline-flex min-h-11 items-center justify-center gap-1.5 text-sm font-medium text-ink sm:justify-start"
-                  >
-                    <span>Get in touch</span>
-                    <span
-                      aria-hidden="true"
-                      className="inline-block transition-transform duration-300 [@media(hover:hover)]:group-hover:translate-x-1"
-                    >
-                      →
-                    </span>
-                    <span className="absolute bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-ink transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] [@media(hover:hover)]:group-hover:scale-x-100" />
-                  </a>
-                </motion.div>
-              </motion.div>
-            </div>
-          </div>
+                View work
+              </a>
+            </Magnetic>
+
+            <a
+              href="#contact"
+              className="group relative inline-flex min-h-11 items-center justify-center gap-1.5 text-sm font-medium text-ink sm:justify-start"
+            >
+              <span>Get in touch</span>
+              <span
+                aria-hidden="true"
+                className="inline-block transition-transform duration-300 [@media(hover:hover)]:group-hover:translate-x-1"
+              >
+                →
+              </span>
+              <span className="absolute bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-ink transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] [@media(hover:hover)]:group-hover:scale-x-100" />
+            </a>
+          </motion.div>
         </div>
 
         <motion.div
-          initial={shouldReduceMotion ? false : { opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: DURATION.base, delay: 0.46, ease: EASE }}
-          className="flex items-center justify-between font-mono text-sm tracking-[0.04em] text-ink-dim pt-4"
+          variants={itemVariants}
+          className="mt-auto flex items-center justify-between gap-4 border-t border-ink/10 pb-[calc(1.5rem+env(safe-area-inset-bottom))] pt-6"
         >
-          <motion.div
-            style={shouldReduceMotion ? undefined : { opacity: scrollCueOpacity }}
-            className="flex items-center gap-2.5"
-          >
+          <div className="hidden items-center gap-2 text-[0.9375rem] text-ink-dim min-[480px]:flex">
             <span>Scroll</span>
-            <div className="relative h-5 w-px overflow-hidden bg-line-strong">
-              {!shouldReduceMotion && (
-                <motion.div
-                  animate={{ y: ["-100%", "100%"] }}
-                  transition={{
-                    repeat: Infinity,
-                    duration: 1.8,
-                    ease: EASE,
-                  }}
-                  className="h-full w-full bg-ink"
-                />
-              )}
-            </div>
-          </motion.div>
+            <motion.span
+              aria-hidden="true"
+              animate={shouldReduceMotion ? undefined : { y: [0, 6, 0] }}
+              transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
+              className="inline-block"
+            >
+              ↓
+            </motion.span>
+          </div>
 
-          <span>Web / Motion / ML</span>
+          <div className="grid w-full grid-cols-3 gap-2 min-[480px]:w-auto min-[480px]:flex">
+            {heroLinks.map((link) => (
+              <a
+                key={link.label}
+                href={link.href}
+                className="inline-flex h-11 items-center justify-center rounded-full border border-ink/15 px-5 text-[0.9375rem] leading-none text-ink transition-colors [@media(hover:hover)]:hover:border-accent [@media(hover:hover)]:hover:text-accent focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-4"
+              >
+                {link.label}
+              </a>
+            ))}
+          </div>
         </motion.div>
-      </div>
+      </motion.div>
     </section>
   );
 }

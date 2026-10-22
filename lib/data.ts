@@ -157,6 +157,12 @@ export const contactForm: ContactFormConfig = {
 
 export const email = "work.krishnendu.dev@gmail.com";
 
+export const heroLinks: { label: string; href: string }[] = [
+  { label: "WEB", href: "#work" },
+  { label: "MOTION", href: "#reel" },
+  { label: "ML", href: "#experience" },
+];
+
 export interface GithubSectionConfig {
   eyebrow: string;
   heading: string;

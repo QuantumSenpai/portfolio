@@ -8,7 +8,6 @@
   --ink-dim: #4a5a75;
   --accent: #3770bf;
   --accent-soft: #8dc2ff;
-  --timeline-stroke: var(--accent);
   --line: rgba(14, 27, 51, 0.1);
   --line-strong: rgba(14, 27, 51, 0.2);
   --shadow: rgba(14, 27, 51, 0.08);
@@ -26,7 +25,6 @@
   --ink-dim: #9aa5c4;
   --accent: #8dc2ff;
   --accent-soft: #3770bf;
-  --timeline-stroke: #bcdcff;
   --line: rgba(243, 246, 255, 0.09);
   --line-strong: rgba(243, 246, 255, 0.16);
   --shadow: rgba(0, 0, 0, 0.4);
@@ -154,19 +152,7 @@ p {
 
 .timeline-stroke {
   font-style: italic;
-  -webkit-text-stroke: 2px var(--timeline-stroke);
-  -webkit-text-fill-color: transparent;
-  color: transparent;
-  cursor: pointer;
-  transition: -webkit-text-fill-color 0.7s cubic-bezier(0.16, 1, 0.3, 1),
-              color 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-@media (hover: hover) {
-  .timeline-stroke:hover {
-    -webkit-text-fill-color: var(--accent);
-    color: var(--accent);
-  }
+  color: var(--accent);
 }
 
 a {

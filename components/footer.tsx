@@ -1,12 +1,18 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import Image from "next/image";
-import { motion, useInView, useReducedMotion } from "framer-motion";
+import {
+  motion,
+  useInView,
+  useMotionTemplate,
+  useMotionValue,
+  useReducedMotion,
+  animate,
+} from "framer-motion";
 import { footer } from "@/lib/data";
 import { useLenis } from "@/components/providers/smooth-scroll-provider";
 import { EASE, SIGNATURE_DURATION, SIGNATURE_EASE } from "@/lib/motion";
-import { cn } from "@/lib/utils";
 
 export function Footer({ hasSignature = false }: { hasSignature?: boolean }) {
   const { lenis } = useLenis();
@@ -94,24 +100,29 @@ export function Footer({ hasSignature = false }: { hasSignature?: boolean }) {
 function Signature({ hasSignature }: { hasSignature: boolean }) {
   const shouldReduceMotion = useReducedMotion();
   const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-60px" });
+  const inView = useInView(ref, { once: true, amount: 0.3 });
 
-  const wipe = cn(
-    "signature-wipe",
-    inView && !shouldReduceMotion && "signature-wipe-run"
-  );
+  const p = useMotionValue(0);
+
+  useEffect(() => {
+    if (!inView) return;
+    if (shouldReduceMotion) {
+      p.set(100);
+    } else {
+      animate(p, 100, { duration: SIGNATURE_DURATION, ease: SIGNATURE_EASE });
+    }
+  }, [inView, p, shouldReduceMotion]);
+
+  const mask = useMotionTemplate`linear-gradient(90deg, #000 0%, #000 calc(${p}%), transparent calc(${p}% + 12%))`;
 
   return (
     <div
       ref={ref}
       className="relative flex w-full max-w-[640px] flex-col justify-end overflow-visible min-h-[calc(clamp(3rem,14vw,8rem)*1.1)] sm:min-h-[calc(clamp(4rem,9vw,8rem)*1.1)]"
     >
-      <div
-        className={wipe}
-        style={{
-          "--signature-duration": `${SIGNATURE_DURATION}s`,
-          "--signature-ease": `cubic-bezier(${SIGNATURE_EASE.join(",")})`,
-        } as React.CSSProperties}
+      <motion.div
+        className="overflow-hidden"
+        style={{ maskImage: mask, WebkitMaskImage: mask }}
       >
         {hasSignature ? (
           <Image
@@ -127,7 +138,7 @@ function Signature({ hasSignature }: { hasSignature: boolean }) {
             {footer.signatureText}
           </span>
         )}
-      </div>
+      </motion.div>
 
       <svg
         aria-hidden="true"
@@ -141,13 +152,11 @@ function Signature({ hasSignature }: { hasSignature: boolean }) {
           strokeWidth="2"
           strokeLinecap="round"
           initial={{ pathLength: 0 }}
-          animate={
-            shouldReduceMotion || inView ? { pathLength: 1 } : { pathLength: 0 }
-          }
+          animate={{ pathLength: 1 }}
           transition={{
             duration: 1,
             ease: EASE,
-            delay: shouldReduceMotion ? 0 : SIGNATURE_DURATION,
+            delay: SIGNATURE_DURATION,
           }}
         />
       </svg>

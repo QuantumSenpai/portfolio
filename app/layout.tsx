@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import { JetBrains_Mono } from "next/font/google";
+import { Herr_Von_Muellerhoff, JetBrains_Mono } from "next/font/google";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { SmoothScroll } from "@/components/providers/smooth-scroll-provider";
-import { SwissGridBackground } from "@/components/ui/swiss-grid-background";
 import "./globals.css";
 
 const cabinetGrotesk = localFont({
@@ -61,10 +60,24 @@ const jetbrainsMono = JetBrains_Mono({
   display: "swap",
 });
 
+const signatureFont = Herr_Von_Muellerhoff({
+  subsets: ["latin"],
+  weight: "400",
+  fallback: ["Mea Culpa"],
+  variable: "--font-signature",
+  display: "swap",
+});
+
+const siteUrl = process.env.SITE_URL ?? "https://getkisu.vercel.app";
+
+const title = "Krishnendu Adak — Developer & Editor";
+const description =
+  "Krishnendu Adak (Kisu) — CSE student, web developer, video editor and NLP/ML enthusiast from Ghatal, West Bengal.";
+
 export const metadata: Metadata = {
-  title: "Krishnendu Adak — Developer & Editor",
-  description:
-    "Krishnendu Adak (Kisu) — CSE student, web developer, video editor and NLP/ML enthusiast from Ghatal, West Bengal.",
+  metadataBase: new URL(siteUrl),
+  title,
+  description,
   icons: {
     icon: [
       { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
@@ -73,6 +86,18 @@ export const metadata: Metadata = {
       { url: "/icon-512.png", sizes: "512x512", type: "image/png" },
     ],
     apple: "/apple-touch-icon.png",
+  },
+  openGraph: {
+    type: "website",
+    url: siteUrl,
+    siteName: "Kisu",
+    title,
+    description,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title,
+    description,
   },
 };
 
@@ -88,11 +113,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${cabinetGrotesk.variable} ${generalSans.variable} ${jetbrainsMono.variable}`}
+      className={`${cabinetGrotesk.variable} ${generalSans.variable} ${jetbrainsMono.variable} ${signatureFont.variable}`}
     >
       <body>
         <ThemeProvider>
-          <SwissGridBackground />
           <SmoothScroll>{children}</SmoothScroll>
         </ThemeProvider>
       </body>

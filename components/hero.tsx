@@ -1,127 +1,159 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { motion, useInView, animate } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { motion, useReducedMotion, type Variants } from "framer-motion";
 import { Magnetic } from "./ui/magnetic-button";
-import { stats } from "@/lib/data";
+import { SwissGridBackground } from "./ui/swiss-grid-background";
+import { EASE, DURATION, STAGGER } from "@/lib/motion";
+import { availability, heroCopy, heroLinks } from "@/lib/data";
+import { formatISTTime } from "@/lib/utils";
 
 export function Hero() {
-  return (
-    <section
-      id="top"
-      className="relative flex min-h-[100svh] flex-col justify-center overflow-hidden px-5 pb-16 pt-28 sm:px-8"
-    >
-      <div className="container relative">
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          className="mb-6 inline-flex items-center gap-2 font-mono text-xs text-ink-dim"
-        >
-          <span className="relative flex h-1.5 w-1.5">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-75" />
-            <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-accent" />
-          </span>
-          Available for freelance — Ghatal, West Bengal, IN
-        </motion.div>
+  const heroRef = useRef<HTMLElement>(null);
+  const shouldReduceMotion = useReducedMotion();
 
-        <h1 className="max-w-4xl text-[13vw] font-extrabold leading-[0.98] tracking-tight sm:text-[7.5vw] lg:text-[5.75rem]">
-          <span className="block overflow-hidden">
-            <motion.span
-              initial={{ y: "110%" }}
-              animate={{ y: 0 }}
-              transition={{ duration: 0.9, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-              className="inline-block"
-            >
-              Building on screen,
-            </motion.span>
-          </span>
-          <span className="block overflow-hidden">
-            <motion.span
-              initial={{ y: "110%" }}
-              animate={{ y: 0 }}
-              transition={{ duration: 0.9, delay: 0.27, ease: [0.16, 1, 0.3, 1] }}
-              className="inline-block"
-            >
-              cutting on{" "}
-              <span className="italic text-stroke">timeline.</span>
-            </motion.span>
-          </span>
-        </h1>
-
-        <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.55, ease: [0.16, 1, 0.3, 1] }}
-          className="mt-7 max-w-md text-base text-ink-dim sm:text-lg"
-        >
-          I&apos;m <strong className="font-medium text-ink">Krishnendu Adak</strong>, a
-          B.Tech CSE undergraduate building full-stack web applications and exploring
-          applied machine learning and NLP. Alongside development, I work as a video
-          editor and motion designer, delivering cinematic content for clients and creators.
-        </motion.p>
-
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.68, ease: [0.16, 1, 0.3, 1] }}
-          className="mt-8 flex flex-wrap gap-4"
-        >
-          <Magnetic>
-            <a
-              href="#work"
-              className="inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3.5 text-sm font-medium text-white transition-transform hover:-translate-y-0.5"
-            >
-              View work
-            </a>
-          </Magnetic>
-          <Magnetic>
-            <a
-              href="#contact"
-              className="inline-flex items-center gap-2 rounded-full border border-line-strong px-6 py-3.5 text-sm font-medium transition-all hover:-translate-y-0.5 hover:border-accent"
-            >
-              Get in touch
-            </a>
-          </Magnetic>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.7, delay: 0.85 }}
-          className="mt-14 flex flex-wrap gap-10 sm:gap-14"
-        >
-          {stats.map((s) => (
-            <Stat key={s.label} value={s.value} label={s.label} />
-          ))}
-        </motion.div>
-      </div>
-    </section>
-  );
-}
-
-function Stat({ value, label }: { value: number; label: string }) {
-  const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-40px" });
+  const [mounted, setMounted] = useState(false);
+  const [time, setTime] = useState("");
 
   useEffect(() => {
-    if (!inView || !ref.current) return;
-    const controls = animate(0, value, {
-      duration: 1.2,
-      ease: [0.16, 1, 0.3, 1],
-      onUpdate: (v) => {
-        if (ref.current) ref.current.textContent = String(Math.round(v));
-      },
-    });
-    return () => controls.stop();
-  }, [inView, value]);
+    setMounted(true);
+    setTime(formatISTTime());
+    const interval = setInterval(() => {
+      setTime(formatISTTime());
+    }, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const containerVariants: Variants = {
+    hidden: {},
+    visible: {
+      transition: { staggerChildren: STAGGER },
+    },
+  };
+
+  const itemVariants: Variants = {
+    hidden: { opacity: 0, y: 16 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: DURATION.base, ease: EASE },
+    },
+  };
 
   return (
-    <div className="flex flex-col gap-1">
-      <span ref={ref} className="font-display text-3xl sm:text-4xl">
-        0
-      </span>
-      <span className="font-mono text-xs text-ink-dim">{label}</span>
-    </div>
+    <section
+      ref={heroRef}
+      id="top"
+      className="relative flex min-h-[100svh] flex-col overflow-x-hidden pb-8 pt-24 sm:pt-28"
+    >
+      <SwissGridBackground />
+
+      <motion.div
+        variants={containerVariants}
+        initial={shouldReduceMotion ? false : "hidden"}
+        animate="visible"
+        className="relative z-10 mx-auto flex w-full max-w-[1680px] flex-1 flex-col px-5 md:px-10 lg:px-16"
+      >
+        <motion.div
+          variants={itemVariants}
+          className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between"
+        >
+          <div className="inline-flex h-11 items-center gap-2.5 rounded-full border border-ink/15 px-5 text-[0.9375rem] leading-none text-ink-dim">
+            <span
+              aria-hidden="true"
+              className="relative flex h-2 w-2 items-center justify-center"
+            >
+              <span className="pulse-dot absolute inline-flex h-full w-full rounded-full bg-accent/60" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-accent" />
+            </span>
+            <span>{availability.text}</span>
+          </div>
+
+          <div className="text-[0.9375rem] tabular-nums text-ink-dim">
+            <span>Ghatal, IN · </span>
+            <span className="inline-block min-w-[5ch] text-left">
+              {mounted && time ? time : "--:--"}
+            </span>
+            <span> IST</span>
+          </div>
+        </motion.div>
+
+        <div className="my-auto py-8">
+          <h1 className="font-display text-[clamp(2.5rem,7vw,6.5rem)] font-bold leading-[1.0] tracking-[-0.03em] text-ink [text-wrap:balance]">
+            <motion.span variants={itemVariants} className="sm:block">
+              {heroCopy.headline.first}
+            </motion.span>{" "}
+            <motion.span variants={itemVariants} className="sm:block">
+              {heroCopy.headline.second}{" "}
+              <span className="timeline-stroke">{heroCopy.headline.accent}</span>
+            </motion.span>
+          </h1>
+
+          <motion.p
+            variants={itemVariants}
+            className="mt-8 max-w-[52ch] text-[clamp(1.0625rem,1.5vw,1.25rem)] leading-relaxed text-ink-dim [text-wrap:pretty]"
+          >
+            {heroCopy.subcopy}
+          </motion.p>
+
+          <motion.div
+            variants={itemVariants}
+            className="mt-8 flex flex-col items-stretch gap-4 sm:flex-row sm:items-center"
+          >
+            <Magnetic>
+              <a
+                href="#work"
+                className="btn-primary inline-flex h-[52px] items-center justify-center rounded-full px-6 text-sm font-medium transition-transform hover:-translate-y-0.5"
+              >
+                View work
+              </a>
+            </Magnetic>
+
+            <a
+              href="#contact"
+              className="group relative inline-flex min-h-11 items-center justify-center gap-1.5 text-sm font-medium text-ink sm:justify-start"
+            >
+              <span>Get in touch</span>
+              <span
+                aria-hidden="true"
+                className="inline-block transition-transform duration-300 [@media(hover:hover)]:group-hover:translate-x-1"
+              >
+                →
+              </span>
+              <span className="absolute bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-ink transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] [@media(hover:hover)]:group-hover:scale-x-100" />
+            </a>
+          </motion.div>
+        </div>
+
+        <motion.div
+          variants={itemVariants}
+          className="mt-auto flex items-center justify-between gap-4 border-t border-ink/10 pb-[calc(1.5rem+env(safe-area-inset-bottom))] pt-6"
+        >
+          <div className="hidden items-center gap-2 text-[0.9375rem] text-ink-dim min-[480px]:flex">
+            <span>{heroCopy.scrollLabel}</span>
+            <motion.span
+              aria-hidden="true"
+              animate={shouldReduceMotion ? undefined : { y: [0, 6, 0] }}
+              transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
+              className="inline-block"
+            >
+              ↓
+            </motion.span>
+          </div>
+
+          <div className="grid w-full grid-cols-3 gap-2 min-[480px]:w-auto min-[480px]:flex">
+            {heroLinks.map((link) => (
+              <a
+                key={link.label}
+                href={link.href}
+                className="inline-flex h-11 items-center justify-center rounded-full border border-ink/15 px-5 text-[0.9375rem] leading-none text-ink transition-colors [@media(hover:hover)]:hover:border-accent [@media(hover:hover)]:hover:text-accent focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-4"
+              >
+                {link.label}
+              </a>
+            ))}
+          </div>
+        </motion.div>
+      </motion.div>
+    </section>
   );
 }

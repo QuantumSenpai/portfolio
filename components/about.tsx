@@ -1,79 +1,365 @@
-import { StrokeText } from "./ui/stroke-text";
-import { Reveal, RevealGroup, RevealItem } from "./ui/reveal";
+"use client";
 
-export function About() {
+import { useEffect, useRef, useState, type MouseEvent } from "react";
+import Image from "next/image";
+import {
+  motion,
+  useMotionTemplate,
+  useMotionValue,
+  useReducedMotion,
+  type Variants,
+} from "framer-motion";
+import {
+  aboutSection,
+  skillGroups,
+  services,
+  type SkillGroup,
+  type SkillItem as SkillItemType,
+} from "@/lib/data";
+import { EASE, DURATION, STAGGER } from "@/lib/motion";
+
+const HOVER_TRANSITION = {
+  transitionDuration: `${DURATION.base}s`,
+  transitionTimingFunction: `cubic-bezier(${EASE.join(", ")})`,
+};
+
+const SKILLS_VISIBLE = 8;
+
+export function About({ hasPortrait = false }: { hasPortrait?: boolean }) {
+  const shouldReduceMotion = useReducedMotion();
+
+  const groupVariants: Variants = {
+    hidden: {},
+    visible: {
+      transition: { staggerChildren: STAGGER },
+    },
+  };
+
+  const cardVariants: Variants = {
+    hidden: { opacity: 0, y: 16 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: DURATION.base, ease: EASE },
+    },
+  };
+
   return (
-    <section id="about" className="container py-24 sm:py-32">
-      <Reveal>
-        <span className="eyebrow">003 — About</span>
-        <h2 className="mt-4 max-w-xl text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl">
-          Crafting <StrokeText>digital</StrokeText> experiences with code and motion.
-        </h2>
-      </Reveal>
+    <section id="about" className="relative w-full py-24 sm:py-32">
 
-      <div className="mt-12 grid gap-10 lg:grid-cols-[1fr_1.4fr] lg:gap-16">
-        <Reveal delay={0.05}>
-          <div className="rounded-2xl border border-line bg-surface p-7">
-            <p className="font-mono text-xs uppercase tracking-wider text-accent">
-              Background & Education
-            </p>
-            <h3 className="mt-2 text-xl font-medium text-ink">
-              Krishnendu Adak (Kisu)
-            </h3>
-            <p className="mt-4 text-sm leading-relaxed text-ink-dim">
-              CSE student, web developer, video editor and NLP/ML enthusiast from Ghatal, West Bengal. Blending technical engineering with cinematic storytelling and motion aesthetics.
-            </p>
+      <span id="skills" />
 
-            <div className="mt-8 border-t border-line pt-6">
-              <p className="font-mono text-xs uppercase tracking-wider text-ink-dim">Focus Areas</p>
-              <div className="mt-3 flex flex-wrap gap-1.5">
-                {["Full-Stack Web", "Video Editing", "Motion Graphics", "NLP & ML", "Algorithms"].map(
-                  (item) => (
-                    <span
-                      key={item}
-                      className="rounded-full bg-surface-2 px-2.5 py-1 font-mono text-[0.65rem] text-ink-dim"
-                    >
-                      {item}
-                    </span>
-                  )
-                )}
+      <div className="mx-auto w-full max-w-[1680px] px-5 md:px-10 lg:px-16">
+        <motion.div
+          initial={shouldReduceMotion ? false : { opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: DURATION.base, ease: EASE }}
+          viewport={{ once: true, margin: "-60px" }}
+        >
+
+          <span className="font-mono text-[13px] uppercase tracking-widest text-accent">
+            {aboutSection.eyebrow}
+          </span>
+          <h2
+            style={{ fontWeight: 800, letterSpacing: "-0.04em" }}
+            className="mt-4 font-display text-ink text-[length:var(--text-h2)] [text-wrap:balance]"
+          >
+            {aboutSection.heading}
+          </h2>
+
+          <div className="mt-12 grid gap-12 md:grid-cols-12 md:gap-x-8 lg:gap-x-12 xl:gap-x-16">
+
+            <div className="max-w-[240px] md:col-span-4 md:max-w-none">
+              <Portrait hasPortrait={hasPortrait} />
+
+
+              <p
+                style={{ fontWeight: 700, letterSpacing: "-0.015em" }}
+                className="mt-6 font-display text-[clamp(1.5rem,2.2vw,2.25rem)] leading-tight text-ink"
+              >
+                {aboutSection.portrait.name}
+                <span className="ml-3 font-medium text-ink-dim">
+                  {`(${aboutSection.portrait.nickname})`}
+                </span>
+              </p>
+              <p className="mt-2 text-[0.9375rem] leading-relaxed text-ink-dim">
+                {aboutSection.portrait.role}
+              </p>
+            </div>
+
+
+            <div className="md:col-span-7 md:col-start-6">
+
+              <div className="max-w-[62ch] space-y-6 pb-8">
+                {aboutSection.bio.map((paragraph) => (
+                  <p
+                    key={paragraph}
+                    className="text-[clamp(1.0625rem,1.3vw,1.25rem)] leading-[1.7] text-ink-dim"
+                  >
+                    {paragraph}
+                  </p>
+                ))}
+              </div>
+
+
+              <p className="mt-8 max-w-[62ch] border-t border-ink/10 pt-6 text-[0.9375rem] leading-relaxed text-ink-dim">
+                {aboutSection.education.line}
+              </p>
+
+
+              <motion.div
+                variants={groupVariants}
+                initial={shouldReduceMotion ? false : "hidden"}
+                whileInView="visible"
+                viewport={{ once: true, margin: "-40px" }}
+                className="masonry mt-12"
+              >
+                {skillGroups.map((group) => (
+                  <motion.div
+                    key={group.label}
+                    variants={cardVariants}
+                    className="mb-8 break-inside-avoid"
+                  >
+                    <SkillCard group={group} />
+                  </motion.div>
+                ))}
+              </motion.div>
+
+
+              <div className="mt-12 border-t border-ink/15 pt-8">
+                <div className="grid gap-8 sm:grid-cols-3 md:grid-cols-1 xl:grid-cols-3">
+                  {services.map((service, i) => (
+                    <div key={service.title}>
+                      <span className="font-mono text-sm tabular-nums tracking-[0.04em] text-ink-dim">
+                        {String(i + 1).padStart(2, "0")}
+                      </span>
+                      <h3
+                        style={{
+                          fontWeight: 700,
+                          letterSpacing: "-0.015em",
+                        }}
+                        className="mt-4 font-display text-[1.375rem] leading-tight text-ink sm:text-[1.5rem]"
+                      >
+                        {service.title}
+                      </h3>
+                      <p className="mt-2 text-base leading-relaxed text-ink-dim">
+                        {service.line}
+                      </p>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
-        </Reveal>
-
-        <Reveal delay={0.15}>
-          <div>
-            <h3 className="font-mono text-xs uppercase tracking-wider text-ink-dim">
-              Philosophy
-            </h3>
-            <p className="mt-3 text-base leading-relaxed text-ink-dim">
-              I believe in clean design, performant code, and visual impact. Every interface should feel responsive, alive, and intuitive to navigate.
-            </p>
-
-            <h3 className="mt-8 font-mono text-xs uppercase tracking-wider text-ink-dim">
-              Core Principles
-            </h3>
-            <RevealGroup className="mt-4 space-y-4" stagger={0.06}>
-              {[
-                { title: "Precision Engineering", desc: "Writing clean, modular, and maintainable code built to scale." },
-                { title: "Visual Storytelling", desc: "Elevating concepts with smooth animations and cinematic editing." },
-                { title: "Continuous Learning", desc: "Exploring machine learning, NLP, and modern web frameworks." },
-              ].map((principle, i) => (
-                <RevealItem key={i} className="flex gap-4">
-                  <span className="mt-0.5 font-mono text-xs text-accent-soft">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <div>
-                    <h4 className="text-sm font-medium text-ink">{principle.title}</h4>
-                    <p className="mt-1 text-sm leading-relaxed text-ink-dim">{principle.desc}</p>
-                  </div>
-                </RevealItem>
-              ))}
-            </RevealGroup>
-          </div>
-        </Reveal>
+        </motion.div>
       </div>
     </section>
+  );
+}
+
+function SkillCard({ group }: { group: SkillGroup }) {
+  const shouldReduceMotion = useReducedMotion();
+  const [expanded, setExpanded] = useState(false);
+  const visibleItems = expanded
+    ? group.items
+    : group.items.slice(0, SKILLS_VISIBLE);
+  const hiddenItems = group.items.slice(SKILLS_VISIBLE);
+  const cardRef = useRef<HTMLDivElement>(null);
+  const rectRef = useRef<DOMRect | null>(null);
+
+  const mouseX = useMotionValue(-400);
+  const mouseY = useMotionValue(-400);
+
+  const spotlight = useMotionTemplate`radial-gradient(220px circle at ${mouseX}px ${mouseY}px, color-mix(in srgb, var(--accent) 10%, transparent), transparent 70%)`;
+
+  const [isTouch, setIsTouch] = useState(true);
+
+  useEffect(() => {
+    setIsTouch(window.matchMedia("(pointer: coarse)").matches);
+  }, []);
+
+  const labelId = `skill-group-${group.label
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")}`;
+
+  function track(e: MouseEvent<HTMLDivElement>) {
+    const rect = rectRef.current;
+    if (!rect) return;
+    mouseX.set(e.clientX - rect.left);
+    mouseY.set(e.clientY - rect.top);
+  }
+
+  function handleMouseEnter(e: MouseEvent<HTMLDivElement>) {
+    if (isTouch || shouldReduceMotion) return;
+    rectRef.current = e.currentTarget.getBoundingClientRect();
+    track(e);
+  }
+
+  function handleMouseMove(e: MouseEvent<HTMLDivElement>) {
+    if (isTouch || shouldReduceMotion) return;
+    track(e);
+  }
+
+  function handleMouseLeave() {
+    rectRef.current = null;
+    mouseX.set(-400);
+    mouseY.set(-400);
+  }
+
+  function handleFocus() {
+    if (isTouch) return;
+    const rect = cardRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    mouseX.set(rect.width / 2);
+    mouseY.set(rect.height / 2);
+  }
+
+  function handleBlur() {
+    mouseX.set(-400);
+    mouseY.set(-400);
+  }
+
+  return (
+    <div
+      ref={cardRef}
+      role="group"
+      tabIndex={0}
+      aria-labelledby={labelId}
+      onMouseEnter={handleMouseEnter}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      onFocus={handleFocus}
+      onBlur={handleBlur}
+      className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-ink/15 bg-surface/40 p-6 transition-colors duration-700 [@media(hover:hover)]:hover:border-ink/40 focus-visible:border-ink/40 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-4"
+    >
+
+      <motion.span
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0"
+        style={{ background: spotlight }}
+      />
+
+      <h3
+        id={labelId}
+        style={{ fontWeight: 700, letterSpacing: "-0.015em" }}
+        className="relative font-display text-2xl leading-tight text-ink"
+      >
+        {group.label}
+      </h3>
+
+      {group.blurb && (
+        <p className="relative mt-2 text-[0.9375rem] leading-relaxed text-ink-dim">
+          {group.blurb}
+        </p>
+      )}
+
+      <ul className="relative mt-6 grid grid-cols-2 gap-x-4 gap-y-2">
+        {visibleItems.map((item) => (
+          <SkillItem key={item.name} item={item} />
+        ))}
+      </ul>
+
+      {hiddenItems.length > 0 && (
+        <>
+          <div
+            className="grid transition-[grid-template-rows]"
+            style={{
+              gridTemplateRows: expanded ? "1fr" : "0fr",
+              ...HOVER_TRANSITION,
+            }}
+          >
+            <div className="overflow-hidden">
+              <ul className="mt-2 grid grid-cols-2 gap-x-4 gap-y-2">
+                {hiddenItems.map((item) => (
+                  <SkillItem key={item.name} item={item} />
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setExpanded((value) => !value)}
+            aria-expanded={expanded}
+            className="mt-2 inline-flex min-h-[44px] items-center text-[0.9375rem] text-ink-dim transition-colors [@media(hover:hover)]:hover:text-accent focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-4"
+          >
+            Show all {group.items.length}
+          </button>
+        </>
+      )}
+    </div>
+  );
+}
+
+function SkillItem({ item }: { item: SkillItemType }) {
+  return (
+    <li className="flex items-start gap-2 text-base leading-snug text-ink">
+      <span aria-hidden="true" className="mt-2 h-1 w-1 shrink-0 rounded-full bg-accent" />
+      <span className="flex flex-wrap items-baseline gap-x-2">
+        {item.name}
+        {item.status === "learning" && (
+          <span className="font-mono text-[0.875rem] uppercase tracking-wider text-accent">
+            {item.status}
+          </span>
+        )}
+        {item.note && (
+          <span className="text-[0.875rem] text-ink-dim">{item.note}</span>
+        )}
+      </span>
+    </li>
+  );
+}
+
+function Portrait({ hasPortrait }: { hasPortrait: boolean }) {
+  const [failed, setFailed] = useState(!hasPortrait);
+
+  if (failed) return <PortraitPlaceholder />;
+
+  return (
+    <div className="group relative overflow-hidden rounded-2xl border border-ink/15 bg-surface">
+      <Image
+        src={aboutSection.portrait.src}
+        alt={aboutSection.portrait.alt}
+        width={1600}
+        height={2000}
+        sizes="(min-width: 768px) 30vw, 240px"
+        className="aspect-[4/5] w-full object-cover grayscale-[30%] transition-[filter] [@media(hover:hover)]:group-hover:grayscale-0"
+        style={HOVER_TRANSITION}
+        onError={() => setFailed(true)}
+      />
+    </div>
+  );
+}
+
+function PortraitPlaceholder() {
+  return (
+    <div className="relative aspect-[4/5] w-full overflow-hidden rounded-2xl border border-ink/15 bg-surface select-none">
+
+      <div
+        aria-hidden="true"
+        className="absolute inset-0"
+        style={{
+          background: `radial-gradient(120% 120% at 85% 15%, color-mix(in srgb, var(--accent) 10%, var(--surface)), var(--surface))`,
+        }}
+      />
+
+
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 opacity-[0.06]"
+        style={{
+          backgroundImage: `linear-gradient(to right, var(--ink) 1px, transparent 1px), linear-gradient(to bottom, var(--ink) 1px, transparent 1px)`,
+          backgroundSize: "28px 28px",
+        }}
+      />
+
+
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 flex items-center justify-center font-display text-8xl font-bold tracking-tighter text-ink/[0.12]"
+      >
+        KA
+      </span>
+    </div>
   );
 }

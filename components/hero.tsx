@@ -23,7 +23,6 @@ export function Hero() {
     return () => clearInterval(interval);
   }, []);
 
-  // Scroll parallax & fade transforms
   const { scrollYProgress } = useScroll({
     target: heroRef,
     offset: ["start start", "end start"],
@@ -41,11 +40,9 @@ export function Hero() {
       id="top"
       className="relative flex min-h-[100svh] flex-col justify-between overflow-x-hidden pb-8 pt-24 sm:pb-10 sm:pt-28"
     >
-      {/* The swiss grid lives only inside the hero */}
       <SwissGridBackground />
 
-      <div className="relative z-10 mx-auto flex w-full max-w-[1680px] flex-1 flex-col justify-between px-6 md:px-10 lg:px-16">
-        {/* a) Meta row */}
+      <div className="relative z-10 mx-auto flex w-full max-w-[1680px] flex-1 flex-col justify-between px-5 md:px-10 lg:px-16">
         <motion.div
           initial={shouldReduceMotion ? false : { opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
@@ -69,10 +66,8 @@ export function Hero() {
           </div>
         </motion.div>
 
-        {/* Center content: Headline, 12-col Subcopy/CTA row */}
         <div className="my-auto py-2">
-          {/* b) Headline (h1) with descender breathing room */}
-          <h1 className="text-[clamp(3.25rem,8.6vw,10rem)] font-display font-[800] leading-[0.95] tracking-[-0.05em] text-ink [text-wrap:balance]">
+          <h1 className="text-[clamp(2.5rem,8.6vw,10rem)] font-display font-[800] leading-[0.95] tracking-[-0.05em] text-ink [text-wrap:balance]">
             <span className="block overflow-hidden pb-[0.14em] -mb-[0.14em]">
               <motion.span
                 initial={shouldReduceMotion ? false : { y: "115%" }}
@@ -89,7 +84,7 @@ export function Hero() {
                           opacity: headlineOpacity,
                         }
                   }
-                  className="inline-block"
+                  className="inline-block max-w-full"
                 >
                   Building on screen,
                 </motion.span>
@@ -112,18 +107,17 @@ export function Hero() {
                           opacity: headlineOpacity,
                         }
                   }
-                  className="inline-block"
+                  className="inline-block max-w-full"
                 >
-                  cutting on <span className="timeline-stroke">timeline.</span>
+                  cutting on{" "}
+                  <span className="timeline-stroke inline-block">timeline.</span>
                 </motion.span>
               </motion.span>
             </span>
           </h1>
 
-          {/* 12-column layout below headline: cols 1-6 = subcopy + CTAs */}
           <div className="mt-[40px] grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
             <div className="md:col-span-8 lg:col-span-6">
-              {/* c) Subcopy: max-width 38ch */}
               <motion.div
                 initial={shouldReduceMotion ? false : { opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -138,7 +132,6 @@ export function Hero() {
                 </motion.p>
               </motion.div>
 
-              {/* d) CTAs: 32px below subcopy */}
               <motion.div
                 initial={shouldReduceMotion ? false : { opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -151,23 +144,23 @@ export function Hero() {
                   <Magnetic>
                     <a
                       href="#work"
-                      className="btn-primary inline-flex items-center justify-center rounded-full px-7 py-3.5 text-sm font-medium transition-transform hover:-translate-y-0.5"
+                      className="btn-primary inline-flex items-center justify-center rounded-full px-7 py-3.5 text-sm font-medium transition-transform [@media(hover:hover)]:hover:-translate-y-0.5"
                     >
                       View work
                     </a>
                   </Magnetic>
                   <a
                     href="#contact"
-                    className="group relative inline-flex items-center justify-center gap-1.5 py-2 text-sm font-medium text-ink sm:justify-start"
+                    className="group relative inline-flex min-h-11 items-center justify-center gap-1.5 text-sm font-medium text-ink sm:justify-start"
                   >
                     <span>Get in touch</span>
                     <span
                       aria-hidden="true"
-                      className="inline-block transition-transform duration-300 group-hover:translate-x-1"
+                      className="inline-block transition-transform duration-300 [@media(hover:hover)]:group-hover:translate-x-1"
                     >
                       →
                     </span>
-                    <span className="absolute bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-ink transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-x-100" />
+                    <span className="absolute bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-ink transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] [@media(hover:hover)]:group-hover:scale-x-100" />
                   </a>
                 </motion.div>
               </motion.div>
@@ -175,7 +168,6 @@ export function Hero() {
           </div>
         </div>
 
-        {/* e) Bottom row */}
         <motion.div
           initial={shouldReduceMotion ? false : { opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}

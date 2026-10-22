@@ -6,15 +6,8 @@ import { useTheme } from "next-themes";
 import { Magnetic } from "./ui/magnetic-button";
 import { useLenis } from "./providers/smooth-scroll-provider";
 import { cn } from "@/lib/utils";
+import { navLinks } from "@/lib/data";
 import { EASE, DURATION } from "@/lib/motion";
-
-const links = [
-  { href: "#work", label: "Work" },
-  { href: "#experience", label: "Experience" },
-  { href: "#about", label: "About" },
-  { href: "#reel", label: "Reel" },
-  { href: "#contact", label: "Contact" },
-];
 
 export function Nav() {
   const [scrolled, setScrolled] = useState(false);
@@ -25,6 +18,7 @@ export function Nav() {
   const lenis = useLenis();
 
   const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const menuPanelRef = useRef<HTMLDivElement>(null);
   const wasOpenRef = useRef(false);
   const wasAtHero = useRef(true);
   const scrolledRef = useRef(false);
@@ -63,7 +57,6 @@ export function Nav() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // 1 & 2. Drive active state strictly from real sections with rootMargin "-45% 0px -50% 0px"
   useEffect(() => {
     function updateHeroHeight() {
       const heroEl = document.getElementById("top");
@@ -85,7 +78,6 @@ export function Nav() {
           ? heroHeightRef.current * 0.5
           : window.innerHeight * 0.5;
 
-      // 1. Clear ONLY when window.scrollY < (hero height * 0.5)
       if (window.scrollY < threshold) {
         if (debounceTimerRef.current) {
           clearTimeout(debounceTimerRef.current);
@@ -98,13 +90,10 @@ export function Nav() {
         return;
       }
 
-      // Keep the LAST active section until a different section becomes active!
       if (intersectingMap.size === 0) {
         return;
       }
 
-      // 2. Among all intersecting entries, pick the one closest to that line
-      // Using entry.boundingClientRect (zero forced reflow / layout read)
       const lineY = window.innerHeight * 0.475;
       let closestId: string | null = null;
       let minDistance = Infinity;
@@ -132,7 +121,6 @@ export function Nav() {
         if (debounceTimerRef.current) {
           clearTimeout(debounceTimerRef.current);
         }
-        // 3. Debounce activeId changes: ignore changes shorter than 80ms
         debounceTimerRef.current = setTimeout(() => {
           setActive(closestId!);
         }, 80);
@@ -184,7 +172,6 @@ export function Nav() {
     };
   }, []);
 
-  // Mobile menu scroll lock and focus return
   useEffect(() => {
     if (open) {
       lenis.stop();
@@ -198,7 +185,6 @@ export function Nav() {
     }
   }, [open, lenis]);
 
-  // Close mobile menu on Escape
   useEffect(() => {
     if (!open) return;
     function handleKeyDown(e: KeyboardEvent) {
@@ -210,10 +196,44 @@ export function Nav() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [open]);
 
-  // The header always uses its own theme tokens, even over an inverted section.
+  useEffect(() => {
+    if (!open) return;
+    const panel = menuPanelRef.current;
+    if (!panel) return;
+
+    function focusables() {
+      const element = menuPanelRef.current;
+      if (!element) return [];
+      return Array.from(
+        element.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+        )
+      );
+    }
+
+    focusables()[0]?.focus();
+
+    function handleTab(e: KeyboardEvent) {
+      if (e.key !== "Tab") return;
+      const list = focusables();
+      if (list.length === 0) return;
+      const first = list[0];
+      const last = list[list.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    }
+
+    panel.addEventListener("keydown", handleTab);
+    return () => panel.removeEventListener("keydown", handleTab);
+  }, [open]);
+
   return (
     <>
-      {/* 1px accent scroll-progress line fixed at top */}
       <motion.div
         aria-hidden="true"
         className="fixed inset-x-0 top-0 z-[60] h-px origin-left bg-accent pointer-events-none"
@@ -226,9 +246,9 @@ export function Nav() {
           scrolled ? "backdrop-blur-md" : "backdrop-blur-none"
         )}
       >
-        <div className="mx-auto flex w-full max-w-[1680px] items-center justify-between px-6 py-5 md:px-10 lg:px-16">
-          <a href="#top" className="group flex items-center gap-2.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-line bg-surface p-1.5 text-ink shadow-sm transition-colors duration-200 group-hover:border-accent">
+        <div className="mx-auto flex w-full max-w-[1680px] items-center justify-between px-5 py-5 md:px-10 lg:px-16">
+          <a href="#top" className="group flex min-h-11 items-center gap-2.5">
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-line bg-surface p-1.5 text-ink shadow-sm transition-colors duration-200 [@media(hover:hover)]:group-hover:border-accent">
               <svg
                 viewBox="0 0 100 100"
                 fill="none"
@@ -242,20 +262,19 @@ export function Nav() {
             <span className="font-display text-lg font-bold tracking-tight text-ink">Kisu</span>
           </a>
 
-          {/* Desktop nav with shared sliding active pill */}
           <nav className="hidden items-center gap-1 text-sm md:flex" aria-label="Primary">
-            {links.map((link) => {
+            {navLinks.map((link) => {
               const isActive = active === link.href;
               return (
                 <a
                   key={link.href}
                   href={link.href}
-                  className="relative rounded-full px-3.5 py-1.5 text-sm font-medium transition-colors"
+                  className="relative inline-flex min-h-11 items-center rounded-full px-3.5 text-sm font-medium transition-colors"
                 >
                   <span
                     className={cn(
                       "relative z-10 transition-colors duration-200",
-                      isActive ? "text-[var(--bg)] font-semibold" : "text-ink-dim hover:text-ink"
+                      isActive ? "text-[var(--bg)] font-semibold" : "text-ink-dim [@media(hover:hover)]:hover:text-ink"
                     )}
                   >
                     {link.label}
@@ -298,22 +317,22 @@ export function Nav() {
             <Magnetic>
               <a
                 href="#contact"
-                className="rounded-full border border-line-strong px-4 py-2 text-sm transition-colors hover:border-accent hover:bg-accent/10"
+                className="inline-flex min-h-11 items-center rounded-full border border-line-strong px-4 text-sm transition-colors [@media(hover:hover)]:hover:border-accent [@media(hover:hover)]:hover:bg-accent/10"
               >
                 Let&apos;s talk
               </a>
             </Magnetic>
           </div>
 
-          {/* Mobile controls (minimum 40px touch targets) */}
           <div className="flex items-center gap-2 md:hidden">
             <ThemeToggle theme={resolvedTheme} setTheme={setTheme} mounted={mounted} />
             <button
               ref={menuButtonRef}
               aria-label={open ? "Close navigation menu" : "Open navigation menu"}
               aria-expanded={open}
+              aria-controls="mobile-menu"
               onClick={() => setOpen(!open)}
-              className="flex h-10 w-10 min-h-[40px] min-w-[40px] flex-col items-center justify-center gap-1.5 rounded-full border border-line-strong transition-colors hover:border-accent"
+              className="flex h-11 w-11 min-h-[44px] min-w-[44px] flex-col items-center justify-center gap-1.5 rounded-full border border-line-strong transition-colors [@media(hover:hover)]:hover:border-accent"
             >
               <span
                 className={cn(
@@ -332,26 +351,47 @@ export function Nav() {
         </div>
       </header>
 
-      {/* Mobile menu modal */}
       <AnimatePresence>
         {open && (
           <motion.div
+            ref={menuPanelRef}
+            id="mobile-menu"
             initial={{ y: "-100%" }}
             animate={{ y: 0 }}
             exit={{ y: "-100%" }}
             transition={{ duration: DURATION.fast, ease: EASE }}
-            className="fixed inset-0 z-40 flex flex-col items-center justify-center gap-8 bg-bg px-6"
+            className="fixed inset-0 z-40 flex flex-col items-center justify-center gap-8 overflow-y-auto bg-bg px-5 pb-[env(safe-area-inset-bottom)] pt-24"
           >
-            {links.map((link) => (
+            <nav
+              className="flex flex-col items-center gap-4"
+              aria-label="Mobile"
+            >
+              {navLinks.map((link) => (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setOpen(false)}
+                  className="inline-flex min-h-11 items-center font-display text-3xl font-bold text-ink transition-colors [@media(hover:hover)]:hover:text-accent"
+                >
+                  {link.label}
+                </a>
+              ))}
+            </nav>
+
+            <div className="flex items-center gap-4">
+              <ThemeToggle
+                theme={resolvedTheme}
+                setTheme={setTheme}
+                mounted={mounted}
+              />
               <a
-                key={link.href}
-                href={link.href}
+                href="#contact"
                 onClick={() => setOpen(false)}
-                className="font-display text-3xl font-bold text-ink transition-colors hover:text-accent"
+                className="inline-flex min-h-11 items-center rounded-full border border-line-strong px-5 text-sm text-ink transition-colors [@media(hover:hover)]:hover:border-accent [@media(hover:hover)]:hover:bg-accent/10"
               >
-                {link.label}
+                Let&apos;s talk
               </a>
-            ))}
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -372,7 +412,7 @@ function ThemeToggle({
     <button
       aria-label="Toggle theme"
       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-      className="relative flex h-10 w-10 min-h-[40px] min-w-[40px] items-center justify-center rounded-full border border-line-strong transition-colors hover:border-accent"
+      className="relative flex h-11 w-11 min-h-[44px] min-w-[44px] items-center justify-center rounded-full border border-line-strong transition-colors [@media(hover:hover)]:hover:border-accent"
     >
       {mounted && (
         <motion.span

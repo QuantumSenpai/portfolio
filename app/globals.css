@@ -140,8 +140,10 @@ p {
   transition: transform 0.3s var(--ease), opacity 0.3s var(--ease);
 }
 
-.btn-primary:hover {
-  opacity: 0.92;
+@media (hover: hover) {
+  .btn-primary:hover {
+    opacity: 0.92;
+  }
 }
 
 .text-stroke {
@@ -160,9 +162,11 @@ p {
               color 0.7s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.timeline-stroke:hover {
-  -webkit-text-fill-color: var(--accent);
-  color: var(--accent);
+@media (hover: hover) {
+  .timeline-stroke:hover {
+    -webkit-text-fill-color: var(--accent);
+    color: var(--accent);
+  }
 }
 
 a {

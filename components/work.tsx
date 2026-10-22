@@ -77,7 +77,7 @@ export function Work() {
       data-tone="invert"
       className="relative w-full py-24 sm:py-32"
     >
-      <div className="mx-auto w-full max-w-[1680px] px-6 md:px-10 lg:px-16">
+      <div className="mx-auto w-full max-w-[1680px] px-5 md:px-10 lg:px-16">
         {/* Section Heading */}
         <div className="mb-14 sm:mb-20">
           <span className="font-mono text-[13px] uppercase tracking-widest text-accent">
@@ -145,13 +145,13 @@ export function Work() {
                       {/* Row background tint via absolute layer (ink at 4%) */}
                       <span
                         aria-hidden="true"
-                        className="pointer-events-none absolute inset-0 -mx-4 rounded-lg bg-ink/[0.04] opacity-0 px-4 transition-opacity duration-[0.7s] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:opacity-100 group-focus-visible:opacity-100"
+                        className="pointer-events-none absolute inset-0 -mx-4 rounded-lg bg-ink/[0.04] opacity-0 px-4 transition-opacity duration-[0.7s] ease-[cubic-bezier(0.16,1,0.3,1)] [@media(hover:hover)]:group-hover:opacity-100 group-focus-visible:opacity-100"
                       />
 
                       {/* 1px accent underline scales scaleX 0 -> 1 from left */}
                       <span
                         aria-hidden="true"
-                        className="pointer-events-none absolute bottom-0 left-0 right-0 h-px origin-left scale-x-0 bg-accent transition-transform duration-[0.7s] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-x-100 group-focus-visible:scale-x-100"
+                        className="pointer-events-none absolute bottom-0 left-0 right-0 h-px origin-left scale-x-0 bg-accent transition-transform duration-[0.7s] ease-[cubic-bezier(0.16,1,0.3,1)] [@media(hover:hover)]:group-hover:scale-x-100 group-focus-visible:scale-x-100"
                       />
 
                       {/* Left: Index + Title (translateX 12px & accent on hover) + Role */}
@@ -165,7 +165,7 @@ export function Work() {
                               fontWeight: 700,
                               letterSpacing: "-0.015em",
                             }}
-                            className="font-display text-ink text-[length:var(--text-h2)] leading-tight truncate transition-all duration-[0.7s] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-3 group-focus-visible:translate-x-3 group-hover:text-accent group-focus-visible:text-accent"
+                            className="font-display text-ink text-[length:var(--text-h2)] leading-tight truncate transition-all duration-[0.7s] ease-[cubic-bezier(0.16,1,0.3,1)] [@media(hover:hover)]:group-hover:translate-x-3 group-focus-visible:translate-x-3 [@media(hover:hover)]:group-hover:text-accent group-focus-visible:text-accent"
                           >
                             {project.title}
                           </h3>
@@ -180,7 +180,7 @@ export function Work() {
                         <span className="tabular-nums">{project.year}</span>
                         <span
                           aria-hidden="true"
-                          className="inline-block text-lg leading-none transition-all duration-[0.7s] ease-[cubic-bezier(0.16,1,0.3,1)] transform rotate-45 group-hover:rotate-0 group-focus-visible:rotate-0 text-ink-dim group-hover:text-accent group-focus-visible:text-accent"
+                          className="inline-block text-lg leading-none transition-all duration-[0.7s] ease-[cubic-bezier(0.16,1,0.3,1)] transform rotate-45 [@media(hover:hover)]:group-hover:rotate-0 group-focus-visible:rotate-0 text-ink-dim [@media(hover:hover)]:group-hover:text-accent group-focus-visible:text-accent"
                         >
                           ↗
                         </span>
@@ -223,7 +223,7 @@ export function Work() {
                     href={activeProject.liveUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 font-medium text-ink transition-colors hover:text-accent"
+                    className="inline-flex items-center gap-1 font-medium text-ink transition-colors [@media(hover:hover)]:hover:text-accent"
                   >
                     Live ↗
                   </a>
@@ -233,7 +233,7 @@ export function Work() {
                     href={activeProject.repoUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-ink-dim transition-colors hover:text-accent"
+                    className="inline-flex items-center gap-1 text-ink-dim transition-colors [@media(hover:hover)]:hover:text-accent"
                   >
                     Repo ↗
                   </a>
@@ -253,7 +253,7 @@ export function Work() {
                             ?.scrollIntoView({ behavior: "smooth" });
                         }
                       }}
-                      className="inline-flex items-center gap-1 font-medium text-ink transition-colors hover:text-accent"
+                      className="inline-flex items-center gap-1 font-medium text-ink transition-colors [@media(hover:hover)]:hover:text-accent"
                     >
                       Case study ↗
                     </a>
@@ -295,10 +295,10 @@ export function Work() {
               href={workSection.githubUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="group inline-flex items-center gap-2 font-mono text-sm tracking-[0.04em] text-ink-dim transition-colors hover:text-accent focus-visible:outline-accent"
+              className="group inline-flex items-center gap-2 font-mono text-sm tracking-[0.04em] text-ink-dim transition-colors [@media(hover:hover)]:hover:text-accent focus-visible:outline-accent"
             >
               <span>View all on GitHub</span>
-              <span className="transition-transform duration-200 group-hover:translate-x-1">
+              <span className="transition-transform duration-200 [@media(hover:hover)]:group-hover:translate-x-1">
                 &rarr;
               </span>
             </a>
@@ -311,14 +311,14 @@ export function Work() {
                 href={repo.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group flex items-center justify-between py-4 text-ink-dim transition-colors hover:text-ink focus-visible:outline-accent"
+                className="group flex items-center justify-between py-4 text-ink-dim transition-colors [@media(hover:hover)]:hover:text-ink focus-visible:outline-accent"
               >
-                <span className="font-medium text-ink transition-colors group-hover:text-accent">
+                <span className="font-medium text-ink transition-colors [@media(hover:hover)]:group-hover:text-accent">
                   {repo.name}
                 </span>
                 <div className="flex items-center gap-6">
                   <span className="text-ink-dim">{repo.language}</span>
-                  <span className="text-sm leading-none transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-accent">
+                  <span className="text-sm leading-none transition-transform duration-200 [@media(hover:hover)]:group-hover:translate-x-0.5 [@media(hover:hover)]:group-hover:-translate-y-0.5 [@media(hover:hover)]:group-hover:text-accent">
                     ↗
                   </span>
                 </div>
@@ -463,7 +463,7 @@ function MobileProjectCard({
             href={project.liveUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 font-semibold text-accent hover:underline focus-visible:outline-accent"
+            className="inline-flex min-h-11 items-center gap-1 font-semibold text-accent [@media(hover:hover)]:hover:underline focus-visible:outline-accent"
           >
             Live ↗
           </a>
@@ -473,7 +473,7 @@ function MobileProjectCard({
             href={project.repoUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-ink-dim transition-colors hover:text-ink focus-visible:outline-accent"
+            className="inline-flex items-center gap-1 text-ink-dim transition-colors [@media(hover:hover)]:hover:text-ink focus-visible:outline-accent"
           >
             GitHub ↗
           </a>
@@ -491,7 +491,7 @@ function MobileProjectCard({
                   ?.scrollIntoView({ behavior: "smooth" });
               }
             }}
-            className="inline-flex items-center gap-1 font-semibold text-accent hover:underline focus-visible:outline-accent"
+            className="inline-flex min-h-11 items-center gap-1 font-semibold text-accent [@media(hover:hover)]:hover:underline focus-visible:outline-accent"
           >
             Case study ↗
           </a>

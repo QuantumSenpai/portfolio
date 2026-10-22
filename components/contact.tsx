@@ -224,7 +224,7 @@ export function Contact({
 
   return (
     <section id="contact" className="relative w-full py-24 sm:py-32">
-      <div className="mx-auto w-full max-w-[1680px] px-6 md:px-10 lg:px-16">
+      <div className="mx-auto w-full max-w-[1680px] px-5 md:px-10 lg:px-16">
         <motion.div
           variants={containerVariants}
           initial={shouldReduceMotion ? false : "hidden"}
@@ -257,13 +257,13 @@ export function Contact({
                 <span ref={emailRef}>{email}</span>
                 <span
                   aria-hidden="true"
-                  className="inline-block text-lg leading-none text-ink-dim transition-transform rotate-45 group-hover:rotate-0 group-focus-visible:rotate-0 group-hover:text-accent group-focus-visible:text-accent"
+                  className="inline-block text-lg leading-none text-ink-dim transition-transform rotate-45 [@media(hover:hover)]:group-hover:rotate-0 group-focus-visible:rotate-0 [@media(hover:hover)]:group-hover:text-accent group-focus-visible:text-accent"
                 >
                   ↗
                 </span>
                 <span
                   aria-hidden="true"
-                  className="absolute bottom-0 left-0 right-0 h-px origin-left scale-x-0 bg-accent transition-transform group-hover:scale-x-100 group-focus-visible:scale-x-100"
+                  className="absolute bottom-0 left-0 right-0 h-px origin-left scale-x-0 bg-accent transition-transform [@media(hover:hover)]:group-hover:scale-x-100 group-focus-visible:scale-x-100"
                 />
               </a>
 
@@ -272,7 +272,7 @@ export function Contact({
                   type="button"
                   onClick={handleCopy}
                   aria-live="polite"
-                  className="inline-flex h-11 items-center justify-center gap-2 rounded-full border border-ink/15 px-5 text-[0.9375rem] leading-none text-ink-dim transition-colors hover:border-accent hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+                  className="inline-flex h-11 items-center justify-center gap-2 rounded-full border border-ink/15 px-5 text-[0.9375rem] leading-none text-ink-dim transition-colors [@media(hover:hover)]:hover:border-accent [@media(hover:hover)]:hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
                 >
                   {copied ? "Copied" : "Copy email"}
                 </button>
@@ -313,7 +313,7 @@ export function Contact({
 
                 <input type="hidden" name="startedAt" value={startedAt} />
 
-                <div className="grid gap-7 sm:grid-cols-2">
+                <div className="grid gap-7 md:grid-cols-2">
                   <Field label={nameLabel}>
                     <input
                       type="text"
@@ -374,7 +374,7 @@ export function Contact({
                     {contactForm.consentPrefix}{" "}
                     <a
                       href="/privacy"
-                      className="underline underline-offset-4 transition-colors hover:text-accent focus-visible:text-accent focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
+                      className="underline underline-offset-4 transition-colors [@media(hover:hover)]:hover:text-accent focus-visible:text-accent focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
                     >
                       {contactForm.consentLink}
                     </a>

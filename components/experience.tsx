@@ -53,7 +53,7 @@ export function Experience() {
 
   return (
     <section id="experience" className="relative w-full py-24 sm:py-32">
-      <div className="mx-auto w-full max-w-[1680px] px-6 md:px-10 lg:px-16">
+      <div className="mx-auto w-full max-w-[1680px] px-5 md:px-10 lg:px-16">
         {/* Section heading */}
         <motion.div
           variants={headingVariants}
@@ -139,14 +139,14 @@ function ExperienceRow({
         {/* Row background tint — ink at 4% */}
         <span
           aria-hidden="true"
-          className="pointer-events-none absolute inset-0 bg-ink/[0.04] opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100"
+          className="pointer-events-none absolute inset-0 bg-ink/[0.04] opacity-0 transition-opacity [@media(hover:hover)]:group-hover:opacity-100 group-focus-visible:opacity-100"
           style={HOVER_TRANSITION}
         />
 
         {/* 1px accent underline — scaleX 0 -> 1 from the left */}
         <span
           aria-hidden="true"
-          className="pointer-events-none absolute bottom-0 left-0 right-0 h-px origin-left scale-x-0 bg-accent transition-transform group-hover:scale-x-100 group-focus-visible:scale-x-100"
+          className="pointer-events-none absolute bottom-0 left-0 right-0 h-px origin-left scale-x-0 bg-accent transition-transform [@media(hover:hover)]:group-hover:scale-x-100 group-focus-visible:scale-x-100"
           style={HOVER_TRANSITION}
         />
 
@@ -165,7 +165,7 @@ function ExperienceRow({
                 letterSpacing: "-0.015em",
                 ...HOVER_TRANSITION,
               }}
-              className="font-display text-ink text-[length:var(--text-h2)] leading-tight transition-all group-hover:translate-x-3 group-focus-visible:translate-x-3 group-hover:text-accent group-focus-visible:text-accent"
+              className="font-display text-ink text-[length:var(--text-h2)] leading-tight transition-all [@media(hover:hover)]:group-hover:translate-x-3 group-focus-visible:translate-x-3 [@media(hover:hover)]:group-hover:text-accent group-focus-visible:text-accent"
             >
               {entry.role}
             </h3>

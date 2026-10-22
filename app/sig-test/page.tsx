@@ -77,7 +77,7 @@ export default function SigTestPage() {
     <div
       className={`${mrsSaintDelafield.variable} ${meaCulpa.variable} ${herrVonMuellerhoff.variable} ${monsieurLaDoulaise.variable} ${allura.variable} ${greatVibes.variable} ${pinyonScript.variable} ${italianno.variable}`}
     >
-      <div className="mx-auto w-full max-w-[1680px] px-6 py-16 md:px-10 lg:px-16">
+      <div className="mx-auto w-full max-w-[1680px] px-5 py-16 md:px-10 lg:px-16">
         {fonts.map((font) => (
           <div key={font.name} className="border-b border-ink/10 py-10">
             <p

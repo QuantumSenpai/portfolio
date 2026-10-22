@@ -53,7 +53,7 @@ export function About({ hasPortrait = false }: { hasPortrait?: boolean }) {
       {/* Legacy anchor: the Skills section now lives here */}
       <span id="skills" />
 
-      <div className="mx-auto w-full max-w-[1680px] px-6 md:px-10 lg:px-16">
+      <div className="mx-auto w-full max-w-[1680px] px-5 md:px-10 lg:px-16">
         <motion.div
           initial={shouldReduceMotion ? false : { opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -238,7 +238,7 @@ function SkillCard({ group }: { group: SkillGroup }) {
       onMouseLeave={handleMouseLeave}
       onFocus={handleFocus}
       onBlur={handleBlur}
-      className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-ink/15 bg-surface/40 p-6 transition-colors duration-700 hover:border-ink/40 focus-visible:border-ink/40 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-4"
+      className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-ink/15 bg-surface/40 p-6 transition-colors duration-700 [@media(hover:hover)]:hover:border-ink/40 focus-visible:border-ink/40 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-4"
     >
       {/* Spotlight that follows the pointer */}
       <motion.span
@@ -289,7 +289,7 @@ function SkillCard({ group }: { group: SkillGroup }) {
             type="button"
             onClick={() => setExpanded((value) => !value)}
             aria-expanded={expanded}
-            className="mt-2 inline-flex min-h-[44px] items-center text-[0.9375rem] text-ink-dim transition-colors hover:text-accent focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-4"
+            className="mt-2 inline-flex min-h-[44px] items-center text-[0.9375rem] text-ink-dim transition-colors [@media(hover:hover)]:hover:text-accent focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-4"
           >
             Show all {group.items.length}
           </button>
@@ -330,8 +330,8 @@ function Portrait({ hasPortrait }: { hasPortrait: boolean }) {
         alt={aboutSection.portrait.alt}
         width={1600}
         height={2000}
-        sizes="(min-width: 1024px) 30vw, (min-width: 768px) 30vw, 240px"
-        className="aspect-[4/5] w-full object-cover grayscale-[30%] transition-[filter] group-hover:grayscale-0"
+        sizes="(min-width: 768px) 30vw, 240px"
+        className="aspect-[4/5] w-full object-cover grayscale-[30%] transition-[filter] [@media(hover:hover)]:group-hover:grayscale-0"
         style={HOVER_TRANSITION}
         onError={() => setFailed(true)}
       />

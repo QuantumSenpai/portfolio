@@ -13,10 +13,10 @@ export default function PrivacyPage() {
   return (
     <>
       <main className="relative w-full py-24 sm:py-32">
-        <div className="mx-auto w-full max-w-[1680px] px-6 md:px-10 lg:px-16">
+        <div className="mx-auto w-full max-w-[1680px] px-5 md:px-10 lg:px-16">
           <Link
             href="/"
-            className="inline-flex items-center gap-1.5 font-mono text-sm tracking-[0.04em] text-ink-dim transition-colors hover:text-accent focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-4"
+            className="inline-flex min-h-11 items-center gap-1.5 font-mono text-sm tracking-[0.04em] text-ink-dim transition-colors [@media(hover:hover)]:hover:text-accent focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-4"
           >
             <span aria-hidden="true">←</span>
             <span>Back</span>
@@ -60,7 +60,7 @@ export default function PrivacyPage() {
           <p className="mt-14 max-w-[70ch] font-mono text-sm tracking-[0.04em] text-ink-dim">
             <a
               href={`mailto:${email}`}
-              className="underline underline-offset-4 transition-colors hover:text-accent focus-visible:text-accent"
+              className="underline underline-offset-4 transition-colors [@media(hover:hover)]:hover:text-accent focus-visible:text-accent"
             >
               {email}
             </a>

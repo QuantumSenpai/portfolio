@@ -45,7 +45,7 @@ export function Reel() {
 
   return (
     <section id="reel" className="relative w-full py-24 sm:py-32">
-      <div className="mx-auto w-full max-w-[1680px] px-6 md:px-10 lg:px-16">
+      <div className="mx-auto w-full max-w-[1680px] px-5 md:px-10 lg:px-16">
         {/* Section heading */}
         <motion.div
           initial={shouldReduceMotion ? false : { opacity: 0, y: 16 }}
@@ -72,7 +72,7 @@ export function Reel() {
               href={reelSection.channelUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-4 inline-flex items-center gap-1.5 font-mono text-sm tracking-[0.04em] text-ink-dim transition-colors hover:text-accent focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-4"
+              className="mt-4 inline-flex items-center gap-1.5 font-mono text-sm tracking-[0.04em] text-ink-dim transition-colors [@media(hover:hover)]:hover:text-accent focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-4"
             >
               <span>YouTube</span>
               <span aria-hidden="true">↗</span>
@@ -141,7 +141,7 @@ function EditCard({ video }: { video: ReelVideo }) {
               style={HOVER_TRANSITION}
             />
             <span className={PLAY_PILL} style={HOVER_TRANSITION}>
-              <span aria-hidden="true" className="text-xs leading-none">
+              <span aria-hidden="true" className="text-sm leading-none">
                 ▶
               </span>
               Play
@@ -220,7 +220,7 @@ function ShortsRail({ shorts }: { shorts: ReelVideo[] }) {
               onClick={() => scrollByCard(-1)}
               disabled={!canPrev}
               aria-label="Previous short"
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-ink/20 text-ink transition-colors hover:border-accent hover:text-accent focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-4 disabled:opacity-40 disabled:hover:border-ink/20 disabled:hover:text-ink"
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-ink/20 text-ink transition-colors [@media(hover:hover)]:hover:border-accent [@media(hover:hover)]:hover:text-accent focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-4 disabled:opacity-40 disabled:[@media(hover:hover)]:hover:border-ink/20 disabled:[@media(hover:hover)]:hover:text-ink"
             >
               <span aria-hidden="true">←</span>
             </button>
@@ -229,7 +229,7 @@ function ShortsRail({ shorts }: { shorts: ReelVideo[] }) {
               onClick={() => scrollByCard(1)}
               disabled={!canNext}
               aria-label="Next short"
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-ink/20 text-ink transition-colors hover:border-accent hover:text-accent focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-4 disabled:opacity-40 disabled:hover:border-ink/20 disabled:hover:text-ink"
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-ink/20 text-ink transition-colors [@media(hover:hover)]:hover:border-accent [@media(hover:hover)]:hover:text-accent focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-4 disabled:opacity-40 disabled:[@media(hover:hover)]:hover:border-ink/20 disabled:[@media(hover:hover)]:hover:text-ink"
             >
               <span aria-hidden="true">→</span>
             </button>
@@ -290,7 +290,7 @@ function ShortCard({ video }: { video: ReelVideo }) {
               className="scale-[1.4] object-cover"
             />
             <span className={PLAY_PILL} style={HOVER_TRANSITION}>
-              <span aria-hidden="true" className="text-xs leading-none">
+              <span aria-hidden="true" className="text-sm leading-none">
                 ▶
               </span>
               Play

@@ -157,6 +157,14 @@ export const contactForm: ContactFormConfig = {
 
 export const email = "work.krishnendu.dev@gmail.com";
 
+export const navLinks: { href: string; label: string }[] = [
+  { href: "#work", label: "Work" },
+  { href: "#experience", label: "Experience" },
+  { href: "#about", label: "About" },
+  { href: "#reel", label: "Reel" },
+  { href: "#contact", label: "Contact" },
+];
+
 export const socials: { label: string; url: string }[] = [
   { label: "GitHub", url: "https://github.com/QuantumSenpai" },
   { label: "LinkedIn", url: "https://www.linkedin.com/in/krishnendu158" },

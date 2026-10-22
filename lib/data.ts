@@ -100,7 +100,7 @@ export interface ContactSectionConfig {
 }
 
 export const contactSection: ContactSectionConfig = {
-  eyebrow: "005 / Contact",
+  eyebrow: "006 / Contact",
   heading: "Let's build something.",
   subline:
     "Open for freelance — video editing, motion design, web development and content writing. Whether you're a startup, creator or fellow student, let's talk.",
@@ -156,6 +156,20 @@ export const contactForm: ContactFormConfig = {
 };
 
 export const email = "work.krishnendu.dev@gmail.com";
+
+export interface GithubSectionConfig {
+  eyebrow: string;
+  heading: string;
+  username: string;
+  profileUrl: string;
+}
+
+export const githubSection: GithubSectionConfig = {
+  eyebrow: "004 / GitHub",
+  heading: "Contributions on GitHub",
+  username: "QuantumSenpai",
+  profileUrl: "https://github.com/QuantumSenpai",
+};
 
 export const navLinks: { href: string; label: string }[] = [
   { href: "#work", label: "Work" },
@@ -728,7 +742,7 @@ export interface ReelSectionConfig {
 }
 
 export const reelSection: ReelSectionConfig = {
-  eyebrow: "004 / Reel",
+  eyebrow: "005 / Reel",
   heading: "Frames I've cut.",
 };
 

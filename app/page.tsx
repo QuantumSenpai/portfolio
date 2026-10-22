@@ -1,4 +1,5 @@
 import { statSync } from "node:fs";
+import { getGithubActivity } from "@/lib/github";
 import { join } from "node:path";
 import { Nav } from "@/components/nav";
 import { Hero } from "@/components/hero";
@@ -6,6 +7,7 @@ import { Ticker } from "@/components/ticker";
 import { Work } from "@/components/work";
 import { Experience } from "@/components/experience";
 import { About } from "@/components/about";
+import { GitHubActivity } from "@/components/github-activity";
 import { Reel } from "@/components/reel";
 import { Contact } from "@/components/contact";
 
@@ -27,7 +29,9 @@ function signatureExists() {
   }
 }
 
-export default function Home() {
+export default async function Home() {
+  const githubActivity = await getGithubActivity();
+
   return (
     <>
       <Nav />
@@ -37,6 +41,7 @@ export default function Home() {
         <Work />
         <Experience />
         <About hasPortrait={portraitIsLoadable()} />
+        {githubActivity ? <GitHubActivity activity={githubActivity} /> : null}
         <Reel />
         <Contact hasSignature={signatureExists()} />
       </main>

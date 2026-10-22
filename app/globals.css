@@ -222,6 +222,32 @@ a {
   }
 }
 
+/* GitHub contribution cells — fade in with a left-to-right stagger.
+   --i is the week index; the total delay is capped at ~1.2s. */
+@keyframes github-cell-in {
+  from {
+    opacity: 0;
+    transform: translateX(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.github-grid-in .github-cell {
+  animation: github-cell-in 400ms var(--ease) both;
+  animation-delay: calc(var(--i) * 23ms);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .github-grid-in .github-cell {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
 /* Signature wipe — a soft-edged linear wipe from left to right.
    --p is registered so the browser can interpolate it. */
 @property --p {

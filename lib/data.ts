@@ -162,6 +162,12 @@ export interface GithubSectionConfig {
   heading: string;
   username: string;
   profileUrl: string;
+  stats: {
+    total: string;
+    active: string;
+    currentStreak: string;
+    longestStreak: string;
+  };
 }
 
 export const githubSection: GithubSectionConfig = {
@@ -169,6 +175,12 @@ export const githubSection: GithubSectionConfig = {
   heading: "Contributions on GitHub",
   username: "QuantumSenpai",
   profileUrl: "https://github.com/QuantumSenpai",
+  stats: {
+    total: "Contributions in the last year",
+    active: "Active days",
+    currentStreak: "Current streak",
+    longestStreak: "Longest streak",
+  },
 };
 
 export const navLinks: { href: string; label: string }[] = [

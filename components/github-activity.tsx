@@ -7,10 +7,10 @@ import type { ContributionDay, GithubActivity } from "@/lib/github";
 import { cn } from "@/lib/utils";
 
 const LEVEL_CLASS = [
-  "bg-accent/0",
-  "bg-accent/20",
-  "bg-accent/40",
-  "bg-accent/65",
+  "bg-[var(--heatmap-empty)]",
+  "bg-accent/25",
+  "bg-accent/45",
+  "bg-accent/70",
   "bg-accent",
 ];
 
@@ -37,8 +37,15 @@ const MONTHS = [
   "Dec",
 ];
 
+const WEEKDAYS = [
+  { weekday: 1, label: "Mon" },
+  { weekday: 3, label: "Wed" },
+  { weekday: 5, label: "Fri" },
+];
+
 const DAYS_PER_WEEK = 7;
-const TOTAL_LABEL = "Contributions in the last year";
+const CELL_SIZE = 13;
+const GAP = 4;
 
 function parseDay(date: string) {
   return new Date(`${date}T00:00:00Z`);
@@ -54,12 +61,14 @@ function dayLabel(date: string) {
   return `${weekday} ${day}, ${value.getUTCFullYear()}`;
 }
 
-function computeStreaks(days: ContributionDay[]) {
+function computeStats(days: ContributionDay[]) {
+  let activeDays = 0;
   let longest = 0;
   let run = 0;
 
   for (const day of days) {
     if (day.contributionCount > 0) {
+      activeDays += 1;
       run += 1;
       if (run > longest) longest = run;
     } else {
@@ -67,18 +76,22 @@ function computeStreaks(days: ContributionDay[]) {
     }
   }
 
+  let index = days.length - 1;
+  if (index >= 0 && days[index].contributionCount === 0) index -= 1;
+
   let current = 0;
-  for (let index = days.length - 1; index >= 0; index -= 1) {
+  for (; index >= 0; index -= 1) {
     if (days[index].contributionCount > 0) current += 1;
     else break;
   }
 
-  return { currentStreak: current, longestStreak: longest };
+  return { activeDays, currentStreak: current, longestStreak: longest };
 }
 
 export function GitHubActivity({ activity }: { activity: GithubActivity }) {
   const gridRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
   const inView = useInView(gridRef, { once: true, margin: "-60px" });
 
@@ -92,8 +105,8 @@ export function GitHubActivity({ activity }: { activity: GithubActivity }) {
 
   const days = useMemo(() => cells.map((cell) => cell.day), [cells]);
 
-  const { currentStreak, longestStreak } = useMemo(
-    () => computeStreaks(days),
+  const { activeDays, currentStreak, longestStreak } = useMemo(
+    () => computeStats(days),
     [days]
   );
 
@@ -101,10 +114,22 @@ export function GitHubActivity({ activity }: { activity: GithubActivity }) {
     Math.max(0, days.length - 1)
   );
 
+  const firstWeekday = days.length ? parseDay(days[0].date).getUTCDay() : 0;
+
+  const weekdayLabels = useMemo(
+    () =>
+      WEEKDAYS.map(({ weekday, label }) => ({
+        label,
+        row: ((weekday - firstWeekday + DAYS_PER_WEEK) % DAYS_PER_WEEK) + 1,
+      })),
+    [firstWeekday]
+  );
+
   const monthLabels = useMemo(() => {
     const labels: (string | null)[] = [];
-    let previousMonth = -1;
     let lastLabelIndex = -99;
+    let lastLabelMonth = -1;
+    let lastLabelYear = -1;
 
     activity.weeks.forEach((week, index) => {
       const first = week.contributionDays[0];
@@ -112,15 +137,44 @@ export function GitHubActivity({ activity }: { activity: GithubActivity }) {
         labels.push(null);
         return;
       }
-      const month = parseDay(first.date).getUTCMonth();
-      const changed = month !== previousMonth;
-      previousMonth = month;
-      if (changed && index - lastLabelIndex >= 3) {
-        labels.push(MONTHS[month]);
-        lastLabelIndex = index;
-      } else {
+
+      const start = parseDay(first.date);
+      const month = start.getUTCMonth();
+      const year = start.getUTCFullYear();
+
+      if (month === lastLabelMonth && year === lastLabelYear) {
         labels.push(null);
+        return;
       }
+
+      let weeksInMonth = 0;
+      for (let i = index; i < activity.weeks.length; i += 1) {
+        const day = activity.weeks[i].contributionDays[0];
+        if (!day) continue;
+        const value = parseDay(day.date);
+        if (
+          value.getUTCMonth() !== month ||
+          value.getUTCFullYear() !== year
+        ) {
+          break;
+        }
+        weeksInMonth += 1;
+      }
+
+      const isFirstLabel = lastLabelIndex === -99;
+      if (isFirstLabel && weeksInMonth < 3) {
+        labels.push(null);
+        return;
+      }
+      if (index - lastLabelIndex < 3) {
+        labels.push(null);
+        return;
+      }
+
+      labels.push(MONTHS[month]);
+      lastLabelIndex = index;
+      lastLabelMonth = month;
+      lastLabelYear = year;
     });
 
     return labels;
@@ -178,15 +232,24 @@ export function GitHubActivity({ activity }: { activity: GithubActivity }) {
 
   function showTooltip(cell: HTMLElement, day: ContributionDay) {
     const tooltip = tooltipRef.current;
-    const grid = gridRef.current;
-    if (!tooltip || !grid) return;
+    const wrapper = wrapperRef.current;
+    if (!tooltip || !wrapper) return;
+
     const cellRect = cell.getBoundingClientRect();
-    const gridRect = grid.getBoundingClientRect();
+    const wrapperRect = wrapper.getBoundingClientRect();
+    const above = cellRect.top - wrapperRect.top;
+    const placeBelow = above < 48;
+
     tooltip.textContent = `${day.contributionCount} contributions on ${dayLabel(
       day.date
     )}`;
-    tooltip.style.left = `${cellRect.left - gridRect.left + cellRect.width / 2}px`;
-    tooltip.style.top = `${cellRect.top - gridRect.top}px`;
+    tooltip.style.left = `${cellRect.left - wrapperRect.left + cellRect.width / 2}px`;
+    tooltip.style.top = placeBelow
+      ? `${cellRect.bottom - wrapperRect.top}px`
+      : `${above}px`;
+    tooltip.style.transform = placeBelow
+      ? "translate(-50%, 0)"
+      : "translate(-50%, -100%)";
     tooltip.style.opacity = "1";
   }
 
@@ -195,10 +258,15 @@ export function GitHubActivity({ activity }: { activity: GithubActivity }) {
     if (tooltip) tooltip.style.opacity = "0";
   }
 
+  const weeks = activity.weeks.length;
+  const gridWidth = `max(100%, ${weeks * (CELL_SIZE + GAP)}px)`;
+  const gridColumns = `repeat(${weeks}, minmax(${CELL_SIZE}px, 1fr))`;
+
   const stats = [
-    { label: TOTAL_LABEL, value: activity.totalContributions },
-    { label: "Current streak", value: currentStreak },
-    { label: "Longest streak", value: longestStreak },
+    { label: githubSection.stats.total, value: activity.totalContributions },
+    { label: githubSection.stats.active, value: activeDays },
+    { label: githubSection.stats.currentStreak, value: currentStreak },
+    { label: githubSection.stats.longestStreak, value: longestStreak },
   ];
 
   return (
@@ -207,33 +275,56 @@ export function GitHubActivity({ activity }: { activity: GithubActivity }) {
         <span className="font-mono text-[13px] uppercase tracking-widest text-accent">
           {githubSection.eyebrow}
         </span>
-        <h2
-          style={{ fontWeight: 800, letterSpacing: "-0.04em" }}
-          className="mt-4 font-display text-ink text-[length:var(--text-h2)] [text-wrap:balance]"
-        >
-          {githubSection.heading}
-        </h2>
 
-        <div
-          ref={scrollRef}
-          className="mt-12 overflow-x-auto pt-12"
-          data-lenis-prevent
-        >
+        <div className="mt-4 flex flex-col items-start gap-4 md:flex-row md:items-end md:justify-between">
+          <h2
+            style={{ fontWeight: 800, letterSpacing: "-0.04em" }}
+            className="font-display text-ink text-[length:var(--text-h2)] [text-wrap:balance]"
+          >
+            {githubSection.heading}
+          </h2>
+          <a
+            href={githubSection.profileUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex min-h-11 items-center gap-2 text-base text-ink transition-colors [@media(hover:hover)]:hover:text-accent focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-4"
+          >
+            View on GitHub
+            <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+
+        <div ref={wrapperRef} className="relative mt-12 flex gap-2">
           <div
-            ref={gridRef}
-            role="group"
-            aria-label={`${activity.totalContributions} ${TOTAL_LABEL.toLowerCase()}`}
-            onKeyDown={handleKeyDown}
-            className={cn("relative w-max", inView && "github-grid-in")}
+            aria-hidden="true"
+            className="mt-8 hidden shrink-0 sm:grid sm:grid-rows-7"
+          >
+            {weekdayLabels.map(({ label, row }) => (
+              <span
+                key={label}
+                className="text-sm text-ink-dim"
+                style={{ gridRow: row }}
+              >
+                {label}
+              </span>
+            ))}
+          </div>
+
+          <div
+            ref={scrollRef}
+            className="min-w-0 flex-1 overflow-x-auto"
+            data-lenis-prevent
           >
             <div
-              className="grid gap-[3px]"
-              style={{
-                gridTemplateColumns: `repeat(${activity.weeks.length}, 13px)`,
-              }}
+              className="grid gap-[4px]"
+              style={{ gridTemplateColumns: gridColumns, width: gridWidth }}
             >
               {monthLabels.map((label, index) => (
-                <span key={index} className="relative h-5 text-sm text-ink-dim">
+                <span
+                  key={index}
+                  className="relative h-6 text-sm text-ink-dim"
+                  style={{ gridColumn: index + 1, gridRow: 1 }}
+                >
                   {label ? (
                     <span className="absolute left-0 whitespace-nowrap">
                       {label}
@@ -243,7 +334,17 @@ export function GitHubActivity({ activity }: { activity: GithubActivity }) {
               ))}
             </div>
 
-            <div className="grid grid-flow-col grid-rows-7 gap-[3px]">
+            <div
+              ref={gridRef}
+              role="group"
+              aria-label={`${activity.totalContributions} ${githubSection.stats.total.toLowerCase()}`}
+              onKeyDown={handleKeyDown}
+              className={cn(
+                "mt-2 grid grid-flow-col grid-rows-7 gap-[4px]",
+                inView && "github-grid-in"
+              )}
+              style={{ gridTemplateColumns: gridColumns, width: gridWidth }}
+            >
               {cells.map((cell, index) => (
                 <button
                   key={cell.day.date}
@@ -255,7 +356,7 @@ export function GitHubActivity({ activity }: { activity: GithubActivity }) {
                   )}`}
                   style={{ "--i": cell.weekIndex } as React.CSSProperties}
                   className={cn(
-                    "github-cell h-[13px] w-[13px] rounded-[3px]",
+                    "github-cell aspect-square rounded-[3px]",
                     LEVEL_CLASS[LEVEL_BY_NAME[cell.day.contributionLevel] ?? 0]
                   )}
                   onMouseEnter={(event) =>
@@ -267,13 +368,13 @@ export function GitHubActivity({ activity }: { activity: GithubActivity }) {
                 />
               ))}
             </div>
-
-            <div
-              ref={tooltipRef}
-              role="status"
-              className="pointer-events-none absolute z-20 -translate-x-1/2 -translate-y-full rounded-lg border border-ink/15 bg-surface px-3 py-2 text-sm text-ink opacity-0 transition-opacity"
-            />
           </div>
+
+          <div
+            ref={tooltipRef}
+            role="status"
+            className="pointer-events-none absolute z-20 rounded-lg border border-ink/15 bg-surface px-4 py-2 text-sm text-ink opacity-0 transition-opacity"
+          />
         </div>
 
         <div className="mt-4 flex items-center gap-2 text-sm text-ink-dim">
@@ -282,32 +383,22 @@ export function GitHubActivity({ activity }: { activity: GithubActivity }) {
             <span
               key={level}
               aria-hidden="true"
-              className={cn("h-[13px] w-[13px] rounded-[3px]", level)}
+              className={cn("h-4 w-4 rounded-[3px]", level)}
             />
           ))}
           <span>More</span>
         </div>
 
-        <div className="mt-12 grid grid-cols-1 gap-8 sm:grid-cols-3">
+        <div className="mt-12 grid grid-cols-2 gap-8 border-t border-ink/10 pt-8 md:grid-cols-4">
           {stats.map((stat) => (
             <div key={stat.label}>
-              <p className="font-display text-4xl font-bold text-ink">
+              <p className="font-display text-[clamp(2rem,4vw,3rem)] font-bold leading-none text-ink">
                 {stat.value}
               </p>
               <p className="mt-2 text-sm text-ink-dim">{stat.label}</p>
             </div>
           ))}
         </div>
-
-        <a
-          href={githubSection.profileUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mt-12 inline-flex min-h-11 items-center gap-2 text-base text-ink transition-colors [@media(hover:hover)]:hover:text-accent focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-4"
-        >
-          View on GitHub
-          <span aria-hidden="true">↗</span>
-        </a>
       </div>
     </section>
   );

@@ -12,8 +12,8 @@
   --line: rgba(14, 27, 51, 0.1);
   --line-strong: rgba(14, 27, 51, 0.2);
   --shadow: rgba(14, 27, 51, 0.08);
-  /* Hero grid line opacity — light theme */
   --grid-line-opacity: 0.04;
+  --heatmap-empty: color-mix(in srgb, var(--ink) 7%, transparent);
 
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -30,8 +30,8 @@
   --line: rgba(243, 246, 255, 0.09);
   --line-strong: rgba(243, 246, 255, 0.16);
   --shadow: rgba(0, 0, 0, 0.4);
-  /* Hero grid line opacity — dark theme */
   --grid-line-opacity: 0.03;
+  --heatmap-empty: color-mix(in srgb, var(--ink) 8%, transparent);
 }
 
 /* Tone Invert: swaps theme values to the opposite theme scoped to section */

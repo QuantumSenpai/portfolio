@@ -16,7 +16,6 @@ import {
   email,
   experiences,
   experienceSection,
-  filters,
   footer,
   otherRepos,
   privacy,
@@ -353,11 +352,6 @@ function validateSectionCopy() {
     if (!Array.isArray(section.paragraphs) || section.paragraphs.length === 0) {
       error(where, `"paragraphs" must be a non-empty array`);
     }
-  });
-
-  filters.forEach((filter, index) => {
-    if (!isFilled(filter.label)) error(`filters[${index}]`, `"label" is required`);
-    if (!isFilled(filter.value)) error(`filters[${index}]`, `"value" is required`);
   });
 
   stats.forEach((stat, index) => {

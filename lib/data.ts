@@ -157,6 +157,17 @@ export const contactForm: ContactFormConfig = {
 
 export const email = "work.krishnendu.dev@gmail.com";
 
+export const heroCopy = {
+  scrollLabel: "Scroll",
+  headline: {
+    first: "Building on screen,",
+    second: "cutting on",
+    accent: "timeline.",
+  },
+  subcopy:
+    "CSE student and full-stack developer who also cuts cinematic video and motion. Exploring applied ML.",
+};
+
 export const heroLinks: { label: string; href: string }[] = [
   { label: "WEB", href: "#work" },
   { label: "MOTION", href: "#reel" },
@@ -495,14 +506,6 @@ export const otherRepos: OtherRepo[] = [
     language: "JavaScript",
     url: "https://github.com/QuantumSenpai/Sort-Visualizer",
   },
-];
-
-export const filters: { label: string; value: ProjectCategory | "all" }[] = [
-  { label: "All", value: "all" },
-  { label: "Web", value: "web" },
-  { label: "DSA", value: "dsa" },
-  { label: "ML / AI", value: "ml" },
-  { label: "Game", value: "game" },
 ];
 
 // ============================================================================

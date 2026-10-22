@@ -144,12 +144,6 @@ p {
   }
 }
 
-.text-stroke {
-  -webkit-text-stroke: 1.5px var(--accent);
-  -webkit-text-fill-color: transparent;
-  color: transparent;
-}
-
 .timeline-stroke {
   font-style: italic;
   color: var(--accent);
@@ -179,20 +173,6 @@ a {
 ::-webkit-scrollbar-thumb {
   background: var(--line-strong);
   border-radius: 999px;
-}
-
-.eyebrow {
-  font-family: var(--font-mono);
-  font-size: 0.8125rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--accent);
-}
-
-.container {
-  max-width: 1680px;
-  margin: 0 auto;
-  padding-inline: clamp(1.5rem, 4vw, 4rem);
 }
 
 /* Skills masonry — one column on mobile, two from 1024px. The column count
@@ -313,21 +293,4 @@ a {
   .animate-marquee {
     animation: none;
   }
-}
-
-.field-input {
-  width: 100%;
-  padding: 0.85rem 1rem;
-  border-radius: 0.6rem;
-  border: 1px solid var(--line);
-  background: var(--surface);
-  color: var(--ink);
-  font-family: var(--font-body);
-  font-size: 0.95rem;
-  transition: border-color 0.2s var(--ease);
-}
-
-.field-input:focus {
-  outline: none;
-  border-color: var(--accent);
 }

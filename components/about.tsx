@@ -137,7 +137,7 @@ export function About({ hasPortrait = false }: { hasPortrait?: boolean }) {
                       <span className="font-mono text-sm tabular-nums tracking-[0.04em] text-ink-dim">
                         {String(i + 1).padStart(2, "0")}
                       </span>
-                      <h4
+                      <h3
                         style={{
                           fontWeight: 700,
                           letterSpacing: "-0.015em",
@@ -145,7 +145,7 @@ export function About({ hasPortrait = false }: { hasPortrait?: boolean }) {
                         className="mt-4 font-display text-[1.375rem] leading-tight text-ink sm:text-[1.5rem]"
                       >
                         {service.title}
-                      </h4>
+                      </h3>
                       <p className="mt-2 text-base leading-relaxed text-ink-dim">
                         {service.line}
                       </p>

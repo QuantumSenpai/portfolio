@@ -5,7 +5,7 @@ import { motion, useReducedMotion, type Variants } from "framer-motion";
 import { Magnetic } from "./ui/magnetic-button";
 import { SwissGridBackground } from "./ui/swiss-grid-background";
 import { EASE, DURATION, STAGGER } from "@/lib/motion";
-import { heroLinks } from "@/lib/data";
+import { availability, heroCopy, heroLinks } from "@/lib/data";
 import { formatISTTime } from "@/lib/utils";
 
 export function Hero() {
@@ -66,7 +66,7 @@ export function Hero() {
               <span className="pulse-dot absolute inline-flex h-full w-full rounded-full bg-accent/60" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-accent" />
             </span>
-            <span>Available for freelance</span>
+            <span>{availability.text}</span>
           </div>
 
           <div className="text-[0.9375rem] tabular-nums text-ink-dim">
@@ -81,10 +81,11 @@ export function Hero() {
         <div className="my-auto py-8">
           <h1 className="font-display text-[clamp(2.5rem,7vw,6.5rem)] font-bold leading-[1.0] tracking-[-0.03em] text-ink [text-wrap:balance]">
             <motion.span variants={itemVariants} className="sm:block">
-              Building on screen,
+              {heroCopy.headline.first}
             </motion.span>{" "}
             <motion.span variants={itemVariants} className="sm:block">
-              cutting on <span className="timeline-stroke">timeline.</span>
+              {heroCopy.headline.second}{" "}
+              <span className="timeline-stroke">{heroCopy.headline.accent}</span>
             </motion.span>
           </h1>
 
@@ -92,8 +93,7 @@ export function Hero() {
             variants={itemVariants}
             className="mt-8 max-w-[52ch] text-[clamp(1.0625rem,1.5vw,1.25rem)] leading-relaxed text-ink-dim [text-wrap:pretty]"
           >
-            CSE student and full-stack developer who also cuts cinematic video and
-            motion. Exploring applied ML.
+            {heroCopy.subcopy}
           </motion.p>
 
           <motion.div
@@ -130,7 +130,7 @@ export function Hero() {
           className="mt-auto flex items-center justify-between gap-4 border-t border-ink/10 pb-[calc(1.5rem+env(safe-area-inset-bottom))] pt-6"
         >
           <div className="hidden items-center gap-2 text-[0.9375rem] text-ink-dim min-[480px]:flex">
-            <span>Scroll</span>
+            <span>{heroCopy.scrollLabel}</span>
             <motion.span
               aria-hidden="true"
               animate={shouldReduceMotion ? undefined : { y: [0, 6, 0] }}

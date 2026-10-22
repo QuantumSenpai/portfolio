@@ -68,10 +68,16 @@ const signatureFont = Herr_Von_Muellerhoff({
   display: "swap",
 });
 
+const siteUrl = process.env.SITE_URL ?? "https://getkisu.vercel.app";
+
+const title = "Krishnendu Adak — Developer & Editor";
+const description =
+  "Krishnendu Adak (Kisu) — CSE student, web developer, video editor and NLP/ML enthusiast from Ghatal, West Bengal.";
+
 export const metadata: Metadata = {
-  title: "Krishnendu Adak — Developer & Editor",
-  description:
-    "Krishnendu Adak (Kisu) — CSE student, web developer, video editor and NLP/ML enthusiast from Ghatal, West Bengal.",
+  metadataBase: new URL(siteUrl),
+  title,
+  description,
   icons: {
     icon: [
       { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
@@ -80,6 +86,18 @@ export const metadata: Metadata = {
       { url: "/icon-512.png", sizes: "512x512", type: "image/png" },
     ],
     apple: "/apple-touch-icon.png",
+  },
+  openGraph: {
+    type: "website",
+    url: siteUrl,
+    siteName: "Kisu",
+    title,
+    description,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title,
+    description,
   },
 };
 

@@ -169,6 +169,8 @@ function ShortsRail({ shorts }: { shorts: ReelVideo[] }) {
   const [isFinePointer, setIsFinePointer] = useState(false);
   const [canPrev, setCanPrev] = useState(false);
   const [canNext, setCanNext] = useState(false);
+  const lastCanPrevRef = useRef(false);
+  const lastCanNextRef = useRef(false);
 
   useEffect(() => {
     setIsFinePointer(window.matchMedia("(pointer: fine)").matches);
@@ -182,8 +184,16 @@ function ShortsRail({ shorts }: { shorts: ReelVideo[] }) {
       const element = railRef.current;
       if (!element) return;
       const max = element.scrollWidth - element.clientWidth;
-      setCanPrev(element.scrollLeft > 4);
-      setCanNext(element.scrollLeft < max - 4);
+      const nextCanPrev = element.scrollLeft > 4;
+      const nextCanNext = element.scrollLeft < max - 4;
+      if (nextCanPrev !== lastCanPrevRef.current) {
+        lastCanPrevRef.current = nextCanPrev;
+        setCanPrev(nextCanPrev);
+      }
+      if (nextCanNext !== lastCanNextRef.current) {
+        lastCanNextRef.current = nextCanNext;
+        setCanNext(nextCanNext);
+      }
     }
 
     update();

@@ -31,6 +31,39 @@
   --grid-line-opacity: 0.03;
   --heatmap-empty: color-mix(in srgb, var(--ink) 8%, transparent);
 }
+[data-tone="invert"] {
+  --bg: #0a0e18;
+  --surface: #121729;
+  --surface-2: #171d33;
+  --ink: #f3f6ff;
+  --ink-dim: #9aa5c4;
+  --accent: #8dc2ff;
+  --accent-soft: #3770bf;
+  --line: rgba(243, 246, 255, 0.09);
+  --line-strong: rgba(243, 246, 255, 0.16);
+  --shadow: rgba(0, 0, 0, 0.4);
+
+  background-color: var(--bg);
+  color: var(--ink);
+  transition: background-color 0.6s var(--ease), color 0.6s var(--ease);
+}
+
+.dark [data-tone="invert"] {
+  --bg: #f3f6ff;
+  --surface: #ffffff;
+  --surface-2: #eaf0ff;
+  --ink: #0e1b33;
+  --ink-dim: #4a5a75;
+  --accent: #3770bf;
+  --accent-soft: #8dc2ff;
+  --line: rgba(14, 27, 51, 0.1);
+  --line-strong: rgba(14, 27, 51, 0.2);
+  --shadow: rgba(14, 27, 51, 0.08);
+
+  background-color: var(--bg);
+  color: var(--ink);
+  transition: background-color 0.6s var(--ease), color 0.6s var(--ease);
+}
 
 @theme inline {
   --color-bg: var(--bg);
@@ -39,6 +72,7 @@
   --color-ink: var(--ink);
   --color-ink-dim: var(--ink-dim);
   --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
   --color-line: var(--line);
   --color-line-strong: var(--line-strong);
 
@@ -93,6 +127,22 @@ p {
 
 .tabular-nums {
   font-variant-numeric: tabular-nums;
+}
+.btn-primary {
+  background: var(--ink);
+  color: var(--bg);
+  transition: transform 0.3s var(--ease), opacity 0.3s var(--ease);
+}
+
+@media (hover: hover) {
+  .btn-primary:hover {
+    opacity: 0.92;
+  }
+}
+
+.timeline-stroke {
+  font-style: italic;
+  color: var(--accent);
 }
 
 a {
@@ -158,6 +208,30 @@ a {
   }
 }
 
+#skills {
+  display: block;
+  height: 0;
+}
+@keyframes pulse-dot {
+  0%,
+  100% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 0.12;
+  }
+}
+
+.pulse-dot {
+  animation: pulse-dot 2.4s var(--ease) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pulse-dot {
+    animation: none;
+  }
+}
+
 @keyframes marquee {
   from {
     transform: translateX(0);
@@ -175,4 +249,69 @@ a {
   .animate-marquee {
     animation: none;
   }
+}
+
+/* ─── Nav (plain CSS, unlayered so it beats `a { color: inherit }`) ───────── */
+.nav-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  height: 44px;
+  padding: 0 1.25rem;
+  border-radius: 9999px;
+  background: var(--ink);
+  color: var(--bg);
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.nav-cta span,
+.nav-cta svg {
+  color: inherit;
+}
+
+.nav-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  height: 44px;
+  padding: 0 0.25rem;
+  font-size: 15px;
+  font-weight: 500;
+  color: color-mix(in srgb, var(--ink) 60%, transparent);
+  transition: color 0.15s;
+}
+
+.nav-link:hover,
+.nav-link[aria-current="location"] {
+  color: var(--ink);
+}
+
+.nav-link .idx {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: color-mix(in srgb, var(--ink) 45%, transparent);
+}
+
+.nav-link:hover .idx,
+.nav-link[aria-current="location"] .idx {
+  color: var(--accent);
+}
+
+.nav-underline {
+  position: absolute;
+  inset-inline: 0;
+  bottom: -2px;
+  height: 2px;
+  background: var(--accent);
+}
+
+.nav-dim {
+  color: color-mix(in srgb, var(--ink) 60%, transparent);
+  transition: color 0.15s;
+}
+
+.nav-dim:hover {
+  color: var(--ink);
 }

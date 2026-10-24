@@ -304,6 +304,68 @@ export const projects: Project[] = [
     caseStudyHref: "#experience",
     category: "ml",
   },
+  // TODO add screenshot
+  {
+    slug: "fraudlens",
+    title: "FraudLens",
+    year: "2026",
+    role: "Solo project · ML + backend",
+    description:
+      "Hybrid ML + rule-based fraud detection that scores transactions in real time, with SHAP explainability and a live transaction simulation. Trained on 280K+ real-world transactions.",
+    tags: ["Python", "XGBoost", "FastAPI"],
+    featured: true,
+    repoUrl: "https://github.com/QuantumSenpai/fraudlens",
+    liveUrl: "https://fraudlens-psi.vercel.app",
+  },
+  // TODO add screenshot
+  {
+    slug: "desulpherisers-site",
+    title: "DESILFHURIZERS",
+    year: "2026",
+    role: "Frontend developer · SIH 2026",
+    description:
+      "Cinematic scroll-driven 3D landing page for DESILFHURIZERS, a passive colorimetric H2S exposure dosimeter wristband built for SIH 2026.",
+    tags: ["React Three Fiber", "GSAP", "TypeScript"],
+    featured: true,
+    repoUrl: "https://github.com/QuantumSenpai/desulpherisers-site",
+    liveUrl: "https://desulpherisers-site.vercel.app",
+  },
+  // TODO add screenshot
+  {
+    slug: "ghostwash",
+    title: "Ghostwash",
+    year: "2026",
+    role: "Solo project · Developer",
+    description:
+      "Local-first tool that cleans up AI-sounding text: strips invisible characters, flags cliché phrases and rewrites only the weak lines. Supports txt, docx and pdf and runs fully on your own machine.",
+    tags: ["TypeScript"],
+    featured: true,
+    repoUrl: "https://github.com/QuantumSenpai/ghostwash",
+  },
+  // TODO add screenshot
+  {
+    slug: "usage-meter-for-claude",
+    title: "Usage Meter for Claude",
+    year: "2026",
+    role: "Developer (fork of claude-counter)",
+    description:
+      "Unofficial browser extension for claude.ai that shows conversation token count, a prompt-cache timer, and session and weekly usage bars.",
+    tags: ["JavaScript", "Browser extension"],
+    featured: true,
+    repoUrl: "https://github.com/QuantumSenpai/usage-meter-for-claude",
+  },
+  // TODO add screenshot
+  {
+    slug: "ern-expiry-rescue-network",
+    title: "ERN — Expiry Rescue Network",
+    year: "2026",
+    role: "Developer",
+    description:
+      "Platform connecting supermarkets, pharmacies and shops with buyers, NGOs and orphanages to sell near-expiry food, medicines and essentials at low prices.",
+    tags: ["TypeScript"],
+    featured: true,
+    repoUrl: "https://github.com/QuantumSenpai/ERN---Expiry-Rescue-Network",
+  },
   {
     slug: "sakura-timer",
     title: "Sakura Timer",
@@ -312,7 +374,7 @@ export const projects: Project[] = [
     description:
       "Anime lofi pomodoro study timer with falling sakura petals, ambient mood and focus tracking.",
     tags: ["HTML", "CSS", "JS"],
-    featured: true,
+    featured: false,
     repoUrl: "https://github.com/QuantumSenpai/sakura-timer",
     category: "web",
   },
@@ -324,7 +386,7 @@ export const projects: Project[] = [
     description:
       "Type numbers, watch them sort in real time — 10 algorithms, dual visualization mode.",
     tags: ["JavaScript", "DSA", "UI"],
-    featured: true,
+    featured: false,
     liveUrl: "https://quantumsenpai.github.io/Sort-Visualizer",
     repoUrl: "https://github.com/QuantumSenpai/Sort-Visualizer",
     category: "dsa",
@@ -337,7 +399,7 @@ export const projects: Project[] = [
     description:
       "NLP-powered customer review insight extraction using Python, NLTK, TextBlob and Flask.",
     tags: ["Python", "NLP", "Flask"],
-    featured: true,
+    featured: false,
     repoUrl: "https://github.com/QuantumSenpai/Sentiment-Analysis-Mini-Project",
     category: "ml",
   },
@@ -349,7 +411,7 @@ export const projects: Project[] = [
     description:
       "Neon cyberpunk typing speed test — live WPM, rank system from Recruit to Cyber God.",
     tags: ["HTML", "CSS", "JS"],
-    featured: true,
+    featured: false,
     liveUrl: "https://quantumsenpai.github.io/Cyber-Type",
     repoUrl: "https://github.com/QuantumSenpai/Cyber-Type",
     category: "web",
@@ -362,7 +424,7 @@ export const projects: Project[] = [
     description:
       "Dodge deadlines, slow your HOD and strike with an anime thunder sword. A student runner game.",
     tags: ["HTML", "JS", "Game"],
-    featured: true,
+    featured: false,
     liveUrl: "https://quantumsenpai.github.io/Midsem-Rush",
     repoUrl: "https://github.com/QuantumSenpai/Midsem-Rush",
     category: "game",
@@ -397,8 +459,8 @@ export const projects: Project[] = [
 // ─── EDIT HERE — Repositories ────────────────────────────────────────────────
 // Array position = display order. Only repos listed in `repos` are shown —
 // nothing is auto-fetched from GitHub and nothing is random.
-// TODO: the three entries below are placeholders — replace them with your
-// favourite repositories (see docs/HOW-TO-EDIT.md for the template).
+// TODO: the entries below replace the old placeholder trio — keep them in
+// sync with the pinned repositories (see docs/HOW-TO-EDIT.md for the template).
 export interface RepoItem {
   name: string;
   url: string;
@@ -423,21 +485,51 @@ export const reposSection: ReposSectionConfig = {
   viewAllLabel: "View all on GitHub",
   repos: [
     {
-      name: "wraith",
-      language: "JavaScript",
-      url: "https://github.com/QuantumSenpai/wraith",
+      name: "triocore",
+      language: "TypeScript",
+      url: "https://github.com/QuantumSenpai/triocore",
+      description: "Startup site",
     },
 
     {
-      name: "dev-card",
+      name: "Sentiment-Analysis-Mini-Project",
+      language: "Python",
+      url: "https://github.com/QuantumSenpai/Sentiment-Analysis-Mini-Project",
+    },
+
+    {
+      name: "gesture-volume-control",
+      language: "Python",
+      url: "https://github.com/QuantumSenpai/gesture-volume-control",
+    },
+
+    {
+      name: "viva-tracker",
+      url: "https://github.com/QuantumSenpai/viva-tracker",
+    },
+
+    {
+      name: "Cyber-Type",
+      language: "HTML",
+      url: "https://github.com/QuantumSenpai/Cyber-Type",
+    },
+
+    {
+      name: "Midsem-Rush",
+      language: "HTML",
+      url: "https://github.com/QuantumSenpai/Midsem-Rush",
+    },
+
+    {
+      name: "Competitive-Programming-Lab",
+      language: "C",
+      url: "https://github.com/QuantumSenpai/Competitive-Programming-Lab",
+    },
+
+    {
+      name: "kisu-business-card",
       language: "CSS",
-      url: "https://github.com/QuantumSenpai/dev-card",
-    },
-
-    {
-      name: "Sort-Visualizer",
-      language: "JavaScript",
-      url: "https://github.com/QuantumSenpai/Sort-Visualizer",
+      url: "https://github.com/QuantumSenpai/kisu-business-card",
     },
   ],
 };
@@ -629,17 +721,65 @@ export interface SkillGroup {
 
 export const skillGroups: SkillGroup[] = [
   {
-    label: "Languages & CS",
+    label: "Languages",
     items: [
       { name: "Java" },
       { name: "C / C++" },
-      { name: "DSA" },
       { name: "Python" },
+      { name: "TypeScript" },
+      { name: "PHP" },
+      { name: "Go" },
     ],
   },
   {
-    label: "Web",
-    items: [{ name: "HTML / CSS / JS" }, { name: "Flask", status: "learning" }],
+    label: "Web & Frameworks",
+    items: [
+      { name: "Web & App Development" },
+      { name: "HTML / CSS / JS" },
+      { name: "React" },
+      { name: "Next.js" },
+      { name: "Node.js" },
+      { name: "MERN Stack" },
+      { name: "Flask", status: "learning" },
+    ],
+  },
+  {
+    label: "Styling & UI",
+    items: [
+      { name: "Tailwind CSS" },
+      { name: "shadcn/ui" },
+    ],
+  },
+  {
+    label: "Web Animation",
+    items: [
+      { name: "Framer Motion" },
+      { name: "GSAP" },
+      { name: "Lenis" },
+      { name: "Anime.js" },
+    ],
+  },
+  {
+    label: "Databases",
+    items: [
+      { name: "MongoDB" },
+      { name: "Drizzle ORM" },
+    ],
+  },
+  {
+    label: "CS Fundamentals",
+    items: [
+      { name: "DSA" },
+      { name: "OOP" },
+      { name: "DBMS" },
+    ],
+  },
+  {
+    label: "Cloud & Systems",
+    items: [
+      { name: "Cloud Computing" },
+      { name: "Linux" },
+    ],
   },
   {
     label: "ML / Data",
@@ -690,6 +830,7 @@ export interface ReelSectionConfig {
 export const reelSection: ReelSectionConfig = {
   eyebrow: "005 / Reel",
   heading: "Frames I've cut.",
+  channelUrl: "https://www.youtube.com/@KyzennFxx",
 };
 
 export interface ReelVideo {
@@ -718,6 +859,46 @@ export const videos: ReelVideo[] = [
     title: "JJK S2 Edit",
     caption: "After Effects · Premiere Pro",
     kind: "video",
+  },
+  {
+    id: "o_C3w5IU_xY",
+    title: "TODO",
+    kind: "short",
+  },
+  {
+    id: "IFQmWkVhSLo",
+    title: "TODO",
+    kind: "short",
+  },
+  {
+    id: "mOgmeADzdDg",
+    title: "TODO",
+    kind: "short",
+  },
+  {
+    id: "793Zsf_N4ZE",
+    title: "TODO",
+    kind: "short",
+  },
+  {
+    id: "6dqUzpzvaNM",
+    title: "TODO",
+    kind: "short",
+  },
+  {
+    id: "0QLfE0aSg0Q",
+    title: "TODO",
+    kind: "short",
+  },
+  {
+    id: "2jwkAPswmuk",
+    title: "TODO",
+    kind: "short",
+  },
+  {
+    id: "gW8NMGo72TI",
+    title: "TODO",
+    kind: "short",
   },
 ];
 

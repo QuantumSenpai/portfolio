@@ -1,7 +1,12 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { motion, useReducedMotion, type Variants } from "framer-motion";
+import {
+  m,
+  useInView,
+  useReducedMotion,
+  type Variants,
+} from "framer-motion";
 import { Magnetic } from "./ui/magnetic-button";
 import { SwissGridBackground } from "./ui/swiss-grid-background";
 import { EASE, DURATION, STAGGER } from "@/lib/motion";
@@ -10,6 +15,8 @@ import { formatISTTime } from "@/lib/utils";
 
 export function Hero() {
   const heroRef = useRef<HTMLElement>(null);
+  const bottomBarRef = useRef<HTMLDivElement>(null);
+  const bottomBarInView = useInView(bottomBarRef);
   const shouldReduceMotion = useReducedMotion();
 
   const [mounted, setMounted] = useState(false);
@@ -48,13 +55,13 @@ export function Hero() {
     >
       <SwissGridBackground />
 
-      <motion.div
+      <m.div
         variants={containerVariants}
         initial={shouldReduceMotion ? false : "hidden"}
         animate="visible"
         className="relative z-10 mx-auto flex w-full max-w-[1680px] flex-1 flex-col px-5 md:px-10 lg:px-16"
       >
-        <motion.div
+        <m.div
           variants={itemVariants}
           className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between"
         >
@@ -76,27 +83,27 @@ export function Hero() {
             </span>
             <span> IST</span>
           </div>
-        </motion.div>
+        </m.div>
 
         <div className="my-auto py-8">
           <h1 className="font-display text-[clamp(2.5rem,7vw,6.5rem)] font-bold leading-[1.0] tracking-[-0.03em] text-ink [text-wrap:balance]">
-            <motion.span variants={itemVariants} className="sm:block">
+            <m.span variants={itemVariants} className="sm:block">
               {heroCopy.headline.first}
-            </motion.span>{" "}
-            <motion.span variants={itemVariants} className="sm:block">
+            </m.span>{" "}
+            <m.span variants={itemVariants} className="sm:block">
               {heroCopy.headline.second}{" "}
               <span className="timeline-stroke">{heroCopy.headline.accent}</span>
-            </motion.span>
+            </m.span>
           </h1>
 
-          <motion.p
+          <m.p
             variants={itemVariants}
             className="mt-8 max-w-[52ch] text-[clamp(1.0625rem,1.5vw,1.25rem)] leading-relaxed text-ink-dim [text-wrap:pretty]"
           >
             {heroCopy.subcopy}
-          </motion.p>
+          </m.p>
 
-          <motion.div
+          <m.div
             variants={itemVariants}
             className="mt-8 flex flex-col items-stretch gap-4 sm:flex-row sm:items-center"
           >
@@ -122,23 +129,32 @@ export function Hero() {
               </span>
               <span className="absolute bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-ink transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] [@media(hover:hover)]:group-hover:scale-x-100" />
             </a>
-          </motion.div>
+          </m.div>
         </div>
 
-        <motion.div
+        <m.div
+          ref={bottomBarRef}
           variants={itemVariants}
           className="mt-auto flex items-center justify-between gap-4 border-t border-ink/10 pb-[calc(1.5rem+env(safe-area-inset-bottom))] pt-6"
         >
           <div className="hidden items-center gap-2 text-[0.9375rem] text-ink-dim min-[480px]:flex">
             <span>{heroCopy.scrollLabel}</span>
-            <motion.span
+            <m.span
               aria-hidden="true"
-              animate={shouldReduceMotion ? undefined : { y: [0, 6, 0] }}
-              transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
+              animate={
+                shouldReduceMotion || !bottomBarInView
+                  ? { y: 0 }
+                  : { y: [0, 6, 0] }
+              }
+              transition={
+                shouldReduceMotion || !bottomBarInView
+                  ? { duration: 0 }
+                  : { duration: 2.4, repeat: Infinity, ease: "easeInOut" }
+              }
               className="inline-block"
             >
               ↓
-            </motion.span>
+            </m.span>
           </div>
 
           <div className="grid w-full grid-cols-3 gap-2 min-[480px]:w-auto min-[480px]:flex">
@@ -152,8 +168,8 @@ export function Hero() {
               </a>
             ))}
           </div>
-        </motion.div>
-      </motion.div>
+        </m.div>
+      </m.div>
     </section>
   );
 }

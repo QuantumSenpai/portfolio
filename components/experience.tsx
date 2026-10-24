@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion, useReducedMotion, type Variants } from "framer-motion";
+import { m, useReducedMotion, type Variants } from "framer-motion";
 import {
   experienceSection,
   experiences,
@@ -49,7 +49,7 @@ export function Experience() {
     <section id="experience" className="relative w-full py-24 sm:py-32 scroll-mt-[72px]">
       <div className="mx-auto w-full max-w-[1680px] px-5 md:px-10 lg:px-16">
 
-        <motion.div
+        <m.div
           variants={headingVariants}
           initial={shouldReduceMotion ? false : "hidden"}
           whileInView="visible"
@@ -68,10 +68,10 @@ export function Experience() {
           <p className="mt-4 max-w-xl text-base text-ink-dim sm:text-lg">
             {experienceSection.description}
           </p>
-        </motion.div>
+        </m.div>
 
 
-        <motion.div
+        <m.div
           role="list"
           variants={listVariants}
           initial={shouldReduceMotion ? false : "hidden"}
@@ -89,7 +89,7 @@ export function Experience() {
               onActive={setActiveId}
             />
           ))}
-        </motion.div>
+        </m.div>
       </div>
     </section>
   );
@@ -137,7 +137,7 @@ function ExperienceRow({
   );
 
   return (
-    <motion.div role="listitem" variants={variants}>
+    <m.div role="listitem" variants={variants}>
       <div
         role="group"
         aria-labelledby={titleId}
@@ -206,7 +206,7 @@ function ExperienceRow({
             </span>
           </button>
 
-          <motion.div
+          <m.div
             id={panelId}
             role="region"
             aria-labelledby={titleId}
@@ -214,7 +214,7 @@ function ExperienceRow({
             animate={{ height: open ? "auto" : 0, opacity: open ? 1 : 0 }}
             transition={expandTransition}
             inert={!open}
-            className="overflow-hidden"
+            className="overflow-hidden contain-content"
           >
             <div className="pt-1">
               {entry.summary && (
@@ -249,9 +249,9 @@ function ExperienceRow({
                 </div>
               )}
             </div>
-          </motion.div>
+          </m.div>
         </div>
       </div>
-    </motion.div>
+    </m.div>
   );
 }

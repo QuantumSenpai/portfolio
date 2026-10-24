@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { motion, useReducedMotion, type Variants } from "framer-motion";
+import { m, useReducedMotion, type Variants } from "framer-motion";
 import { reelSection, videos, type ReelVideo } from "@/lib/data";
 import { EASE, DURATION, STAGGER } from "@/lib/motion";
 
@@ -39,10 +39,10 @@ export function Reel() {
   const shorts = playable.filter((video) => video.kind === "short");
 
   return (
-    <section id="reel" className="relative w-full py-24 sm:py-32 scroll-mt-[72px]">
+    <section className="relative w-full py-24 sm:py-32 scroll-mt-[72px]">
       <div className="mx-auto w-full max-w-[1680px] px-5 md:px-10 lg:px-16">
 
-        <motion.div
+        <m.div
           initial={shouldReduceMotion ? false : { opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: DURATION.base, ease: EASE }}
@@ -73,11 +73,11 @@ export function Reel() {
               <span aria-hidden="true">↗</span>
             </a>
           )}
-        </motion.div>
+        </m.div>
 
 
         {edits.length > 0 && (
-          <motion.div
+          <m.div
             variants={containerVariants}
             initial={shouldReduceMotion ? false : "hidden"}
             whileInView="visible"
@@ -85,11 +85,11 @@ export function Reel() {
             className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-3"
           >
             {edits.map((video) => (
-              <motion.div key={video.id} variants={cardVariants}>
+              <m.div key={video.id} variants={cardVariants}>
                 <EditCard video={video} />
-              </motion.div>
+              </m.div>
             ))}
-          </motion.div>
+          </m.div>
         )}
 
 
@@ -170,25 +170,32 @@ function ShortsRail({ shorts }: { shorts: ReelVideo[] }) {
     const rail = railRef.current;
     if (!rail) return;
 
+    // rAF-throttled: at most one layout read (scrollWidth/clientWidth) per frame.
+    let ticking = false;
     function update() {
-      const element = railRef.current;
-      if (!element) return;
-      const max = element.scrollWidth - element.clientWidth;
-      const nextCanPrev = element.scrollLeft > 4;
-      const nextCanNext = element.scrollLeft < max - 4;
-      if (nextCanPrev !== lastCanPrevRef.current) {
-        lastCanPrevRef.current = nextCanPrev;
-        setCanPrev(nextCanPrev);
-      }
-      if (nextCanNext !== lastCanNextRef.current) {
-        lastCanNextRef.current = nextCanNext;
-        setCanNext(nextCanNext);
-      }
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        ticking = false;
+        const element = railRef.current;
+        if (!element) return;
+        const max = element.scrollWidth - element.clientWidth;
+        const nextCanPrev = element.scrollLeft > 4;
+        const nextCanNext = element.scrollLeft < max - 4;
+        if (nextCanPrev !== lastCanPrevRef.current) {
+          lastCanPrevRef.current = nextCanPrev;
+          setCanPrev(nextCanPrev);
+        }
+        if (nextCanNext !== lastCanNextRef.current) {
+          lastCanNextRef.current = nextCanNext;
+          setCanNext(nextCanNext);
+        }
+      });
     }
 
     update();
     rail.addEventListener("scroll", update, { passive: true });
-    window.addEventListener("resize", update);
+    window.addEventListener("resize", update, { passive: true });
     return () => {
       rail.removeEventListener("scroll", update);
       window.removeEventListener("resize", update);

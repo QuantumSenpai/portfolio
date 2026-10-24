@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import Image from "next/image";
 import {
-  motion,
+  m,
   useInView,
   useMotionTemplate,
   useMotionValue,
@@ -120,7 +120,7 @@ function Signature({ hasSignature }: { hasSignature: boolean }) {
       ref={ref}
       className="relative flex w-full max-w-[640px] flex-col justify-end overflow-visible min-h-[calc(clamp(3rem,14vw,8rem)*1.1)] sm:min-h-[calc(clamp(4rem,9vw,8rem)*1.1)]"
     >
-      <motion.div
+      <m.div
         className="overflow-hidden"
         style={{ maskImage: mask, WebkitMaskImage: mask }}
       >
@@ -138,7 +138,7 @@ function Signature({ hasSignature }: { hasSignature: boolean }) {
             {footer.signatureText}
           </span>
         )}
-      </motion.div>
+      </m.div>
 
       <svg
         aria-hidden="true"
@@ -146,7 +146,7 @@ function Signature({ hasSignature }: { hasSignature: boolean }) {
         fill="none"
         className="mt-1 h-6 w-full max-w-[420px] text-accent"
       >
-        <motion.path
+        <m.path
           d="M6 15C84 5 168 2 248 8c62 5 116 9 166 4"
           stroke="currentColor"
           strokeWidth="2"

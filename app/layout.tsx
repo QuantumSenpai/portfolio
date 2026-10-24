@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import { Herr_Von_Muellerhoff, JetBrains_Mono } from "next/font/google";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { SmoothScroll } from "@/components/providers/smooth-scroll-provider";
+import { MotionProvider } from "@/components/providers/motion-provider";
 import "./globals.css";
 
 const cabinetGrotesk = localFont({
@@ -117,7 +118,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     >
       <body>
         <ThemeProvider>
-          <SmoothScroll>{children}</SmoothScroll>
+          <MotionProvider>
+            <SmoothScroll>{children}</SmoothScroll>
+          </MotionProvider>
         </ThemeProvider>
       </body>
     </html>

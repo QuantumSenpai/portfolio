@@ -7,9 +7,7 @@ import { Ticker } from "@/components/ticker";
 import { Work } from "@/components/work";
 import { Experience } from "@/components/experience";
 import { About } from "@/components/about";
-import { GitHubActivity } from "@/components/github-activity";
-import { Reel } from "@/components/reel";
-import { Contact } from "@/components/contact";
+import { BelowFold } from "@/components/below-fold";
 
 function portraitIsLoadable() {
   try {
@@ -40,9 +38,10 @@ export default async function Home() {
         <Work />
         <Experience />
         <About hasPortrait={portraitIsLoadable()} />
-        {githubActivity ? <GitHubActivity activity={githubActivity} /> : null}
-        <Reel />
-        <Contact hasSignature={signatureExists()} />
+        <BelowFold
+          githubActivity={githubActivity}
+          hasSignature={signatureExists()}
+        />
       </main>
     </>
   );

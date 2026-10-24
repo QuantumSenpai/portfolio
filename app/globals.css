@@ -252,6 +252,29 @@ a {
 }
 
 /* ─── Nav (plain CSS, unlayered so it beats `a { color: inherit }`) ───────── */
+.nav-header {
+  will-change: transform;
+  contain: layout paint;
+  border-bottom: 1px solid transparent;
+  transition:
+    background-color 0.3s var(--ease),
+    backdrop-filter 0.3s var(--ease),
+    border-color 0.3s var(--ease);
+}
+
+.nav-header.is-scrolled {
+  background: color-mix(in srgb, var(--bg) 85%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom-color: color-mix(in srgb, var(--ink) 10%, transparent);
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .nav-header.is-scrolled {
+    background: var(--bg);
+    backdrop-filter: none;
+  }
+}
+
 .nav-cta {
   display: inline-flex;
   align-items: center;
@@ -314,4 +337,15 @@ a {
 
 .nav-dim:hover {
   color: var(--ink);
+}
+
+/* ─── Below-the-fold sections: skip layout/paint until near the viewport ─── */
+/* Targets are the stable wrappers in components/below-fold.tsx (they carry
+   the section ids). `auto` remembers the last rendered size so scroll
+   position stays accurate after first paint. */
+#reel,
+#github,
+#contact {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 900px;
 }

@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, type MouseEvent } from "react";
 import Image from "next/image";
 import {
-  motion,
+  m,
   useMotionTemplate,
   useMotionValue,
   useReducedMotion,
@@ -50,7 +50,7 @@ export function About({ hasPortrait = false }: { hasPortrait?: boolean }) {
       <span id="skills" />
 
       <div className="mx-auto w-full max-w-[1680px] px-5 md:px-10 lg:px-16">
-        <motion.div
+        <m.div
           initial={shouldReduceMotion ? false : { opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: DURATION.base, ease: EASE }}
@@ -107,7 +107,7 @@ export function About({ hasPortrait = false }: { hasPortrait?: boolean }) {
               </p>
 
 
-              <motion.div
+              <m.div
                 variants={groupVariants}
                 initial={shouldReduceMotion ? false : "hidden"}
                 whileInView="visible"
@@ -115,15 +115,15 @@ export function About({ hasPortrait = false }: { hasPortrait?: boolean }) {
                 className="masonry mt-12"
               >
                 {skillGroups.map((group) => (
-                  <motion.div
+                  <m.div
                     key={group.label}
                     variants={cardVariants}
                     className="mb-8 break-inside-avoid"
                   >
                     <SkillCard group={group} />
-                  </motion.div>
+                  </m.div>
                 ))}
-              </motion.div>
+              </m.div>
 
 
               <div className="mt-12 border-t border-ink/15 pt-8">
@@ -151,7 +151,7 @@ export function About({ hasPortrait = false }: { hasPortrait?: boolean }) {
               </div>
             </div>
           </div>
-        </motion.div>
+        </m.div>
       </div>
     </section>
   );
@@ -233,7 +233,7 @@ function SkillCard({ group }: { group: SkillGroup }) {
       className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-ink/15 bg-surface/40 p-6 transition-colors duration-700 [@media(hover:hover)]:hover:border-ink/40 focus-visible:border-ink/40 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-4"
     >
 
-      <motion.span
+      <m.span
         aria-hidden="true"
         className="pointer-events-none absolute inset-0"
         style={{ background: spotlight }}

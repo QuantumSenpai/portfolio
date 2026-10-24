@@ -2,7 +2,7 @@
 
 import { useState, useRef } from "react";
 import Image from "next/image";
-import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { m, AnimatePresence, useReducedMotion } from "framer-motion";
 import {
   projects,
   reposSection,
@@ -101,7 +101,7 @@ export function Work() {
         <div className="hidden lg:grid lg:grid-cols-12 lg:gap-12 xl:gap-16 items-start">
 
           <div className="lg:col-span-8">
-            <motion.div
+            <m.div
               variants={containerVariants}
               initial={shouldReduceMotion ? false : "hidden"}
               whileInView="visible"
@@ -118,7 +118,7 @@ export function Work() {
                 const formattedIndex = String(idx + 1).padStart(2, "0");
 
                 return (
-                  <motion.div variants={rowVariants} key={project.slug}>
+                  <m.div variants={rowVariants} key={project.slug}>
                     <a
                       href={targetUrl}
                       target={isAnchor ? undefined : "_blank"}
@@ -192,17 +192,17 @@ export function Work() {
                         </span>
                       </div>
                     </a>
-                  </motion.div>
+                  </m.div>
                 );
               })}
-            </motion.div>
+            </m.div>
           </div>
 
 
           <div className="lg:col-span-4 sticky top-[112px]">
             <div className="relative aspect-[16/10] w-full overflow-hidden rounded-2xl border border-ink/15 bg-surface shadow-md">
               <AnimatePresence mode="sync">
-                <motion.div
+                <m.div
                   key={activeProject.slug}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
@@ -217,7 +217,7 @@ export function Work() {
                     project={activeProject}
                     index={activeIndex}
                   />
-                </motion.div>
+                </m.div>
               </AnimatePresence>
             </div>
 
@@ -274,7 +274,7 @@ export function Work() {
 
 
         <div className="flex flex-col gap-8 lg:hidden">
-          <motion.div
+          <m.div
             variants={containerVariants}
             initial={shouldReduceMotion ? false : "hidden"}
             whileInView="visible"
@@ -288,7 +288,7 @@ export function Work() {
                 index={idx + 1}
               />
             ))}
-          </motion.div>
+          </m.div>
         </div>
 
 
@@ -344,7 +344,7 @@ export function Work() {
 
         {reposSection.repos.length > 6 && (
           <div>
-            <motion.div
+            <m.div
               id="more-repos"
               initial={false}
               animate={{
@@ -353,7 +353,7 @@ export function Work() {
               }}
               transition={{ duration: DURATION.base, ease: EASE }}
               inert={!showAll}
-              className="overflow-hidden"
+              className="overflow-hidden contain-content"
             >
               {reposSection.repos.slice(6).map((repo) => (
                 <a
@@ -391,7 +391,7 @@ export function Work() {
                   </div>
                 </a>
               ))}
-            </motion.div>
+            </m.div>
 
             <button
               type="button"

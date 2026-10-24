@@ -9,7 +9,7 @@ import {
 } from "react";
 import {
   AnimatePresence,
-  motion,
+  m,
   useReducedMotion,
   type Variants,
 } from "framer-motion";
@@ -223,16 +223,16 @@ export function Contact({
   const disabled = status === "sending" || !ready || cooldownUntil > 0;
 
   return (
-    <section id="contact" className="relative w-full py-24 sm:py-32 scroll-mt-[72px]">
+    <section className="relative w-full py-24 sm:py-32 scroll-mt-[72px]">
       <div className="mx-auto w-full max-w-[1680px] px-5 md:px-10 lg:px-16">
-        <motion.div
+        <m.div
           variants={containerVariants}
           initial={shouldReduceMotion ? false : "hidden"}
           whileInView="visible"
           viewport={{ once: true, margin: "-60px" }}
         >
           <div className="grid gap-12 lg:grid-cols-12 lg:gap-x-8 xl:gap-x-12">
-            <motion.div
+            <m.div
               variants={itemVariants}
               className="pb-16 sm:pb-24 lg:col-span-5"
             >
@@ -288,9 +288,9 @@ export function Contact({
                   <span>{availability.text}</span>
                 </div>
               </div>
-            </motion.div>
+            </m.div>
 
-            <motion.div
+            <m.div
               variants={itemVariants}
               className="pb-16 sm:pb-24 lg:col-start-7 lg:col-span-6"
             >
@@ -395,7 +395,7 @@ export function Contact({
                   <div aria-live="polite" className="text-base">
                     <AnimatePresence mode="wait">
                       {status === "success" && (
-                        <motion.p
+                        <m.p
                           initial={{ opacity: 0, y: 6 }}
                           animate={{ opacity: 1, y: 0 }}
                           exit={{ opacity: 0 }}
@@ -403,10 +403,10 @@ export function Contact({
                           className="text-accent"
                         >
                           {contactForm.success}
-                        </motion.p>
+                        </m.p>
                       )}
                       {status === "error" && (
-                        <motion.p
+                        <m.p
                           initial={{ opacity: 0, y: 6 }}
                           animate={{ opacity: 1, y: 0 }}
                           exit={{ opacity: 0 }}
@@ -414,15 +414,15 @@ export function Contact({
                           className="text-red-500"
                         >
                           {errorMessage}
-                        </motion.p>
+                        </m.p>
                       )}
                     </AnimatePresence>
                   </div>
                 </div>
               </form>
-            </motion.div>
+            </m.div>
           </div>
-        </motion.div>
+        </m.div>
       </div>
 
       <Footer hasSignature={hasSignature} />

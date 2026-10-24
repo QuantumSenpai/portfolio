@@ -3,7 +3,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
   AnimatePresence,
-  motion,
+  LazyMotion,
+  domMax,
+  m,
   useReducedMotion,
   useScroll,
   type Variants,
@@ -23,14 +25,19 @@ export function Nav({ showGithub = true }: { showGithub?: boolean }) {
   const shouldReduceMotion = useReducedMotion();
   const { stop, start } = useLenis();
   const activeCandidateRef = useRef("");
+  const activeRef = useRef("");
+  const scrolledRef = useRef(false);
 
   const { scrollYProgress } = useScroll();
 
   // Resolve the visible candidate against the top-of-page rule.
+  // setState fires only when the resolved value actually changes — never per scroll event.
   const syncActive = useCallback(() => {
-    setActive(
-      window.scrollY < TOP_ACTIVE_THRESHOLD ? "" : activeCandidateRef.current
-    );
+    const next =
+      window.scrollY < TOP_ACTIVE_THRESHOLD ? "" : activeCandidateRef.current;
+    if (next === activeRef.current) return;
+    activeRef.current = next;
+    setActive(next);
   }, []);
 
   // Initial active from location hash (respects the top-of-page rule).
@@ -77,7 +84,11 @@ export function Nav({ showGithub = true }: { showGithub?: boolean }) {
       ticking = true;
       requestAnimationFrame(() => {
         ticking = false;
-        setScrolled(window.scrollY > 8);
+        const isScrolled = window.scrollY > 8;
+        if (isScrolled !== scrolledRef.current) {
+          scrolledRef.current = isScrolled;
+          setScrolled(isScrolled);
+        }
         syncActive();
       });
     }
@@ -176,7 +187,7 @@ export function Nav({ showGithub = true }: { showGithub?: boolean }) {
     : navLinks.filter((link) => link.href !== "#github");
 
   return (
-    <>
+    <LazyMotion features={domMax}>
       {/* Skip link — first focusable element */}
       <a
         href="#main"
@@ -186,20 +197,11 @@ export function Nav({ showGithub = true }: { showGithub?: boolean }) {
       </a>
 
       {/* Bar */}
-      <motion.header
+      <m.header
         className={cn(
-          "fixed inset-x-0 top-0 z-[100] h-[72px] transition-[background-color,backdrop-filter] duration-300",
-          scrolled && "backdrop-blur-lg"
+          "nav-header fixed inset-x-0 top-0 z-[100] h-[72px]",
+          scrolled && "is-scrolled"
         )}
-        style={
-          scrolled
-            ? {
-                background: "color-mix(in srgb, var(--bg) 85%, transparent)",
-                borderBottom:
-                  "1px solid color-mix(in srgb, var(--ink) 10%, transparent)",
-              }
-            : undefined
-        }
       >
         <div className="relative mx-auto flex h-full w-full max-w-[1680px] items-center justify-between px-6 md:px-10 lg:px-16">
           {/* 1. Left: logo */}
@@ -240,7 +242,7 @@ export function Nav({ showGithub = true }: { showGithub?: boolean }) {
                         {String(index + 1).padStart(2, "0")}
                       </span>
                       {isActive && (
-                        <motion.span
+                        <m.span
                           layoutId={
                             shouldReduceMotion ? undefined : "nav-underline"
                           }
@@ -292,18 +294,18 @@ export function Nav({ showGithub = true }: { showGithub?: boolean }) {
           </div>
 
           {/* Scroll progress line (header bottom edge) */}
-          <motion.div
+          <m.div
             aria-hidden="true"
             className="pointer-events-none absolute bottom-0 left-0 h-[2px] w-full origin-left bg-accent"
             style={{ scaleX: scrollYProgress }}
           />
         </div>
-      </motion.header>
+      </m.header>
 
       {/* Mobile overlay — unmounted when closed */}
       <AnimatePresence>
         {open && (
-          <motion.div
+          <m.div
             ref={menuPanelRef}
             id="mobile-menu"
             role="dialog"
@@ -315,7 +317,8 @@ export function Nav({ showGithub = true }: { showGithub?: boolean }) {
             variants={menuItemVariants}
             transition={{ duration: 0.2, ease: EASE }}
             style={{ background: "var(--bg)" }}
-            className="fixed inset-0 z-[90] flex h-[100dvh] flex-col overflow-y-auto px-6 pb-[calc(2rem+env(safe-area-inset-bottom))] pt-24 backdrop-blur-lg"
+            className="fixed inset-0 z-[90] flex h-[100dvh] flex-col overflow-y-auto px-6 pb-[calc(2rem+env(safe-area-inset-bottom))] pt-24"
+            data-lenis-prevent
           >
             <ul className="flex-1 overflow-y-auto px-6 pb-8">
               {filteredNavLinks.map((link, index) => (
@@ -355,10 +358,10 @@ export function Nav({ showGithub = true }: { showGithub?: boolean }) {
                 ))}
               </div>
             </div>
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
-    </>
+    </LazyMotion>
   );
 }
 

@@ -3,7 +3,12 @@
 import { useState, useRef } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
-import { projects, otherRepos, workSection, type Project } from "@/lib/data";
+import {
+  projects,
+  reposSection,
+  workSection,
+  type Project,
+} from "@/lib/data";
 import { EASE, DURATION, STAGGER } from "@/lib/motion";
 import { useLenis } from "@/components/providers/smooth-scroll-provider";
 import { cn } from "@/lib/utils";
@@ -20,6 +25,7 @@ export function Work() {
     featuredProjects[0]?.slug ?? ""
   );
   const [hoveredRowSlug, setHoveredRowSlug] = useState<string | null>(null);
+  const [showAll, setShowAll] = useState(false);
 
   const hoverTimerRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -75,7 +81,7 @@ export function Work() {
     <section
       id="work"
       data-tone="invert"
-      className="relative w-full py-24 sm:py-32"
+      className="relative w-full py-24 sm:py-32 scroll-mt-[72px]"
     >
       <div className="mx-auto w-full max-w-[1680px] px-5 md:px-10 lg:px-16">
 
@@ -288,37 +294,46 @@ export function Work() {
 
         <div className="mt-20 sm:mt-28 border-t border-ink/15 pt-10 sm:pt-14">
           <div className="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-baseline">
-            <span className="font-mono text-[13px] uppercase tracking-widest text-ink-dim">
-              {workSection.allReposLabel}
+            <span className="font-mono text-[13px] uppercase tracking-widest text-accent">
+              {reposSection.eyebrow}
             </span>
-            <a
-              href={workSection.githubUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group inline-flex items-center gap-2 font-mono text-sm tracking-[0.04em] text-ink-dim transition-colors [@media(hover:hover)]:hover:text-accent focus-visible:outline-accent"
-            >
-              <span>View all on GitHub</span>
-              <span className="transition-transform duration-200 [@media(hover:hover)]:group-hover:translate-x-1">
-                &rarr;
-              </span>
-            </a>
+            <span className="block font-mono text-[13px] uppercase tracking-widest text-ink-dim">
+              {reposSection.heading}
+            </span>
           </div>
 
           <div className="divide-y divide-ink/10 border-y border-ink/10 font-mono text-sm tracking-[0.04em]">
-            {otherRepos.map((repo) => (
+            {reposSection.repos.map((repo) => (
               <a
-                key={repo.name}
+                key={repo.url}
                 href={repo.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group flex items-center justify-between py-4 text-ink-dim transition-colors [@media(hover:hover)]:hover:text-ink focus-visible:outline-accent"
+                className="group relative flex items-center justify-between gap-6 py-4 [&>span]:text-ink-dim [&>span]:text-[15px] truncate [&>span]:line-clamp-1 border-b border-ink/10"
               >
-                <span className="font-medium text-ink transition-colors [@media(hover:hover)]:group-hover:text-accent">
-                  {repo.name}
+                <span
+                  className="pointer-events-none absolute inset-0 -mx-4 rounded-lg bg-ink/[0.04] opacity-0 transition-opacity duration-200 [@media(hover:hover)]:group-hover:opacity-100 group-focus-visible:opacity-100"
+                />
+
+                <span className="relative z-10 min-w-0">
+                  <span className="block truncate font-mono text-[16px] font-medium text-ink">
+                    {repo.name}
+                  </span>
+                  {repo.description && (
+                    <span className="mt-0.5 block truncate text-[15px] text-ink-dim">
+                      {repo.description}
+                    </span>
+                  )}
                 </span>
-                <div className="flex items-center gap-6">
-                  <span className="text-ink-dim">{repo.language}</span>
-                  <span className="text-sm leading-none transition-transform duration-200 [@media(hover:hover)]:group-hover:translate-x-0.5 [@media(hover:hover)]:group-hover:-translate-y-0.5 [@media(hover:hover)]:group-hover:text-accent">
+
+                <div className="relative z-10 flex shrink-0 items-center gap-6 font-mono text-[14px] tracking-[0.04em] text-ink-dim">
+                  {typeof repo.stars === "number" && (
+                    <span className="tabular-nums">★ {repo.stars}</span>
+                  )}
+                  {repo.language && <span>{repo.language}</span>}
+                  <span
+                    className="relative group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-focus-visible:text-accent transition-transform duration-200"
+                  >
                     ↗
                   </span>
                 </div>
@@ -326,6 +341,70 @@ export function Work() {
             ))}
           </div>
         </div>
+
+        {reposSection.repos.length > 6 && (
+          <div>
+            <motion.div
+              id="more-repos"
+              initial={false}
+              animate={{
+                height: showAll ? "auto" : 0,
+                opacity: showAll ? 1 : 0,
+              }}
+              transition={{ duration: DURATION.base, ease: EASE }}
+              inert={!showAll}
+              className="overflow-hidden"
+            >
+              {reposSection.repos.slice(6).map((repo) => (
+                <a
+                  key={repo.url}
+                  href={repo.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group relative flex items-center justify-between gap-6 py-4 [&>span]:text-ink-dim [&>span]:text-[15px] truncate [&>span]:line-clamp-1 border-b border-ink/10"
+                >
+                  <span
+                    className="pointer-events-none absolute inset-0 -mx-4 rounded-lg bg-ink/[0.04] opacity-0 transition-opacity duration-200 [@media(hover:hover)]:group-hover:opacity-100 group-focus-visible:opacity-100"
+                  />
+
+                  <span className="relative z-10 min-w-0">
+                    <span className="block truncate font-mono text-[16px] font-medium text-ink">
+                      {repo.name}
+                    </span>
+                    {repo.description && (
+                      <span className="mt-0.5 block truncate text-[15px] text-ink-dim">
+                        {repo.description}
+                      </span>
+                    )}
+                  </span>
+
+                  <div className="relative z-10 flex shrink-0 items-center gap-6 font-mono text-[14px] tracking-[0.04em] text-ink-dim">
+                    {typeof repo.stars === "number" && (
+                      <span className="tabular-nums">★ {repo.stars}</span>
+                    )}
+                    {repo.language && <span>{repo.language}</span>}
+                    <span
+                      className="relative group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-focus-visible:text-accent transition-transform duration-200"
+                    >
+                      ↗
+                    </span>
+                  </div>
+                </a>
+              ))}
+            </motion.div>
+
+            <button
+              type="button"
+              aria-expanded={showAll}
+              aria-controls="more-repos"
+              onClick={() => setShowAll((value) => !value)}
+              className="mt-6 inline-flex min-h-11 items-center font-mono text-sm tracking-[0.04em] text-ink-dim transition-colors [@media(hover:hover)]:hover:text-accent focus-visible:outline-accent"
+            >
+              {showAll ? "Show less" : `Show more (${reposSection.repos.length - 6})`}
+            </button>
+          </div>
+        )}
+
       </div>
     </section>
   );

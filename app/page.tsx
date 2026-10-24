@@ -29,11 +29,12 @@ function signatureExists() {
 
 export default async function Home() {
   const githubActivity = await getGithubActivity();
+  const showGithub = !!process.env.GITHUB_TOKEN;
 
   return (
     <>
-      <Nav />
-      <main>
+      <Nav showGithub={showGithub} />
+      <main id="main">
         <Hero />
         <Ticker />
         <Work />

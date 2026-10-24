@@ -270,7 +270,7 @@ export function GitHubActivity({ activity }: { activity: GithubActivity }) {
   ];
 
   return (
-    <section id="github" className="relative w-full py-24 sm:py-32">
+    <section id="github" className="relative w-full py-24 sm:py-32 scroll-mt-[72px]">
       <div className="mx-auto w-full max-w-[1680px] px-5 md:px-10 lg:px-16">
         <span className="font-mono text-[13px] uppercase tracking-widest text-accent">
           {githubSection.eyebrow}

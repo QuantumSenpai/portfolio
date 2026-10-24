@@ -107,13 +107,33 @@ export const githubSection: GithubSectionConfig = {
   },
 };
 
-export const navLinks: { href: string; label: string }[] = [
+// ─── EDIT HERE — Nav ──────────────────────────────────────────────────────────
+// Links render in array order. `conditional: true` links are hidden unless a
+// section with that id is actually on the page — the GitHub link only shows
+// when the GitHub section renders (it needs data to appear).
+
+export interface NavLink {
+  href: string;
+  label: string;
+  /** Shown only when a section with this id exists in the DOM. */
+  conditional?: boolean;
+}
+
+export const navLinks: NavLink[] = [
   { href: "#work", label: "Work" },
   { href: "#experience", label: "Experience" },
   { href: "#about", label: "About" },
+  { href: "#github", label: "GitHub" },
   { href: "#reel", label: "Reel" },
   { href: "#contact", label: "Contact" },
 ];
+
+export const navCta: { href: string; label: string } = {
+  href: "#contact",
+  label: "Let's talk",
+};
+
+// ─── END EDIT HERE — Nav ──────────────────────────────────────────────────────
 
 export const socials: { label: string; url: string }[] = [
   { label: "GitHub", url: "https://github.com/QuantumSenpai" },
@@ -247,17 +267,11 @@ export const privacy: PrivacyConfig = {
 export interface WorkSectionConfig {
   eyebrow: string;
   heading: string;
-  allReposLabel: string;
-  allReposHref: string;
-  githubUrl: string;
 }
 
 export const workSection: WorkSectionConfig = {
   eyebrow: "001 / Work",
   heading: "Selected work",
-  allReposLabel: "All repositories",
-  allReposHref: "https://github.com/QuantumSenpai?tab=repositories",
-  githubUrl: "https://github.com/QuantumSenpai?tab=repositories",
 };
 
 export type ProjectCategory = "web" | "dsa" | "ml" | "game";
@@ -380,32 +394,53 @@ export const projects: Project[] = [
   },
 ];
 
-export interface OtherRepo {
+// ─── EDIT HERE — Repositories ────────────────────────────────────────────────
+// Array position = display order. Only repos listed in `repos` are shown —
+// nothing is auto-fetched from GitHub and nothing is random.
+// TODO: the three entries below are placeholders — replace them with your
+// favourite repositories (see docs/HOW-TO-EDIT.md for the template).
+export interface RepoItem {
   name: string;
-  language: string;
   url: string;
+  language?: string;
+  description?: string;
+  stars?: number;
 }
 
-export const otherRepos: OtherRepo[] = [
+export interface ReposSectionConfig {
+  eyebrow?: string;
+  heading: string;
+  maxVisible: number;
+  viewAllUrl: string;
+  viewAllLabel: string;
+  repos: RepoItem[];
+}
 
-  {
-    name: "wraith",
-    language: "JavaScript",
-    url: "https://github.com/QuantumSenpai/wraith",
-  },
+export const reposSection: ReposSectionConfig = {
+  heading: "All repositories",
+  maxVisible: 6,
+  viewAllUrl: "https://github.com/QuantumSenpai?tab=repositories",
+  viewAllLabel: "View all on GitHub",
+  repos: [
+    {
+      name: "wraith",
+      language: "JavaScript",
+      url: "https://github.com/QuantumSenpai/wraith",
+    },
 
-  {
-    name: "dev-card",
-    language: "CSS",
-    url: "https://github.com/QuantumSenpai/dev-card",
-  },
+    {
+      name: "dev-card",
+      language: "CSS",
+      url: "https://github.com/QuantumSenpai/dev-card",
+    },
 
-  {
-    name: "Sort-Visualizer",
-    language: "JavaScript",
-    url: "https://github.com/QuantumSenpai/Sort-Visualizer",
-  },
-];
+    {
+      name: "Sort-Visualizer",
+      language: "JavaScript",
+      url: "https://github.com/QuantumSenpai/Sort-Visualizer",
+    },
+  ],
+};
 
 export interface ExperienceSectionConfig {
   eyebrow: string;
@@ -430,6 +465,8 @@ export interface ExperienceEntry {
   bullets: string[];
   stats?: { label: string }[];
   tags: string[];
+  defaultOpen?: boolean;
+  visibleBullets?: number;
 }
 
 export const experiences: ExperienceEntry[] = [
@@ -439,6 +476,7 @@ export const experiences: ExperienceEntry[] = [
     org: "National Institute of Technology",
     location: "Durgapur, WB",
     dates: "July 2026 – August 2026",
+    defaultOpen: true,
     summary:
       "Built a Clinical Decision Support System that classifies Alzheimer's stages from MRI scans and auto-generates a structured diagnostic report — from raw scan to a doctor-readable PDF.",
     bullets: [

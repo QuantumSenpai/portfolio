@@ -45,7 +45,7 @@ export function About({ hasPortrait = false }: { hasPortrait?: boolean }) {
   };
 
   return (
-    <section id="about" className="relative w-full py-24 sm:py-32">
+    <section id="about" className="relative w-full py-24 sm:py-32 scroll-mt-[72px]">
 
       <span id="skills" />
 

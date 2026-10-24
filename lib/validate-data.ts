@@ -9,10 +9,10 @@ import {
   experiences,
   experienceSection,
   footer,
-  otherRepos,
   privacy,
   projects,
   reelSection,
+  reposSection,
   services,
   skillGroups,
   socials,
@@ -25,6 +25,10 @@ const SECTION_IDS = ["work", "experience", "about", "reel", "contact"];
 
 function error(where: string, message: string) {
   console.error(`[data] ${where} — ${message}`);
+}
+
+function warn(where: string, message: string) {
+  console.warn(`[data] ${where} — ${message}`);
 }
 
 function isFilled(value: unknown): value is string {
@@ -119,17 +123,42 @@ function validateProjects() {
   );
 }
 
-function validateOtherRepos() {
-  otherRepos.forEach((repo, index) => {
-    const where = `otherRepos[${index}]`;
+function validateReposSection() {
+  if (reposSection.maxVisible < 1) {
+    warn(
+      "reposSection",
+      `"maxVisible" is ${reposSection.maxVisible} — set it to 1 or more so at least one repo shows before the "Show more" button`
+    );
+  }
+
+  reposSection.repos.forEach((repo, index) => {
+    const where = `reposSection.repos[${index}]`;
     if (!isFilled(repo.name)) error(where, `"name" is required`);
-    if (!isFilled(repo.language)) error(where, `"language" is required`);
     checkUrl(where, "url", repo.url, true);
+    if (repo.language !== undefined && !isFilled(repo.language)) {
+      error(where, `"language" must be a non-empty string`);
+    }
+    if (repo.description !== undefined && !isFilled(repo.description)) {
+      error(where, `"description" must be a non-empty string`);
+    }
+    if (
+      repo.stars !== undefined &&
+      (typeof repo.stars !== "number" ||
+        !Number.isFinite(repo.stars) ||
+        repo.stars < 0)
+    ) {
+      error(where, `"stars" must be a non-negative number`);
+    }
   });
 
   checkDuplicates(
-    "otherRepos",
-    otherRepos.map((repo) => repo.name),
+    "reposSection.repos",
+    reposSection.repos.map((repo) => repo.url),
+    "repo url"
+  );
+  checkDuplicates(
+    "reposSection.repos",
+    reposSection.repos.map((repo) => repo.name),
     "name"
   );
 }
@@ -171,6 +200,22 @@ function validateExperiences() {
             error(`${where}.stats[${statIndex}]`, `"label" is required`);
           }
         });
+      }
+    }
+    if (entry.defaultOpen !== undefined && typeof entry.defaultOpen !== "boolean") {
+      error(where, `"defaultOpen" must be true or false`);
+    }
+    if (entry.visibleBullets !== undefined) {
+      if (!Number.isInteger(entry.visibleBullets) || entry.visibleBullets < 0) {
+        error(where, `"visibleBullets" must be a non-negative integer`);
+      } else if (
+        Array.isArray(entry.bullets) &&
+        entry.visibleBullets > entry.bullets.length
+      ) {
+        warn(
+          where,
+          `"visibleBullets" (${entry.visibleBullets}) is larger than the ${entry.bullets.length} bullets — every bullet is shown`
+        );
       }
     }
   });
@@ -344,7 +389,7 @@ function validateSectionCopy() {
 
 export function validateData() {
   validateProjects();
-  validateOtherRepos();
+  validateReposSection();
   validateExperiences();
   validateSkillGroups();
   validateVideos();

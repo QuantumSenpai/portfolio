@@ -223,7 +223,7 @@ export function Contact({
   const disabled = status === "sending" || !ready || cooldownUntil > 0;
 
   return (
-    <section id="contact" className="relative w-full py-24 sm:py-32">
+    <section id="contact" className="relative w-full py-24 sm:py-32 scroll-mt-[72px]">
       <div className="mx-auto w-full max-w-[1680px] px-5 md:px-10 lg:px-16">
         <motion.div
           variants={containerVariants}

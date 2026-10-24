@@ -31,39 +31,6 @@
   --grid-line-opacity: 0.03;
   --heatmap-empty: color-mix(in srgb, var(--ink) 8%, transparent);
 }
-[data-tone="invert"] {
-  --bg: #0a0e18;
-  --surface: #121729;
-  --surface-2: #171d33;
-  --ink: #f3f6ff;
-  --ink-dim: #9aa5c4;
-  --accent: #8dc2ff;
-  --accent-soft: #3770bf;
-  --line: rgba(243, 246, 255, 0.09);
-  --line-strong: rgba(243, 246, 255, 0.16);
-  --shadow: rgba(0, 0, 0, 0.4);
-
-  background-color: var(--bg);
-  color: var(--ink);
-  transition: background-color 0.6s var(--ease), color 0.6s var(--ease);
-}
-
-.dark [data-tone="invert"] {
-  --bg: #f3f6ff;
-  --surface: #ffffff;
-  --surface-2: #eaf0ff;
-  --ink: #0e1b33;
-  --ink-dim: #4a5a75;
-  --accent: #3770bf;
-  --accent-soft: #8dc2ff;
-  --line: rgba(14, 27, 51, 0.1);
-  --line-strong: rgba(14, 27, 51, 0.2);
-  --shadow: rgba(14, 27, 51, 0.08);
-
-  background-color: var(--bg);
-  color: var(--ink);
-  transition: background-color 0.6s var(--ease), color 0.6s var(--ease);
-}
 
 @theme inline {
   --color-bg: var(--bg);
@@ -72,7 +39,6 @@
   --color-ink: var(--ink);
   --color-ink-dim: var(--ink-dim);
   --color-accent: var(--accent);
-  --color-accent-soft: var(--accent-soft);
   --color-line: var(--line);
   --color-line-strong: var(--line-strong);
 
@@ -128,22 +94,6 @@ p {
 .tabular-nums {
   font-variant-numeric: tabular-nums;
 }
-.btn-primary {
-  background: var(--ink);
-  color: var(--bg);
-  transition: transform 0.3s var(--ease), opacity 0.3s var(--ease);
-}
-
-@media (hover: hover) {
-  .btn-primary:hover {
-    opacity: 0.92;
-  }
-}
-
-.timeline-stroke {
-  font-style: italic;
-  color: var(--accent);
-}
 
 a {
   color: inherit;
@@ -163,13 +113,16 @@ a {
 ::-webkit-scrollbar {
   width: 10px;
 }
+
 ::-webkit-scrollbar-track {
   background: var(--bg);
 }
+
 ::-webkit-scrollbar-thumb {
   background: var(--line-strong);
   border-radius: 999px;
 }
+
 .masonry {
   column-count: 1;
   column-gap: 2rem;
@@ -180,6 +133,7 @@ a {
     column-count: 2;
   }
 }
+
 @keyframes github-cell-in {
   from {
     opacity: 0;
@@ -201,30 +155,6 @@ a {
     animation: none;
     opacity: 1;
     transform: none;
-  }
-}
-
-#skills {
-  display: block;
-  height: 0;
-}
-@keyframes pulse-dot {
-  0%,
-  100% {
-    opacity: 0.7;
-  }
-  50% {
-    opacity: 0.12;
-  }
-}
-
-.pulse-dot {
-  animation: pulse-dot 2.4s var(--ease) infinite;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .pulse-dot {
-    animation: none;
   }
 }
 

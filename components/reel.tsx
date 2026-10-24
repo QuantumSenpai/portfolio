@@ -39,7 +39,7 @@ export function Reel() {
   const shorts = playable.filter((video) => video.kind === "short");
 
   return (
-    <section id="reel" className="relative w-full py-24 sm:py-32">
+    <section id="reel" className="relative w-full py-24 sm:py-32 scroll-mt-[72px]">
       <div className="mx-auto w-full max-w-[1680px] px-5 md:px-10 lg:px-16">
 
         <motion.div

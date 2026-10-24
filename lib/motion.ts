@@ -25,6 +25,17 @@ export const LENIS_CONFIG = {
   autoRaf: true,
 } as const;
 
+export const NAV = {
+  /** Spring config for the active underline (stiffness 380, damping 34). */
+  pillSpring: { type: "spring", stiffness: 380, damping: 34 } as const,
+  /** Softer spring for any future hover ghost pill. */
+  ghostSpring: { stiffness: 280, damping: 32 } as const,
+  /** Scroll distance (px) past which the bar starts auto-hiding. */
+  hideThreshold: 500,
+  /** Minimum scroll delta (px) that counts as a direction change. */
+  hideDelta: 6,
+} as const;
+
 export const transitionFast: Transition = {
   duration: DURATION.fast,
   ease: EASE,

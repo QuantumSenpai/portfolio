@@ -7,7 +7,7 @@ import {
   experiences,
   type ExperienceEntry,
 } from "@/lib/data";
-import { EASE, DURATION, STAGGER } from "@/lib/motion";
+import { EASE, DURATION } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 
 const HOVER_TRANSITION = {
@@ -17,7 +17,6 @@ const HOVER_TRANSITION = {
 
 export function Experience() {
   const shouldReduceMotion = useReducedMotion();
-
 
   const [activeId, setActiveId] = useState<string | null>(null);
 
@@ -33,7 +32,7 @@ export function Experience() {
   const listVariants: Variants = {
     hidden: {},
     visible: {
-      transition: { staggerChildren: STAGGER },
+      transition: { staggerChildren: 0.05 },
     },
   };
 
@@ -47,7 +46,7 @@ export function Experience() {
   };
 
   return (
-    <section id="experience" className="relative w-full py-24 sm:py-32">
+    <section id="experience" className="relative w-full py-24 sm:py-32 scroll-mt-[72px]">
       <div className="mx-auto w-full max-w-[1680px] px-5 md:px-10 lg:px-16">
 
         <motion.div
@@ -109,114 +108,148 @@ function ExperienceRow({
   dimmed: boolean;
   onActive: (id: string | null) => void;
 }) {
+  const shouldReduceMotion = useReducedMotion();
+  const [open, setOpen] = useState(false); // Always start collapsed per requirement 9
+
   const formattedIndex = String(index).padStart(2, "0");
   const titleId = `experience-${entry.id}`;
+  const panelId = `experience-panel-${entry.id}`;
   const meta = [entry.org, entry.location, entry.dates]
     .filter(Boolean)
     .join(" · ");
+
+  const expandTransition = shouldReduceMotion
+    ? { duration: 0 }
+    : { duration: DURATION.base, ease: EASE };
+
+  // Render bullet — shows ALL bullets when expanded, none when collapsed
+  const renderBullet = (bullet: string, bulletIndex: number) => (
+    <li
+      key={`${bulletIndex}-${bullet}`}
+      className="flex items-start gap-3 text-[16px] leading-[1.65] text-ink-dim max-w-[78ch]"
+    >
+      <span
+        aria-hidden="true"
+        className="mt-3 h-px w-3 shrink-0 bg-accent/70"
+      />
+      <span>{bullet}</span>
+    </li>
+  );
 
   return (
     <motion.div role="listitem" variants={variants}>
       <div
         role="group"
-        tabIndex={0}
         aria-labelledby={titleId}
         onMouseEnter={() => onActive(entry.id)}
         onMouseLeave={() => onActive(null)}
         onFocus={() => onActive(entry.id)}
         onBlur={() => onActive(null)}
-        style={HOVER_TRANSITION}
         className={cn(
-          "group relative w-full border-b border-ink/15 py-8 transition-opacity focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-4 sm:py-10",
+          "group relative w-full border-b border-ink/15 py-8 transition-opacity sm:py-10",
           dimmed ? "opacity-55" : "opacity-100"
         )}
       >
 
         <span
           aria-hidden="true"
-          className="pointer-events-none absolute inset-0 bg-ink/[0.04] opacity-0 transition-opacity [@media(hover:hover)]:group-hover:opacity-100 group-focus-visible:opacity-100"
+          className="pointer-events-none absolute inset-0 bg-ink/[0.04] opacity-0 transition-opacity [@media(hover:hover)]:group-hover:opacity-100 group-has-[:focus-visible]:opacity-100"
           style={HOVER_TRANSITION}
         />
-
 
         <span
           aria-hidden="true"
-          className="pointer-events-none absolute bottom-0 left-0 right-0 h-px origin-left scale-x-0 bg-accent transition-transform [@media(hover:hover)]:group-hover:scale-x-100 group-focus-visible:scale-x-100"
+          className="pointer-events-none absolute bottom-0 left-0 right-0 h-px origin-left scale-x-0 bg-accent transition-transform [@media(hover:hover)]:group-hover:scale-x-100 group-has-[:focus-visible]:scale-x-100"
           style={HOVER_TRANSITION}
         />
 
-        <div className="relative z-10 flex items-baseline gap-6 lg:gap-8">
+        <div className="relative z-10">
 
-          <span className="shrink-0 font-mono text-sm tabular-nums tracking-[0.04em] text-ink-dim">
-            {formattedIndex}
-          </span>
-
-          <div className="min-w-0 flex-1">
-
-            <h3
-              id={titleId}
-              style={{
-                fontWeight: 700,
-                letterSpacing: "-0.015em",
-                ...HOVER_TRANSITION,
-              }}
-              className="font-display text-ink text-[length:var(--text-h2)] leading-tight transition-all [@media(hover:hover)]:group-hover:translate-x-3 group-focus-visible:translate-x-3 [@media(hover:hover)]:group-hover:text-accent group-focus-visible:text-accent"
+          <button
+            type="button"
+            aria-expanded={open}
+            aria-controls={panelId}
+            onClick={() => setOpen((value) => !value)}
+            className="flex w-full items-baseline gap-6 text-left lg:gap-8"
+          >
+            <span
+              className="shrink-0 font-mono text-sm tabular-nums tracking-[0.04em] transition-colors align-baseline"
+              style={{ verticalAlign: "baseline" }}
             >
-              {entry.role}
-            </h3>
+              {formattedIndex}
+            </span>
 
+            <span className="min-w-0 flex-1">
+              <h3
+                id={titleId}
+                style={{
+                  fontWeight: 700,
+                  letterSpacing: "-0.015em",
+                  ...HOVER_TRANSITION,
+                }}
+                className="font-display text-ink text-[clamp(1.5rem,2.6vw,2.5rem)] leading-tight transition-all [@media(hover:hover)]:group-hover:translate-x-3 group-has-[:focus-visible]:translate-x-3 [@media(hover:hover)]:group-hover:text-[var(--ink)] group-has-[:focus-visible]:text-[var(--ink)]"
+              >
+                {entry.role}
+              </h3>
 
-            <p className="mt-3 font-mono text-sm tracking-[0.04em] text-ink-dim">{meta}</p>
-
-
-            {entry.summary && (
-              <p className="mt-4 max-w-[60ch] text-sm leading-relaxed text-ink">
-                {entry.summary}
+              <p className="mt-2 mb-4 font-mono text-[15px] tracking-[0.04em] text-ink-dim">
+                {meta}
               </p>
-            )}
+            </span>
+
+            <span
+              aria-hidden="true"
+              className="shrink-0 self-center font-mono text-2xl leading-none text-ink-dim transition-colors [@media(hover:hover)]:group-hover:text-[var(--accent)]"
+              style={HOVER_TRANSITION}
+            >
+              {open ? "×" : "+"}
+            </span>
+          </button>
+
+          <motion.div
+            id={panelId}
+            role="region"
+            aria-labelledby={titleId}
+            initial={false}
+            animate={{ height: open ? "auto" : 0, opacity: open ? 1 : 0 }}
+            transition={expandTransition}
+            inert={!open}
+            className="overflow-hidden"
+          >
+            <div className="pt-1">
+              {entry.summary && (
+                <p className="mb-6 max-w-[68ch] text-[18px] leading-relaxed text-ink/85">
+                  {entry.summary}
+                </p>
+              )}
+
+              <ul className="space-y-3">
+                {entry.bullets.map(renderBullet)}
+              </ul>
 
 
-            <ul className="mt-6 space-y-2.5">
-              {entry.bullets.map((bullet) => (
-                <li
-                  key={bullet}
-                  className="flex items-start gap-3 text-sm leading-relaxed text-ink-dim"
-                >
-                  <span
-                    aria-hidden="true"
-                    className="mt-3 h-px w-3 shrink-0 bg-accent/70"
-                  />
-                  <span>{bullet}</span>
-                </li>
-              ))}
-            </ul>
-
-
-            {entry.stats && entry.stats.length > 0 && (
-              <div className="mt-6 flex flex-wrap gap-1.5">
-                {entry.stats.map((stat) => (
-                  <span
-                    key={stat.label}
-                    className="rounded-full border border-accent/30 bg-accent/10 px-2.5 py-1 font-mono text-sm tracking-[0.04em] text-accent"
-                  >
-                    {stat.label}
-                  </span>
-                ))}
-              </div>
-            )}
-
-
-            <div className="mt-6 flex flex-wrap gap-1.5">
-              {entry.tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="rounded-full border border-ink/15 bg-ink/[0.03] px-2.5 py-1 font-mono text-sm tracking-[0.04em] text-ink-dim"
-                >
-                  {tag}
-                </span>
-              ))}
+              {(entry.stats?.length ?? 0) + entry.tags.length > 0 && (
+                <div className="mt-6 flex flex-wrap gap-1.5">
+                  {entry.stats?.map((stat) => (
+                    <span
+                      key={stat.label}
+                      className="rounded-full border border-accent/30 bg-accent/10 px-2.5 py-1 font-mono text-sm tracking-[0.04em] text-accent"
+                    >
+                      {stat.label}
+                    </span>
+                  ))}
+                  {entry.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="rounded-full border border-ink/15 bg-ink/[0.03] px-2.5 py-1 font-mono text-sm tracking-[0.04em] text-ink-dim"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              )}
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </motion.div>

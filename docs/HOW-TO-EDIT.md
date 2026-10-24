@@ -9,7 +9,7 @@ Fields marked OPTIONAL can be left out completely.
 
 ```
   project     -> projects[]
-  otherRepo   -> otherRepos[]
+  repo        -> reposSection.repos[]
   experience  -> experiences[]
   skillGroup  -> skillGroups[]
   skillItem   -> skillGroups[].items[]
@@ -43,15 +43,30 @@ Fields marked OPTIONAL can be left out completely.
 or a full https URL (e.g. Cloudinary). `caseStudyHref` is an internal anchor
 like `"#experience"`.
 
-### otherRepo → `otherRepos[]`
+### Featured ordering → `projects[]`
+
+The Work list shows only projects with `featured: true`, in the same order
+they appear in the `projects[]` array — there is no separate `order` field.
+To add a project to the Work list, set `featured: true`. To reorder the Work
+list, cut and paste the whole project object. `featured: false` projects stay
+in the file but are not rendered.
+
+### repo → `reposSection.repos[]`
 
 ```ts
 {
   name: "my-repo",                 // required, unique
-  language: "TypeScript",          // required
-  url: "https://github.com/…",     // required
+  url: "https://github.com/…",     // required, unique
+  language: "TypeScript",          // OPTIONAL
+  description: "One short line.",  // OPTIONAL — truncated to one line
+  stars: 42,                       // OPTIONAL — shown next to the language
 }
 ```
+
+`reposSection.repos` renders in array order — nothing is fetched from GitHub
+and nothing is random. The first `reposSection.maxVisible` entries are shown;
+when there are more, a "Show more (N)" button reveals the rest. Remove every
+entry to hide the whole block, heading included.
 
 ### experience → `experiences[]`
 
@@ -66,8 +81,16 @@ like `"#experience"`.
   location: "Remote",              // OPTIONAL
   summary: "One or two sentences.", // OPTIONAL
   stats: [{ label: "4-stage" }],   // OPTIONAL, max 3
+  defaultOpen: true,               // OPTIONAL — entry starts expanded
+  visibleBullets: 3,               // OPTIONAL — bullets shown before "Show all" (default 3)
 }
 ```
+
+Entries render as an accordion: only entries with `defaultOpen: true` start
+expanded, and opening one never closes another. Bullets beyond
+`visibleBullets` stay in the file and in the page — a "Show all (N)" button
+reveals them. If a `stats` label matches a `tags` entry, the tag is hidden
+and the stats pill is kept.
 
 ### skillGroup → `skillGroups[]`
 
@@ -134,7 +157,7 @@ navLinks                       Primary navigation links
 footer                         Copyright, signature and the link columns
 privacy                        Privacy policy sections
 workSection, projects          Work copy and the project list
-otherRepos                     The small repository list
+reposSection                   The "All repositories" block under the project list
 experienceSection, experiences Experience copy and the role list
 aboutSection                   About copy, portrait and bio
 skillGroups                    Skill groups and their items
@@ -146,8 +169,8 @@ stats                          Legacy counters, not rendered anywhere
 `aboutSection.legacy` holds the original About / Skills copy. It has no slot in
 the merged layout and is kept so nothing is lost.
 
-The three `otherRepos` entries are placeholders — replace them when you have
-real repositories to show.
+The three `reposSection.repos` entries are placeholders — replace them with
+your favourite repositories (see the repo template above).
 
 ## Rate limits
 

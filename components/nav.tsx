@@ -12,7 +12,7 @@ import {
 } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { email, navCta, navLinks, socials } from "@/lib/data";
-import { EASE } from "@/lib/motion";
+import { EASE, STAGGER } from "@/lib/motion";
 import { useLenis } from "./providers/smooth-scroll-provider";
 
 /** No link is highlighted while the page is within this many px of the top. */
@@ -56,6 +56,15 @@ export function Nav({ showGithub = true }: { showGithub?: boolean }) {
       });
     },
     [scrollTo]
+  );
+
+  // Handle link click in mobile menu
+  const handleMobileLinkClick = useCallback(
+    (href: string) => {
+      closeMenuNoFocus();
+      scrollToHash(href);
+    },
+    [closeMenuNoFocus, scrollToHash]
   );
 
   const { scrollYProgress } = useScroll();
@@ -178,6 +187,9 @@ export function Nav({ showGithub = true }: { showGithub?: boolean }) {
     const panel = menuPanelRef.current;
     if (!panel) return;
 
+    // Focus the overlay container (not the first link) so focus is visible but no jump
+    panel.focus();
+
     function focusables() {
       const element = menuPanelRef.current;
       if (!element) return [];
@@ -187,8 +199,6 @@ export function Nav({ showGithub = true }: { showGithub?: boolean }) {
         )
       );
     }
-
-    focusables()[0]?.focus();
 
     function handleTab(e: KeyboardEvent) {
       if (e.key !== "Tab") return;
@@ -238,15 +248,23 @@ export function Nav({ showGithub = true }: { showGithub?: boolean }) {
       {/* Bar */}
       <m.header
         className={cn(
-          "nav-header fixed inset-x-0 top-0 z-[100] h-[72px]",
+          "nav-header fixed inset-x-0 top-0 z-[100]",
+          "h-[72px] lg:h-[72px]",
+          "lg:!h-[72px]",
+          "[&.is-scrolled]:backdrop-blur-[8px]",
+          open && !scrolled && "bg-[var(--bg)] border-b border-[var(--line)]",
           scrolled && "is-scrolled"
         )}
+        style={{
+          height: "64px",
+          paddingTop: "env(safe-area-inset-top, 0px)",
+        }}
       >
         <div className="relative mx-auto flex h-full w-full max-w-[1680px] items-center justify-between px-6 md:px-10 lg:px-16">
           {/* 1. Left: logo */}
           <a
             href="#top"
-            className="flex min-h-11 items-center gap-1.5 rounded-full pl-1.5"
+            className="flex min-h-11 items-center gap-1.5 rounded-full pl-1.5 lg:pl-1.5"
           >
             <span className="flex h-9 w-9 items-center justify-center rounded-lg border border-line bg-surface p-1.5">
               <svg
@@ -266,8 +284,8 @@ export function Nav({ showGithub = true }: { showGithub?: boolean }) {
           </a>
 
           {/* 2. Center: links (desktop only, GitHub filtered by showGithub) */}
-          <nav aria-label="Primary">
-            <ul className="hidden items-center gap-[28px] lg:flex">
+          <nav aria-label="Primary" className="hidden lg:flex">
+            <ul className="items-center gap-[28px]">
               {filteredNavLinks.map((link, index) => {
                 const isActive = active === link.href;
                 return (
@@ -296,8 +314,24 @@ export function Nav({ showGithub = true }: { showGithub?: boolean }) {
             </ul>
           </nav>
 
-          {/* 3. Right: menu button (mobile), theme toggle, CTA */}
-          <div className="flex items-center gap-3">
+          {/* 3. Right: group (theme toggle + menu button) on mobile; theme + CTA on desktop */}
+          <div className="flex items-center gap-2 lg:gap-3">
+            {/* Theme toggle - visible on all sizes */}
+            <button
+              type="button"
+              aria-label="Toggle theme"
+              onClick={toggleTheme}
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-line text-ink"
+            >
+              <span className="hidden dark:block" aria-hidden="true">
+                ☀
+              </span>
+              <span className="dark:hidden" aria-hidden="true">
+                ☾
+              </span>
+            </button>
+
+            {/* Mobile menu button - rightmost on mobile, hidden on desktop */}
             <button
               ref={menuButtonRef}
               type="button"
@@ -320,21 +354,8 @@ export function Nav({ showGithub = true }: { showGithub?: boolean }) {
               )}
             </button>
 
-            <button
-              type="button"
-              aria-label="Toggle theme"
-              onClick={toggleTheme}
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-line text-ink"
-            >
-              <span className="hidden dark:block" aria-hidden="true">
-                ☀
-              </span>
-              <span className="dark:hidden" aria-hidden="true">
-                ☾
-              </span>
-            </button>
-
-            <a href={navCta.href} className="nav-cta">
+            {/* Desktop CTA - hidden on mobile */}
+            <a href={navCta.href} className="nav-cta hidden lg:inline-flex">
               Let&apos;s talk <span aria-hidden="true">↗</span>
             </a>
           </div>
@@ -357,16 +378,17 @@ export function Nav({ showGithub = true }: { showGithub?: boolean }) {
             role="dialog"
             aria-modal="true"
             aria-label="Menu"
+            tabIndex={-1}
             initial={shouldReduceMotion ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            variants={menuItemVariants}
+            variants={menuContainerVariants}
             transition={{ duration: 0.2, ease: EASE }}
             style={{
               background: "var(--bg)",
               overscrollBehavior: "contain",
-              paddingTop: "max(24px, env(safe-area-inset-top))",
-              paddingBottom: `max(2rem, env(safe-area-inset-bottom))`,
+              paddingTop: "calc(64px + env(safe-area-inset-top, 0px) + 16px)",
+              paddingBottom: "calc(24px + env(safe-area-inset-bottom, 0px))",
             }}
             className="fixed inset-0 z-[90] flex h-[100dvh] flex-col overflow-y-auto px-6"
             data-lenis-prevent
@@ -375,43 +397,62 @@ export function Nav({ showGithub = true }: { showGithub?: boolean }) {
             }}
             key="mobile-menu"
           >
-            <ul className="flex-1 overflow-y-auto px-6 pb-8">
-              {filteredNavLinks.map((link, index) => (
-                <li key={link.href}>
-                  <a
-                    href={link.href}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      closeMenuNoFocus();
-                      scrollToHash(link.href);
-                    }}
-                    className="flex min-h-11 items-baseline gap-2 py-1 font-display text-[clamp(2rem,9vw,3rem)] font-bold leading-none"
-                  >
-                    <span className="font-mono text-sm text-ink-dim">
-                      {String(index + 1).padStart(2, "0")}
-                    </span>
-                    <span>{link.label}</span>
-                  </a>
-                </li>
-              ))}
+            <ul className="flex-1 overflow-y-auto space-y-0" role="list">
+              {filteredNavLinks.map((link, index) => {
+                const isActive = active === link.href;
+                return (
+                  <li key={link.href} className="relative">
+                    <a
+                      href={link.href}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        handleMobileLinkClick(link.href);
+                      }}
+                      className={cn(
+                        "flex min-h-[64px] items-baseline gap-4 px-2 py-4 border-b border-[var(--line)]",
+                        isActive && "text-[var(--accent)]"
+                      )}
+                      style={{
+                        fontSize: "clamp(2rem, 9vw, 2.75rem)",
+                        lineHeight: 1.1,
+                        fontWeight: 700,
+                        fontFamily: "var(--font-display)",
+                      }}
+                    >
+                      <span className="font-mono text-[13px] text-[var(--ink-dim)] shrink-0">
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+                      <span>{link.label}</span>
+                    </a>
+                    {/* Stagger animation for each link */}
+                    <m.span
+                      custom={index}
+                      variants={menuItemVariants}
+                      className="absolute inset-0 pointer-events-none"
+                    />
+                  </li>
+                );
+              })}
             </ul>
 
-            <div className="mt-auto border-t border-line/20 pt-8">
+            <div className="mt-auto border-t border-[var(--line)] pt-6 pb-4">
+              {/* Single CTA button */}
               <a
                 href={navCta.href}
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
-                  closeMenuNoFocus();
-                  scrollToHash(navCta.href);
+                  handleMobileLinkClick(navCta.href);
                 }}
-                className="nav-cta mb-4 w-full justify-center"
+                className="nav-cta w-full justify-center"
+                style={{ height: "52px" }}
               >
                 Let&apos;s talk <span aria-hidden="true">↗</span>
               </a>
 
-              <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
+              {/* Email + socials row */}
+              <div className="mt-6 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-[14px]">
                 <a href={`mailto:${email}`} className="nav-dim">
                   {email}
                 </a>
@@ -434,6 +475,16 @@ export function Nav({ showGithub = true }: { showGithub?: boolean }) {
     </LazyMotion>
   );
 }
+
+const menuContainerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: STAGGER,
+    },
+  },
+};
 
 const menuItemVariants: Variants = {
   hidden: { opacity: 0, y: 24 },

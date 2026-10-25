@@ -285,7 +285,7 @@ export function Nav({ showGithub = true }: { showGithub?: boolean }) {
 
           {/* 2. Center: links (desktop only, GitHub filtered by showGithub) */}
           <nav aria-label="Primary" className="hidden lg:flex">
-            <ul className="items-center gap-[28px]">
+            <ul className="flex items-center gap-[28px]">
               {filteredNavLinks.map((link, index) => {
                 const isActive = active === link.href;
                 return (

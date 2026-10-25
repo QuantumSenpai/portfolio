@@ -23,10 +23,40 @@ export function Nav({ showGithub = true }: { showGithub?: boolean }) {
   const [active, setActive] = useState("");
   const [open, setOpen] = useState(false);
   const shouldReduceMotion = useReducedMotion();
-  const { stop, start } = useLenis();
+  const { stop, start, scrollTo } = useLenis();
   const activeCandidateRef = useRef("");
   const activeRef = useRef("");
   const scrolledRef = useRef(false);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const menuPanelRef = useRef<HTMLDivElement>(null);
+
+  // Close menu WITH focus restore (for X button, Escape, backdrop, resize, hashchange)
+  const closeMenu = useCallback(() => {
+    setOpen(false);
+    start();
+    menuButtonRef.current?.focus();
+  }, [start]);
+
+  // Close menu WITHOUT focus restore (for link/CTA taps — avoids jump)
+  const closeMenuNoFocus = useCallback(() => {
+    setOpen(false);
+    start();
+  }, [start]);
+
+  // Toggle function for the menu button
+  const toggleMenu = useCallback(() => {
+    setOpen((prev) => !prev);
+  }, []);
+
+  // Scroll to hash after menu closes (one rAF so lenis.start() has taken effect)
+  const scrollToHash = useCallback(
+    (hash: string) => {
+      requestAnimationFrame(() => {
+        scrollTo(hash, { offset: -72, duration: 1.2 });
+      });
+    },
+    [scrollTo]
+  );
 
   const { scrollYProgress } = useScroll();
 
@@ -103,33 +133,45 @@ export function Nav({ showGithub = true }: { showGithub?: boolean }) {
       stop();
     } else {
       start();
-      if (menuButtonRef.current) {
-        menuButtonRef.current.focus();
-      }
+      menuButtonRef.current?.focus();
     }
   }, [open, stop, start]);
+
+  // Unmount cleanup: ensure scroll is re-enabled if component unmounts while open
+  useEffect(() => {
+    return () => {
+      start();
+    };
+  }, [start]);
 
   useEffect(() => {
     if (!open) return;
     function handleKeyDown(e: KeyboardEvent) {
-      if (e.key === "Escape") setOpen(false);
+      if (e.key === "Escape") closeMenu();
     }
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [open]);
+  }, [open, closeMenu]);
 
   useEffect(() => {
     if (!open) return;
-    function close() {
-      setOpen(false);
-    }
-    window.addEventListener("hashchange", close);
-    window.addEventListener("popstate", close);
+    window.addEventListener("hashchange", closeMenu);
+    window.addEventListener("popstate", closeMenu);
     return () => {
-      window.removeEventListener("hashchange", close);
-      window.removeEventListener("popstate", close);
+      window.removeEventListener("hashchange", closeMenu);
+      window.removeEventListener("popstate", closeMenu);
     };
-  }, [open]);
+  }, [open, closeMenu]);
+
+  // Close on resize to desktop breakpoint
+  useEffect(() => {
+    if (!open) return;
+    function handleResize() {
+      if (window.innerWidth >= 1024) closeMenu();
+    }
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [open, closeMenu]);
 
   useEffect(() => {
     if (!open) return;
@@ -166,9 +208,6 @@ export function Nav({ showGithub = true }: { showGithub?: boolean }) {
     panel.addEventListener("keydown", handleTab);
     return () => panel.removeEventListener("keydown", handleTab);
   }, [open]);
-
-  const menuButtonRef = useRef<HTMLButtonElement>(null);
-  const menuPanelRef = useRef<HTMLDivElement>(null);
 
   function toggleTheme() {
     const html = document.documentElement;
@@ -262,16 +301,23 @@ export function Nav({ showGithub = true }: { showGithub?: boolean }) {
             <button
               ref={menuButtonRef}
               type="button"
-              aria-label="Open navigation menu"
+              aria-label={open ? "Close navigation menu" : "Open navigation menu"}
               aria-expanded={open}
               aria-controls="mobile-menu"
-              onClick={() => setOpen(true)}
+              onClick={toggleMenu}
               className="flex h-11 w-11 items-center justify-center rounded-full border border-line text-ink lg:hidden"
             >
-              <span className="flex flex-col gap-1.5" aria-hidden="true">
-                <span className="block h-px w-4 bg-ink" />
-                <span className="block h-px w-4 bg-ink" />
-              </span>
+              {open ? (
+                <span className="flex flex-col gap-1.5" aria-hidden="true">
+                  <span className="block h-px w-5 bg-ink rotate-45 translate-y-[5px]" />
+                  <span className="block h-px w-5 bg-ink -rotate-45 -translate-y-[5px]" />
+                </span>
+              ) : (
+                <span className="flex flex-col gap-1.5" aria-hidden="true">
+                  <span className="block h-px w-4 bg-ink" />
+                  <span className="block h-px w-4 bg-ink" />
+                </span>
+              )}
             </button>
 
             <button
@@ -316,15 +362,30 @@ export function Nav({ showGithub = true }: { showGithub?: boolean }) {
             exit={{ opacity: 0 }}
             variants={menuItemVariants}
             transition={{ duration: 0.2, ease: EASE }}
-            style={{ background: "var(--bg)" }}
-            className="fixed inset-0 z-[90] flex h-[100dvh] flex-col overflow-y-auto px-6 pb-[calc(2rem+env(safe-area-inset-bottom))] pt-24"
+            style={{
+              background: "var(--bg)",
+              overscrollBehavior: "contain",
+              paddingTop: "max(24px, env(safe-area-inset-top))",
+              paddingBottom: `max(2rem, env(safe-area-inset-bottom))`,
+            }}
+            className="fixed inset-0 z-[90] flex h-[100dvh] flex-col overflow-y-auto px-6"
             data-lenis-prevent
+            onClick={(e) => {
+              if (e.target === e.currentTarget) closeMenu();
+            }}
+            key="mobile-menu"
           >
             <ul className="flex-1 overflow-y-auto px-6 pb-8">
               {filteredNavLinks.map((link, index) => (
                 <li key={link.href}>
                   <a
                     href={link.href}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      closeMenuNoFocus();
+                      scrollToHash(link.href);
+                    }}
                     className="flex min-h-11 items-baseline gap-2 py-1 font-display text-[clamp(2rem,9vw,3rem)] font-bold leading-none"
                   >
                     <span className="font-mono text-sm text-ink-dim">
@@ -337,7 +398,16 @@ export function Nav({ showGithub = true }: { showGithub?: boolean }) {
             </ul>
 
             <div className="mt-auto border-t border-line/20 pt-8">
-              <a href={navCta.href} className="nav-cta mb-4 w-full justify-center">
+              <a
+                href={navCta.href}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  closeMenuNoFocus();
+                  scrollToHash(navCta.href);
+                }}
+                className="nav-cta mb-4 w-full justify-center"
+              >
                 Let&apos;s talk <span aria-hidden="true">↗</span>
               </a>
 

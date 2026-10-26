@@ -27,11 +27,12 @@ function signatureExists() {
 
 export default async function Home() {
   const githubActivity = await getGithubActivity();
-  const showGithub = !!process.env.GITHUB_TOKEN;
 
   return (
     <>
-      <Nav showGithub={showGithub} />
+      {/* The GitHub section always renders (heatmap or honest fallback), so the
+          nav link is unconditional — it no longer depends on GITHUB_TOKEN. */}
+      <Nav showGithub />
       <main id="main">
         <Hero />
         <Ticker />

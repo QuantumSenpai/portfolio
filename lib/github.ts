@@ -33,20 +33,18 @@ const QUERY = `
   }
 `;
 
-let warned = false;
-
+// Server-side diagnostics: always log the failure reason (never the token) so
+// a failed fetch is visible in build and server logs, including production.
 function warn(message: string) {
-  if (warned) return;
-  warned = true;
-  if (process.env.NODE_ENV !== "production") {
-    console.warn(`[github] ${message}`);
-  }
+  console.warn(`[github] ${message}`);
 }
 
 export async function getGithubActivity(): Promise<GithubActivity | null> {
   const token = process.env.GITHUB_TOKEN;
   if (!token) {
-    warn("GITHUB_TOKEN is not set — the contributions section is hidden.");
+    warn(
+      "GITHUB_TOKEN is not set — the contributions graph is unavailable, rendering the fallback."
+    );
     return null;
   }
 
@@ -90,7 +88,7 @@ export async function getGithubActivity(): Promise<GithubActivity | null> {
     if (!calendar || !Array.isArray(calendar.weeks)) {
       const reason = payload.errors?.[0]?.message;
       warn(
-        `GitHub response could not be read${reason ? `: ${reason}` : "."}`
+        `GitHub GraphQL response could not be read${reason ? `: ${reason}` : "."}`
       );
       return null;
     }
@@ -101,8 +99,10 @@ export async function getGithubActivity(): Promise<GithubActivity | null> {
         contributionDays: week.contributionDays ?? [],
       })),
     };
-  } catch {
-    warn("GitHub request failed.");
+  } catch (error) {
+    warn(
+      `GitHub request failed: ${error instanceof Error ? error.message : "unknown error"}`
+    );
     return null;
   }
 }

@@ -4,7 +4,8 @@ import { email, privacy } from "@/lib/data";
 import { Footer } from "@/components/footer";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy",
+  title: "Privacy Policy | Krishnendu Adak",
+  alternates: { canonical: "/privacy" },
   description:
     "What this site collects, what it does not, and how to ask for anything to be corrected or deleted.",
 };

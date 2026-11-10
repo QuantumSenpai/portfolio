@@ -69,16 +69,20 @@ const signatureFont = Herr_Von_Muellerhoff({
   display: "swap",
 });
 
-const siteUrl = process.env.SITE_URL ?? "https://getkisu.vercel.app";
+const siteUrl = "https://getkisu.vercel.app";
 
-const title = "Krishnendu Adak — Developer & Editor";
+const title = "Krishnendu Adak (Kisu) | Developer & Editor";
 const description =
-  "Krishnendu Adak (Kisu) — CSE student, web developer, video editor and NLP/ML enthusiast from Ghatal, West Bengal.";
+  "Portfolio of Krishnendu Adak (Kisu), a computer science student and full-stack developer working on web applications, machine learning, and video editing.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title,
   description,
+  alternates: { canonical: "/" },
+  robots: { index: true, follow: true },
+  authors: [{ name: "Krishnendu Adak", url: siteUrl }],
+  creator: "Krishnendu Adak",
   icons: {
     icon: [
       { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
@@ -91,12 +95,15 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     url: siteUrl,
-    siteName: "Kisu",
+    siteName: "Krishnendu Adak",
+    locale: "en_IN",
+    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "Krishnendu Adak portfolio" }],
     title,
     description,
   },
   twitter: {
     card: "summary_large_image",
+    images: ["/opengraph-image"],
     title,
     description,
   },
@@ -109,6 +116,22 @@ export const viewport = {
   ],
 };
 
+const personStructuredData = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "@id": `${siteUrl}/#person`,
+  name: "Krishnendu Adak",
+  alternateName: "Kisu",
+  url: siteUrl,
+  description,
+  jobTitle: "Full-stack Developer",
+  sameAs: [
+    "https://github.com/QuantumSenpai",
+    "https://www.linkedin.com/in/krishnendu158",
+  ],
+  mainEntityOfPage: { "@type": "WebPage", "@id": siteUrl },
+};
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html
@@ -117,6 +140,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       className={`${cabinetGrotesk.variable} ${generalSans.variable} ${jetbrainsMono.variable} ${signatureFont.variable}`}
     >
       <body>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(personStructuredData).replace(/</g, "\\u003c") }}
+        />
         <ThemeProvider>
           <MotionProvider>
             <SmoothScroll>{children}</SmoothScroll>

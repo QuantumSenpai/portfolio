@@ -71,9 +71,9 @@ const signatureFont = Herr_Von_Muellerhoff({
 
 const siteUrl = "https://getkisu.vercel.app";
 
-const title = "Krishnendu Adak (Kisu) | Developer & Editor";
+const title = "Krishnendu Adak (Kisu) | Full-Stack Developer & Video Editor";
 const description =
-  "Portfolio of Krishnendu Adak (Kisu), a computer science student and full-stack developer working on web applications, machine learning, and video editing.";
+  "Krishnendu Adak (Kisu) is a B.Tech Computer Science student at Adamas University and full-stack developer building web applications, exploring machine learning, and creating video edits.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -123,8 +123,15 @@ const personStructuredData = {
   name: "Krishnendu Adak",
   alternateName: "Kisu",
   url: siteUrl,
+  image: `${siteUrl}/profile.jpg`,
   description,
-  jobTitle: "Full-stack Developer",
+  jobTitle: "Full-Stack Developer",
+  affiliation: {
+    "@type": "CollegeOrUniversity",
+    name: "Adamas University",
+    url: "https://adamasuniversity.ac.in/",
+  },
+  knowsAbout: ["Full-stack web development", "Machine learning", "Video editing"],
   sameAs: [
     "https://github.com/QuantumSenpai",
     "https://www.linkedin.com/in/krishnendu158",
